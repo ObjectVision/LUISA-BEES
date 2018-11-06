@@ -1,0 +1,25 @@
+Luisetta model
+1-ha resolution
+running on GeoDMS 7.182; GDAL 1.11.2 and 2.3.1
+
+LEGEND OF ACTIVE CLASSES
+urban
+industry
+other arable
+permanent crops
+pastures
+forests mature
+transitional woodland
+new energy crops
+semi-natural vegetation
+forests young
+
+classes that are de-activated in the model but may possibly (??) be re-instated:
+AbanArable
+AbanPermanentCrops 	  
+AbanPastures       	  
+AbanUrban          	 		
+AbanIndustry
+
+other classes that never change:
+waterbodies and wetlands
