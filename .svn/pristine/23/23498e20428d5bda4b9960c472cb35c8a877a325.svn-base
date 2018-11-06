@@ -1,0 +1,95 @@
+Container PopulationParameters
+{
+	
+	container popcali
+	{
+		
+		unit<uint16> 		PopParamZones: expr = "Geography/Regions/JrcRegion";
+		attribute<bool>		k_perNuts2 				(PopParamZones): expr = "const(false, PopParamZones, bool)"; //PopParamZones/name <> 'Netherlands' && PopParamZones/name <> 'Sweden' && PopParamZones/name <> 'BelgLux' && PopParamZones/name <> 'Kroatia' && PopParamZones/name <> 'Spain' && PopParamZones/name <> 'Romania'  && PopParamZones/name <> 'Bulgaria' && PopParamZones/name <> 'Greece' && PopParamZones/name <> 'Portugal'"; // && PopParamZones/name <> 'Czech_republic'";
+		attribute<float32>	set_k					(PopParamZones): expr =  "const(float32(1), PopParamZones, float32)";// "PopParamZones/name = 'Netherlands' ? float32(1.6): float32(-1)";
+		attribute<bool>		RMSE					(PopParamZones): expr = "const(True, PopParamZones, bool)";
+		attribute<ModelSpecs>ModelType				(PopParamZones): expr = "Const(2, PopParamZones, ModelSpecs)";
+		attribute<float32>	k_adj_factor			(PopParamZones): expr = "Const(1, PopParamZones, float32)";
+				
+		parameter<NrResidents> AbandonmentThreshold: 	expr = "2[NrResidents]";
+		parameter<NrResidents> UrbanizationThreshold: 	expr = "6[NrResidents]";
+		parameter<Year>		   SupplyChange:			expr = "5[Year]";
+		parameter<factors>	   SpatialComponent:		expr = "value(12, factors)"; // last in collection of factors with suitweight = true
+		
+		unit<uint8> ModelSpecs: NrOfRows = 3
+		{
+			attribute<string> Name: ['OLS','SpatialLag','SpatialError'];
+			attribute<string> Label: expr = "Name", DialogType = "LabelText";
+		}
+		
+		
+			
+		unit<uint32> factors: NrOfRows = 13
+		{
+			
+			//Country;dom_a;for_a;urb_dr;nurb_dr;slope;ln_water;urban;industrial;agricultural;forestsmat; forestyo;_cons;rho;Remarks
+			
+			attribute<string> FactorName: ['country','PotentialAccess', 'urb_dr', 'nurb_dr','ln_ta','slope','urban','industrial','agricultural','forestsmat', 'forestsyo', '_cons', 'rho'];
+			attribute<string> FactorCalc: [
+			'country', 
+			'value(PrevState/Variables/PotentialAccess, float32)',
+			'(log(value(PrevState/Variables/DistRoads, float32)+float32(0.01)) * float32(PrevState/LandUse = 0[ModelType]))', '(log(value(PrevState/Variables/DistRoads, float32)+float32(0.01)) * float32(PrevState/LandUse <> 0[ModelType]))', 
+			'log(value(PrevState/Variables/TownAccess, float32) + float32(0.01))',
+			'value(PrevState/Variables/Slope100_cont, float32)','(float32(PrevState/LandUse == ModelType/Urban) + float32(0.5) * float32(PrevState/LandUse == ModelType/AbanUrban))','float32(PrevState/LandUse == ModelType/Industrial)','float32(ModelType/IsAgricultural[PrevState/LandUse])',
+			'float32(PrevState/LandUse == ModelType/ForestsMature)','float32(PrevState/LandUse == ModelType/ForestsYoung)',
+			'const(1, domain, float32)','PrevState/PotQi'];
+			attribute<string> valuetype: expr = "suitweight ? 'float32': 'string'";
+			attribute<string> label: expr = "FACTORNAME";
+			attribute<bool>	  LandUseRelated:		expr = "id(.) > 6 && id(.) < 11";
+			attribute<bool>	  Patch:				expr = "id(.) > 6 && id(.) < 13";
+			attribute<bool>	  SuitWeight: 			expr = "id(.) > 0[.] && id(.) < 13";
+			attribute<bool>	  aSpatialComponent: 	expr = "id(.) = SpatialComponent";
+		}
+			
+		  Container parameterSet: expr = "for_each_nedv(Factors/Suitweight ? Factors/FactorName : '', 'value(GetFactorMatrix/TableChopper/Data/'+ Factors/FactorName+'[GetFactorMatrix/TableChopper/Data/TrueCountryId], float32)', Meta/Run, float32)"
+		  {
+		  	attribute<Meta/Run> ZoneId (Meta/Run): expr = "id(Meta/Run)";
+		  }
+	}
+
+	Container getFactorMatrix: expr = "doReadPopFile(Meta/Run)";	
+
+
+	Container doReadPopFile: IsTemplate = "True"
+	{
+		unit<uint16> 								UnitRef; // :		expr = "Meta/Alloc1Set/UniqueFiles";
+		
+		unit<uint32> Factors: 					expr = "popcali/factors";
+		
+		container TableChopper
+		{
+		   parameter<String> FileName:       	expr = "ParamSets/ActiveSet/ParamPath + '/Population/Population_weights.csv'";
+		   unit<uint16>      Domain:  			expr = "UnitRef";
+		   parameter<String> FieldSeparator: 	expr = "';'";
+		
+		   parameter<String> FileData
+		   :  StorageType = "str"
+		   ,  StorageName = "=FileName";
+		   parameter<String> HeaderLine: expr = "readLines(FileData, void, 0)";
+		   parameter<Bool>   HeaderOK:   expr = "regex_match(HeaderLine,'\"[^\"]*+\"(;\"[^\"]*+\")*+')";
+		        
+		   unit<UInt32> Field: expr = "Range(UInt32, 0, strcount(HeaderLine, FieldSeparator)+1)"
+		   { 
+		   		attribute<String> 		Name: 		Expr = "ReadArray(HeaderLine, Field, String, 0)";
+		   		attribute<bool>	  		Factor:		Expr = "id(.) >= 0[Field] && id(.) < #factors";
+		   		attribute<Factors> 		FactorRef:	Expr = "rlookup(Name, Factors/FactorName)";
+		   }
+		   
+		   unit<uint32> FactorList: expr = "subset(Field/Factor)" {attribute<string> Name: expr = "Field/Name[Nr_OrgEntity]"; attribute<Factors> FactorRef: expr = "Field/FactorRef[Nr_OrgEntity]";}
+		   
+		   attribute<String> BodyLines(Domain): expr = "readLines(FileData, Domain, HeaderLine/ReadPos)"; //,  IntegrityCheck = "HeaderOK";
+		   attribute<Bool> LinesAreSignedIntegerStringOrEmpy (Domain): expr = 
+		      "regex_match(BodyLines,'(-?+[0-9]++|\"[^\"]*+\")?+(;(-?+[0-9]++|\"[^\"]*+\")?+)*+')";
+		        
+		   container Data: Expr = "for_each_nedv(Field/Name,'ReadElems(BodyLines,string,'+MakeDefined(Field/Name[ID(Field)-1]+'/ReadPos','const(0,Domain)')+')',Domain,string)"
+		   {
+		   		attribute<uint16> 							TrueCountryid (Domain): expr = "= 'rlookup(Domain/Name, '+ Factors/FactorName[0[Factors]] +')'";
+		   }
+		 }
+	}
+}

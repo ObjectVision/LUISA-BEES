@@ -1,0 +1,30 @@
+container LandUseData
+{
+	//attribute<UInt8> age0 (Geography/Albers1kmGrid): StorageName = "%sourceDataProjDir%/LandUse/age0.asc",     IsHidden = "True";
+	//attribute<Geography/Albers1kmGrid>	AlbersGridRel (Geography/Lambert100mGrid): expr = "id(Geography/Lambert100mGrid)[Geography/Albers1kmGrid]";
+	//attribute<uint8> age1 (Geography/Lambert100mGrid): expr = "age0[AlbersGridRel]", StorageName = "%sourceDataDir%/EUCS_100m/landuse/age0.tif";
+	
+	attribute<uint8> age0 (Geography/Lambert100mGrid): StorageName = "%sourceDataDir%/EUCS_100m/landuse/age0.tif" ;
+	
+	container CLC_100m
+	{
+		unit<WPoint> LC2012
+			:	DialogData = "Geography/LambertEA"
+			,	Source = "JRC:LandCover"
+			,	StorageName = "%sourceDataDir%/EUCS_100m/landuse/LUISA_Basemap_v1_3.tif"
+			, 	StorageType = "gdal.grid"
+			//,	Expr = 
+			//		"for_each_ndnv(Geography/Regions/JrcRegion/Label, "
+			//			"Geography/RegionDomainSets/JrcRegions100m, Geography/Regions/JrcRegion/Label, Classifications/LU/Corine)"
+			,	StorageReadOnly = "True"
+		{
+			attribute<uint16> GridData;
+			attribute<uint16> ReadData  (Geography/Lambert100mGrid);
+			
+			attribute<Classifications/LU/Corine>	Indata 	 (Geography/Lambert100mGrid): Expr = "rlookup(ReadData, Classifications/Lu/Corine/CLC12_Code)";
+			attribute<Classifications/LU/ModelType> ModelData(Geography/Lambert100mGrid): Expr = "Classifications/Lu/Corine/MT [Indata]"; // DEBUG
+			attribute<Classifications/LU/ViewType>  ViewData (Geography/Lambert100mGrid): Expr = "Classifications/Lu/Corine/VT2[Indata]";
+		}
+	
+	}
+}

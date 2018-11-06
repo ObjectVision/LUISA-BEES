@@ -1,0 +1,856 @@
+container ModelTraits
+{
+	container MNL100
+	{
+		container CalcSuitability: IsTemplate = "True"
+		{
+			unit<UInt32> domain;
+			
+			unit<UInt8>  LUT: Expr = "Classifications/LU/ModelType";
+			
+					// ============ Suitabilites
+
+			unit<UInt32> CurrFactorWeights: Expr = "Rules/CurrFactorWeights";
+			container WeightedSuitabilityFactorData: expr = "for_each_nedv(CurrFactorWeights/Name, Rules/SuitTermExpr, domain, Float32)";
+			attribute<Float32> SuitFactorWeights(CurrFactorWeights): expr = "='union_data(CurrFactorWeights,'+asItemList('sd(WeightedSuitabilityFactorData/'+CurrFactorWeights/Name+')')+')'";
+			container SuitabilityData:  Expr = "for_each_nedv(ModelType/Name, Rules/SuitTermsExpr, domain, Float32)";
+			//container SuitabilityLogit: Expr = "for_each_nedv(ModelType/Name, Rules/SuitabilityLogitExpr, domain, Float32)";
+			attribute<Float32> TotalExpSuitability(domain): Expr = "=Rules/SuitabilitySumExpExpr";
+			container Suitability:   Expr = "for_each_nedv(ModelType/Name, Rules/SuitabilityMNLExpr, domain, Float32)";
+			
+			container PotentialData: Expr = "for_each_nedv(LUT/Name, 'MakeDefined(potential(float32(PrevState/landuse[domain/BasisGrid] = '+ string(id(LUT)) +'[LUT]), Parameters/FuncKernels/RooksNeighbours/Matr)[domain/grid_rel] / StartingState/NeighboursWeight, float32(0))', domain, Float32)";
+			//container AreaData     : Expr = "for_each_nedv(Rules/UniqueFactor2Func/Name, Rules/UniqueFactor2Func/AreaExpr,      domain, Float32)";
+			//container NeighbourData: Expr = "for_each_nedv(Rules/UniqueFactor2Func/Name, Rules/UniqueFactor2Func/NeighbourExpr, domain, Float32)";
+					
+			//container MeanEnrichData: Expr = "for_each_nedv(Rules/UniqueFactor2Func/Name, Rules/UniqueFactor2Func/MeanEnrichExpr, void,   Float32 )";
+			//container EnrichmentData: Expr = "for_each_nedv(Rules/UniqueFactor2Func/Name, Rules/UniqueFactor2Func/EnrichmentExpr, domain, Float32 )";
+	
+			container DynamicNeighbourData: Expr = "for_each_nedv(LUT/Name, Rules/DynamicNeighbourPotentialExpr, domain, Float32)";
+			attribute<Float32> TotalExpNeighbour  (domain): Expr = "=Rules/DynamicNeighbourSumExpExpr";
+			
+			//container Suitability: Expr = "for_each_nedv(LUT/Name, DGRegio/AddPerLUT/addName + ' * SuitabilityMNL/'+LUT/Name, domain, Float32)";
+			//container Suitability: Expr = "for_each_nedv(LUT/Name, 'CaseData/SuitabilityMNL/'+LUT/Name, domain, Float32)"; // without dg regio influences
+			
+			container DynamicNeighbour  : Expr = "for_each_nedv(LUT/Name, Rules/DynamicNeighbourMNLExpr, domain, Float32)";
+	
+			container TotalSuitability: Expr = "for_each_nedv(LUT/Name, Rules/TotalSuitabilityExpr, domain, Float32)";
+
+			container Allowed: Expr = "for_each_nedv(LUT/Name,  Rules/AllowRules, domain, bool)";
+					
+			container TransPot: Expr = "for_each_nedv(LUT/Name, Rules/TransPotExpr, domain, EUR_M2)";
+			
+			//container TransPot: Expr = "TransPot_org" // used to override transpot definitions, presumably necessary in the previous pop->urban approach.
+			//{
+			//	attribute<Float32> Urban(domain): Expr = "(PrevState/LandUse == Classifications/LU/ModelType/Urban) ? TransPot_org/Urban : -5[EUR_m2]"; //override inherited definition
+			//}
+			
+			container BurntForest
+			{
+				attribute<bool> NewlyBurnt (domain): expr = "((PrevState/Landuse = ModelType/ForestsMature) || (PrevState/Landuse = ModelType/ForestsYoung)) && float32(CaseData/JrcFactorData/BurntAreas/BurntInYear[domain/grid_rel]) = CurrYear";
+			}
+		}
+	}
+	container PopulationDistribution: IsTemplate = "True"
+	{
+		unit<uint32>			domain;
+		unit<uint16> 	   		Region;
+		attribute<Region> 		RegionRel 			(domain);
+		
+		attribute<float32>  	randomfield (domain): expr = "rnd_uniform(1, domain, range(float32, float32(0.02), float32(0.1)))";
+		
+		attribute<float32> 		Kj			 		(Region) : Expr = "Demographics/Kj/summed";
+		
+		attribute<float32> 		proto1_Distribution 		(domain): expr = "= Rules/Population_Distribution";
+		attribute<float32>		proto2_Distribution	   		(domain): expr = "max_elem(proto1_Distribution, float32(0))";
+		attribute<float32>		Redistribution				(domain): expr = "Demographics/popdecline[Regionrel] ? float32(1) / proto2_Distribution : proto2_Distribution";
+		
+		attribute<float32> 		proto_Population_Distribution	(domain): Expr = "max_elem(Demographics/InternalMovements/RemainingStock/summed + MakeDefined(scaleSum(Redistribution, Regionrel, Kj), float32(0)), float32(0))";
+		attribute<float32>		supply_effect			(domain): Expr = "HousingStock/Si - proto_Population_Distribution";
+		attribute<float32>		def_Redistribution		(domain): Expr = "(!ModelType/IsUrban[ResultingState/LandUse] && PrevState/Qi < 2[float32]) || ModelType/IsAbandonedUrban[ResultingState/landuse] ? float32(0) : max_elem(Redistribution + (HousingStock/Si - proto_Population_Distribution), float32(0))"; // model very biased towards existing housing stock
+		attribute<float32> 		Population_Distribution	(domain): Expr = "max_elem(Demographics/InternalMovements/RemainingStock/summed + MakeDefined(scaleSum(def_Redistribution, Regionrel, Kj), float32(0)), float32(0))";
+		attribute<float32>		Distribution_dif  		(domain): Expr = "Population_Distribution - PrevState/Qi";
+		
+		
+		attribute<int32>		rnd_Qi		 (domain): Expr = "roundDown(Population_Distribution)";
+		attribute<float32>		Qj			(Region): 	Expr = "Demographics/ProjectedTotals/Population/summed";
+		
+		container discretelyAllocQi: expr = "loop(discrete_people_allocator, uint16(5))";
+		
+		container discrete_people_allocator: IsTemplate = "True"
+		{
+			parameter<uint16> NrIter;
+			
+			container currValue
+			{
+				attribute<float32>  Qi 				(domain): expr = "float32(rnd_Qi)";
+				attribute<float32> 	Qj_hat			(Region): expr = "sum(Qi, RegionRel)";
+				attribute<float32>  dif_Qj			(Region): expr = "Qj - Qj_hat";
+				parameter<uint32> 	regionalCountErrors: 	expr = "sum(uint32(Abs(Qj_hat - Qj) > float32(5)))";
+				parameter<uint32> 	negativePeopleErrors:	expr = "sum(uint32(Qi < float32(0)))";
+				parameter<uint32>	numErrs:				expr = "regionalCountErrors + negativePeopleErrors";
+			}
+			container nextValue
+			{
+				attribute<float32>	Qi (domain): 			expr = "CurrValue/numErrs = 0 ? CurrValue/Qi: float32(Process/Qi)";
+				attribute<float32> 	Qj_hat			(Region): expr = "sum(Qi, RegionRel)";
+				attribute<float32>  dif_Qj			(Region): expr = "Qj - Qj_hat";
+				parameter<uint32> 	regionalCountErrors: 	expr = "sum(uint32(Abs(Qj_hat - Qj) > float32(5)))";
+				parameter<uint32> 	negativePeopleErrors:	expr = "sum(uint32(Qi < float32(0)))";
+				parameter<uint32>	numErrs:				expr = "regionalCountErrors + negativePeopleErrors";
+			}
+			container Process
+			{
+				attribute<int32>	rnd_Qi			(domain): Expr = "roundDown(CurrValue/Qi)"; // 
+				attribute<float32>  Scale			(domain): Expr = "rnd_Qi >= int32(1) ? (proto_Population_Distribution + randomfield)^float32(-1): float32(1) + randomfield"; // + randomfield to prevent that scalethreshold = 1.
+				attribute<int32>	proto_Qj		(Region):  Expr = "sum(rnd_Qi, Regionrel)";
+				attribute<int32> 	Qj_residual		(Region):  Expr = "round(Qj) - sum(rnd_Qi, Regionrel)";
+				//attribute<int32>	Qj_step			(Region):  Expr = "Qj_residual < int32(0) ? int32(-1) * : int32(1)";
+				attribute<int32>	Qj_step			(Region):  Expr = "MakeDefined(Qj_residual / sum(int32(Selected), RegionRel), int32(0))";
+				attribute<float32> 	ScaleThreshold	(Region):  Expr = "MakeDefined(min_elem(nth_element(Scale, uint32(Abs(Qj_residual)), Regionrel), float32(1)), float32(1))";
+				attribute<int32> 	Qi				(domain): Expr = "Scale < ScaleThreshold[Regionrel] ? max_elem(rnd_Qi + Qj_step[Regionrel], int32(0)): rnd_Qi";
+				attribute<bool>		Selected		(domain): Expr = "Scale < ScaleThreshold[Regionrel]";
+			}
+		}
+		parameter<float32> projectedQ: 		 			  Expr = "sum(count(Qi, Regionrel) > 0 ? Qj: 0[NrResidents])";
+		parameter<bool>	   allocation_OK:				  Expr = "discretelyAllocQi/lastIter/nextValue/numErrs == 0";
+		attribute<float32> Qi					(domain): Expr = "discretelyAllocQi/LastIter/nextValue/Qi[float32]", IntegrityCheck = "allocation_OK";
+		attribute<float32> dQi					(domain): Expr = "Qi - PrevState/Qi";
+		attribute<float32> mod_Qj				(Region): Expr = "sum(Qi, Regionrel)";
+	}
+	container ClaimTableGenerators
+	{
+		container ClaimTableSelectionTemplate : IsTemplate = "True"
+		{
+			container ClaimTable;
+			parameter<YearRange> CurrYear;
+			unit<uint32> sel: expr = "Subset(Float32(ClaimTable/Data/Year) == CurrYear)"
+			{
+				attribute<String> Label: Expr = "ClaimTable/Domain/Label[nr_OrgEntity]", DialogType = "LabelText";
+				
+			}
+		}
+		
+		container ClaimTemplate : IsTemplate = "True"
+		{
+			unit<uint8> ModelType;
+			unit<UInt8> ClaimTable: 	 Expr = "CaseData/UniqueRegionRefs";
+			unit<Uint16> UrbanClaimZones: Expr = "= 'RunRegions/UnitSets/'+ ClaimTableName[uint8(0)]";
+			container Conversions: expr = "CaseData/DemandZoneConversions/Conversions";
+			attribute<String> ClaimTableName	(ModelType): Expr = "CaseData/ClaimTableName";
+			attribute<String> DestClaimTableName(ModelType): Expr = "CaseData/DestClaimTableName";
+			container ClaimTableSelections: Expr = "for_each_ne(ClaimTable/Values, 'ClaimTableSelectionTemplate(CaseData/ClaimTables/'+ClaimTable/Values+',CurrYear)')" {
+				container Population:	expr = "ClaimTableSelectionTemplate(DemandSet/Global/PopProjections, CurrYear)";
+				container MinUrban: 	expr = "ClaimTableSelectionTemplate(DemandSet/Global/MinUrban, CurrYear)" {
+					attribute<float32> Claim (UrbanClaimZones): expr = "rjoin(uint32(id(UrbanClaimZones)), "
+						"Parameters/DemandSets/Global/MinUrban/Data/ZoneRel[sel/nr_OrgEntity], "
+						"float32(Parameters/DemandSets/Global/MinUrban/Data/Pop[sel/nr_OrgEntity]))";	
+				}
+				container MaxUrban: 	expr = "ClaimTableSelectionTemplate(DemandSet/Global/MaxUrban, CurrYear)" {
+					attribute<float32> Claim (UrbanClaimZones): expr = "rjoin(uint32(id(UrbanClaimZones)), "
+						"Parameters/DemandSets/Global/MaxUrban/Data/ZoneRel[sel/nr_OrgEntity], "
+						"float32(Parameters/DemandSets/Global/MaxUrban/Data/Pop[sel/nr_OrgEntity]))";	
+				}
+			}
+			
+			// do transformation of min/max separately, then integrate in final demand containers.
+			
+			
+			container CollectMinDemandFromClaimTables:
+				Expr = 
+					"for_each_nednv("
+						"!ModelType/isUrban ? ModelType/Name : '',"
+						"'MakeDefined('+"
+							"'rjoin('+"
+								"'RunRegions/UnitSets/'+ClaimTableName+'/ZoneId, '+"
+								"'CaseData/ClaimTables/'+ClaimTableName+'/Data/RegionUp[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity], '+"
+								"'min_elem('+"
+									"'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MinClaimColumn, 'ZeroClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity]),'+"
+									"'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MaxClaimColumn, 'HighClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'+"
+									"')'+"
+							"') - CaseData/adapt_claim/' + ModelType/Name + "
+						"', float32(0))'"
+						", CaseData/RegionNumbers, ClaimTableName, float32)" {
+							attribute<float32> Urban (UrbanClaimZones): expr = "min_elem(ClaimTableSelections/MinUrban/Claim, ClaimTableSelections/MaxUrban/Claim)";
+						}
+					
+			container CollectMaxDemandFromClaimTables:
+				Expr = 
+					"for_each_nednv("
+						"!ModelType/isUrban ? ModelType/Name : '',"
+						"'MakeDefined('+"
+							"'rjoin('+"
+								"'RunRegions/UnitSets/'+ClaimTableName+'/ZoneId, '+"
+								"'CaseData/ClaimTables/'+ClaimTableName+'/Data/RegionUp[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity], '+"
+								"'max_elem('+"
+									"'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MinClaimColumn, 'ZeroClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity]),'+"
+									"'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MaxClaimColumn, 'HighClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'+"
+									"')'+"
+							"') - CaseData/adapt_claim/' + ModelType/Name + "
+						"', float32(0))'"
+						", CaseData/RegionNumbers, ClaimTableName, float32)" {
+							attribute<float32> Urban (UrbanClaimZones): expr = "max_elem(ClaimTableSelections/MinUrban/Claim, ClaimTableSelections/MaxUrban/Claim)";
+						}		
+	
+	// demand containers below aggregate the demands to the wanted aggregation level
+			Container DemandMin: expr = "for_each_nednv(ModelType/Name, "
+					"IsDefined(ModelType/DemandCharacteristics) ? "
+						"'(MakeDefined(uint32(sum(CollectMinDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * "
+						"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, "
+							"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)"
+								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')), 0))' "
+					" : 'uint32(CollectMinDemandFromClaimTables/'+ModelType/Name+')', "
+				 	" CaseData/RegionNumbers, DestClaimTableName, uint32)";
+			Container DemandMax: expr = "for_each_nednv(ModelType/Name, "
+				"IsDefined(ModelType/DemandCharacteristics) ? "
+						"'(MakeDefined(uint32(sum(CollectMaxDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * "
+						"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, "
+							"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)"
+								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')), 0))' "
+					" : 'uint32(CollectMaxDemandFromClaimTables/'+ModelType/Name+')', "
+				 	" CaseData/RegionNumbers, DestClaimTableName, uint32)";				
+		}
+	}
+	container TestSumsAlloc                                                       //
+	{
+		container SumsDbfFile:                                            // 
+		StorageName = "=simulation_results/DirName+'/test.dbf'",         //
+		Expr =                                                           //
+			"500";                                                  
+	}
+	// ============ factor data export tool for 
+		
+	container DataSampleGenerator
+	{
+		
+		container Templ: IsTemplate = "True"
+		{
+			unit<UInt32> domain;
+			unit<wpoint> domain_grid;
+			
+				unit<UInt32> NrFactors: nrofrows = 10 // @USERINPUT: Keep number consistent with the number of factors that are mentioned in Factor_ID
+			{
+				attribute<MetaData/FactorID> FactorNr: [ 65, 89, 76, 78, 79, 80, 86, 97, 98, 99]; // @USERINPUT: the list of factors that need to be exported
+	
+				
+				attribute<MetaData/Factors>  Factor_rel: Expr = "rlookup(FactorNr, MetaData/Factors/ID)";
+			}
+			
+			unit<uint8> ModelType: Expr = "Classifications/LU/ModelType";
+			unit<uint8> KernelSet: Expr = "Neighbourhood/KernelSet"
+			{
+				attribute<String> MatrRef: Expr = "Neighbourhood/MatrRef"; 
+			}
+			unit<UInt32> NrPotentials: nrofrows = 8 // @USERINPUT: Keep number consistent with the number of LandUse_ID's and Func_ID's given below
+			{
+				attribute<ModelType> LandUse_ID: [ 0, 1, 2, 3, 4, 5, 6, 16 ]; // @USERINPUT: the list of land use types for which factors that need to be exported
+				attribute<KernelSet> Func_ID:    [ 0, 0, 0, 0, 0, 0, 0, 0  ]; // @USERINPUT: the list of kernel id's to apply on the given LandUse_ID !!! Is Specific per paramset, depends on the contents of NeighMat.txt
+			
+				attribute<String> Name:      Expr = "'NE_'+ModelType/Name[LandUse_ID]+'_'+String(Func_ID) "; // this will be the item name, similar to DyanmicComponent names
+				attribute<String> ShortName: Expr = "'NE'+String(ID(NrPotentials))"; // this will be the column name in the resulting .dbf thus no more than 10 chars.
+			}
+			
+			attribute<Classifications/LU/ModelType> OrgLanduse(domain): Expr = "CaseData/OrgLanduse[domain/grid_rel]";
+			parameter<uint32> nr_UrbanCells: expr = "sum(uint32(OrgLandUse = 0[Classifications/LU/ModelType]))";
+			
+			attribute<domain> randomPermutation(domain): Expr = "rnd_permutation(1, domain)"; // !!! Don't user the same seed as in the permutation of the allocatable cells; that did select only the geographically first allocatable cells. They can be the same as in 
+			attribute<bool> sampleDrawer1(domain): Expr = "rnd_permutation(1, domain) < #domain / 100"; // select 1 out of 100 allocatable cells (1%)
+			attribute<bool> sampleDrawer2(domain): Expr = "rnd_permutation(1, domain) < 5000";          // have an additional draw of 5000 allocatable cells.
+			attribute<bool> sampleDrawer3(domain): Expr = "rnd_uniform    (1, domain, range(Float64, 0.0, 1.0)) * Float64(pcount(OrgLanduse)[OrgLanduse]) < 50.0"; // select approx. 50 samples per LUT
+			
+			attribute<bool> proto_popcaliSample(domain_grid): 		Expr = "(rnd_uniform  (1, domain_grid, range(Float64, 0.0, 1.0)) < (float64(5000) / float64(nr_UrbanCells)))  && OrgLandUse[domain/BasisGrid] = 0[Classifications/LU/ModelType]";
+			attribute<bool> proto_popcaliNeighbours (domain_grid): 	Expr = "(potential(float32(proto_popcaliSample), getNeighbours1/neighbourrange/relWeight) * rnd_uniform(1, domain_grid, range(Float32, float32(0.0), float32(1.0)))) > float32(0.5)";
+			attribute<bool>	popcaliSample (domain): expr = "proto_popcaliSample[domain/grid_rel] || proto_popcaliNeighbours[domain/grid_rel]";
+			unit<UInt32> sampleSet: Expr = "Subset(sampleDrawer1 || sampleDrawer2 || sampleDrawer3)", 
+				DialogType = "Map", DialogData = "GeoRef"
+			{
+				attribute<domain_grid> GeoRef: Expr = "domain/grid_rel[nr_OrgEntity]";
+			}
+			unit<uint32> PopCalib_SampleSet: expr = "subset(popcaliSample || sampleDrawer3)", DialogType = "Map", DialogData = "Poly"
+			{
+				attribute<LambertEA>	GeoRef: 		Expr = "(domain/grid_rel[nr_OrgEntity])[LambertEA]";
+				attribute<.>			id:				Expr = "id(.)";
+				attribute<LambertEA> 	Poly (polygon): Expr = "points2sequence(CreatePoly/point, CreatePoly/poly_ID, CreatePoly/order)", StorageName = "=simulation_results/MetaData/DirName+'/PopCaliSample.shp'";
+				
+				Unit<uint32>Points: Expr = "PopCalib_SampleSet"
+				{
+					attribute<LambertEA> point1: expr = "GeoRef";
+					attribute<LambertEA> point2: expr = "point(pointCol(point1) - float64(100),pointRow(point1), LambertEA)";
+					attribute<LambertEA> point3: expr = "point(pointCol(point2), 				pointRow(point2) + float64(100), LambertEA)";
+					attribute<LambertEA> point4: expr = "point(pointCol(point2) + float64(100),pointRow(point3), LambertEA)";
+					attribute<LambertEA> point5: expr = "GeoRef";
+				}
+				unit<uint32>			CreatePoly:	expr = "union_unit(PopCalib_SampleSet, PopCalib_SampleSet, PopCalib_SampleSet, PopCalib_SampleSet, PopCalib_SampleSet)"
+				{
+					attribute<PopCalib_SampleSet>	poly_ID:expr = "union_data(., id, id, id, id, id)";
+					attribute<uint32>	 			order:	expr = "union_data(., const(0, PopCalib_SampleSet, uint32), const(1, PopCalib_SampleSet, uint32), const(2, PopCalib_SampleSet, uint32), const(3, PopCalib_SampleSet, uint32), const(4, PopCalib_SampleSet, uint32))";
+					attribute<LambertEA> 			point:  expr = "union_data(., points/point1, points/point2, points/point3, points/point4, points/point5)";
+				}
+			}
+			container PopCaliFile: 
+				ExplicitSuppliers = "PopCalib_SampleSet/poly",
+				StorageName = "=simulation_results/MetaData/DirName+'/PopCaliSample.dbf'", 
+				Expr = 
+					"for_each_nedvn("
+						"Factors/Name[NrFactors/Factor_rel], "
+						"'CaseData/FactorData/'+Factors/Name[NrFactors/Factor_rel]+'[PopCalib_SampleSet/nr_OrgEntity]', "
+						"PopCalib_SampleSet, "
+						"units, Factors/ValuesUnit2[NrFactors/Factor_rel]"
+					")"
+			{
+				attribute<float64>						area (PopCalib_SampleSet): 			 Expr = "area(PopCalib_SampleSet/Poly, float64)";
+				attribute<Classifications/LU/ModelType> OrgLU(PopCalib_SampleSet): 			 Expr = "OrgLanduse[PopCalib_SampleSet/nr_OrgEntity]";
+				attribute<float32>						Pop06(PopCalib_SampleSet):			 Expr = "CaseData/getOptimalk/observedQi[PopCalib_SampleSet/nr_OrgEntity]";		
+				
+			}
+			
+			container FactorDbfFile: 
+				StorageName = "=simulation_results/MetaData/DirName+'/FactorSample.dbf'", 
+				Expr = 
+					"for_each_nedvn("
+						"Factors/Name[NrFactors/Factor_rel], "
+						"'CaseData/FactorData/'+Factors/Name[NrFactors/Factor_rel]+'[sampleSet/nr_OrgEntity]', "
+						"sampleSet, "
+						"units, Factors/ValuesUnit2[NrFactors/Factor_rel]"
+					")"
+			{
+				attribute<Classifications/LU/ModelType> OrgLU(sampleSet): Expr = "OrgLanduse[sampleSet/nr_OrgEntity]";
+			}
+			
+			container PotentialData: Expr = 
+				"for_each_nedv("
+					"NrPotentials/Name, "
+					"'potential(Float32(CaseData/OrgLanduse == value('+String(NrPotentials/LandUse_ID)+', ModelType)), Neighbourhood/'+Neighbourhood/MatrRef[NrPotentials/Func_ID]+'/Matr)[domain/grid_rel]', "
+					"domain, "
+					"Float32"
+				")";
+			container AreaData: Expr = 
+				"for_each_nedv("
+					"NrPotentials/Name, "
+					"'potential(const(Float32(1.0), domain_grid), Neighbourhood/'+Neighbourhood/MatrRef[NrPotentials/Func_ID]+'/Matr)[domain/grid_rel]', "
+					"domain, "
+					"Float32"
+				")";
+			container NeighbourData: Expr = 
+				"for_each_nedv("
+					"NrPotentials/Name, "
+					"'PotentialData/'+NrPotentials/Name+' / AreaData/'+NrPotentials/Name, "
+					"domain, "
+					"Float32"
+				")";
+			container MeanEnrichData: Expr = 
+				"for_each_nedv("
+					"NrPotentials/Name, "
+					"'replace_value(sum(Float32(CaseData/OrgLanduse == value('+String(NrPotentials/LandUse_ID)+', ModelType))) / sum(AreaData/'+NrPotentials/Name+'), Float32(0.0), Float32(9.0)) ', "
+					"void, "
+					"Float32"
+				")";
+			container EnrichData: Expr = 
+				"for_each_nedv("
+					"NrPotentials/Name, "
+					"'MakeDefined(NeighbourData/'+NrPotentials/Name+' / MeanEnrichData/'+NrPotentials/Name+', Float32(0.0)) ', "
+					"domain, "
+					"Float32"
+				")";
+			
+			container PotentialDbfFile: 
+				StorageName = "=simulation_results/MetaData/DirName+'/PotSample.dbf'", // Potential Sample, as currently used as dynamic factors
+				Expr = 
+					"for_each_nedv("
+						"NrPotentials/ShortName, "
+						"'PotentialData/'+NrPotentials/Name+'[sampleSet/nr_OrgEntity]', "
+						"sampleSet, "
+						"Float32"
+					")"
+			{
+				attribute<Classifications/LU/ModelType> OrgLU(sampleSet): Expr = "OrgLanduse[sampleSet/nr_OrgEntity]";
+			}
+			container EnrichmentDbfFile: 
+				StorageName = "=simulation_results/MetaData/DirName+'/NeSample.dbf'", // Neighbourhood Enrichment Sample, as described in the Clue model descr.
+				Expr = 
+					"for_each_nedv("
+						"NrPotentials/ShortName, "
+						"'EnrichData/'+NrPotentials/Name+'[sampleSet/nr_OrgEntity]', "
+						"sampleSet, "
+						"Float32"
+					")"
+			{
+				attribute<Classifications/LU/ModelType> OrgLU(sampleSet): Expr = "OrgLanduse[sampleSet/nr_OrgEntity]";
+			}
+			Container getNeighbours1: expr = "getNeigbourRange(int16(1))";
+		
+			Container getNeigbourRange: isTemplate = "true"
+			{
+				parameter<int16>  	nRings;
+				parameter<int16>	CellCondition_small:	Expr = "nRings * nRings";
+				parameter<int16>	CellCondition_large:	Expr = "CellCondition_small + int16(1)";
+				unit<spoint>       	tmpRange: 				Expr = "range(spoint, point(-nRings, -nRings), point(nRings + int16(1), nRings + int16(1)))";
+				unit<spoint>       	NeighbourRange: 		Expr = "tmpRange"
+				{
+					attribute<int16> 		distMatr     		: Expr = "int16(dist2(point(Int16(0), Int16(0), tmpRange), uint32))";
+					attribute<bool>	  		neighbour_small		: Expr = "(distMatr <= CellCondition_small) && (distMatr > int16(0))";
+					attribute<bool>	  		neighbour_large		: Expr = "(distMatr <= CellCondition_large) && (distMatr > int16(0))";
+					attribute<float32>		relWeight			: Expr = "neighbour_small ? float32(1) / sqr(float32(distMatr)) : float32(0)";
+				}
+			}
+		}
+	}
+	container OutputGenerators
+	{
+		container Templates
+		{
+			container LandChange: IsTemplate = "True"
+			{
+				// begin case parameters
+				unit<UInt32>    domain;
+				unit<UInt16>    Regions;
+				attribute<Regions> RegionGrid(domain);
+				attribute<bool> wasX(domain);
+				attribute<bool> isY (domain);
+				// end case parameters
+				
+				attribute<bool> IsChanged(domain): Expr = "wasX && isY";
+
+				container Results {
+					attribute<luHa>    sumWas         (Regions): Expr = "sum(value(wasX, luHa), RegionGrid)";
+					attribute<luHa>    sumIs          (Regions): Expr = "sum(value(isY,  luHa), RegionGrid)";
+					attribute<luHa>    absolute_Change(Regions): Expr = "sum(value(IsChanged, luHa), RegionGrid)";
+					attribute<Percent> relative_Change(Regions): Expr = "(absolute_Change / sumWas) * 100[Percent]";
+				}
+			}
+			
+			container LandChange2: IsTemplate = "True"
+			{
+				// begin case parameters
+				unit<UInt32>    domain;
+				unit<UInt16>    Regions;
+				attribute<Regions> RegionGrid(domain);
+				
+				attribute<bool> wasP(domain);
+				attribute<bool> wasS(domain);
+				attribute<bool> isY (domain);
+				// end case parameters
+				
+				container PreviousYear: expr = "Templates/LandChange(domain, Regions, RegionGrid, wasP, isY)";
+				container StartYear:    expr = "Templates/LandChange(domain, Regions, RegionGrid, wasS, isY)";
+			}
+			
+			container SpatialIndicator: IsTemplate = "True"
+			{
+				// begin case parameters
+				
+				unit<UInt32> domain;
+				container JrcFactorData;
+				attribute<bool> SpatialFilter(domain);
+				unit<UInt16> Regions;
+				attribute<Regions> RegionGrid(domain);
+				parameter<String> DirName;
+				
+				// end caser parameters
+				
+				container LandUseIT
+				{
+					container year
+					{
+						attribute<Classifications/LU/IndicatorType> CurrentIT (domain): Expr = "SpatialFilter ? Classifications/LU/ModelType/IT[CurrentLanduse ] : value(0 / 0, Classifications/LU/IndicatorType)";
+						attribute<Classifications/LU/IndicatorType> StartingIT(domain): Expr = "SpatialFilter ? Classifications/LU/ModelType/IT[StartingLanduse] : value(0 / 0, Classifications/LU/IndicatorType)";
+						attribute<Classifications/LU/IndicatorType> PreviousIT(domain): Expr = "SpatialFilter ? Classifications/LU/ModelType/IT[PreviousLanduse] : value(0 / 0, Classifications/LU/IndicatorType)";
+					}
+					container RegionData: 
+						Expr = "for_each_nedv(Classifications/LU/IndicatorType/name"
+						       ", 'sum(value(year/CurrentIT   == value(' + String(id(Classifications/LU/IndicatorType)) +',Classifications/LU/IndicatorType), luHa) "
+						       "   , RegionGrid)'"
+						       ",  Regions"
+						       ",  luHa"
+						       ")"
+					{
+						attribute<luHa> AgriCulture (Regions): Expr = "ArableLand + OtherAgriculture";
+						attribute<luHa> Builtup (Regions): Expr = "Urban + Industrial + AbanUrban + AbanIndustry";
+					}
+					container written_RegionData: 
+						Expr = 
+							"for_each_nedv(Classifications/LU/IndicatorType/name"
+							", 'RegionData/'+Classifications/LU/IndicatorType/name"
+						    ",  Regions"
+						    ",  luHa"
+						    ")",
+						StorageName = "=DirName + '_LandUseIT.dbf'"
+					{
+						attribute<luHa> AgriCulture (Regions): Expr = "RegionData/Agriculture";
+					}
+				}
+				container LandUseVT
+				{
+					container year
+					{
+						attribute<Classifications/LU/ViewType> CurrentVT (domain): Expr = "SpatialFilter ? Classifications/LU/ModelType/VT[CurrentLanduse ] : value(0 / 0, Classifications/LU/ViewType)";
+						attribute<Classifications/LU/ViewType> StartingVT(domain): Expr = "SpatialFilter ? Classifications/LU/ModelType/VT[StartingLanduse] : value(0 / 0, Classifications/LU/ViewType)";
+						attribute<Classifications/LU/ViewType> PreviousVT(domain): Expr = "SpatialFilter ? Classifications/LU/ModelType/VT[PreviousLanduse] : value(0 / 0, Classifications/LU/ViewType)";
+					}
+					container RegionData: 
+						Expr = "for_each_nedv(Classifications/LU/ViewType/name"
+						       ", 'sum(value(year/CurrentVT   == value(' + String(id(Classifications/LU/ViewType)) +',Classifications/LU/ViewType), luHa) "
+						       "   , RegionGrid)'"
+						       ",  Regions"
+						       ",  luHa"
+						       ")"
+					{
+						attribute<string> Nuts2 (Regions) : Expr = "Regions/Label";
+						
+						attribute<luHa> Builtup (Regions): Expr = "Urban + Industrial + AbanUrban + AbanIndustry";
+					}
+					container written_RegionData: 
+						Expr = 
+							"for_each_nedv(Classifications/LU/ViewType/name"
+							", 'RegionData/'+Classifications/LU/ViewType/name"
+						    ",  Regions"
+						    ",  luHa"
+						    ")",
+						StorageName = "=DirName + '_LandUseVT.dbf'"
+					{
+						attribute<string> Nuts2 (Regions) : Expr = "RegionData/Nuts2";
+						attribute<luHa> Builtup (Regions): Expr = "RegionData/Builtup";
+					}
+				}
+				container LandUseChange:
+					Label = "12 - Land use change",
+					Descr = "Area of land converted to artificial surfaces."
+				{							
+					container AgriToUrban: expr =
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", Classifications/LU/IndicatorType/isAgriculture[LandUseIT/year/PreviousIT]"
+						", Classifications/LU/IndicatorType/isAgriculture[LandUseIT/year/StartingIT]"
+						", LandUseIT/year/CurrentIT  == classifications/LU/IndicatorType/Urban"
+						")";
+						
+					container IndustrialToUrban: expr =
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", Classifications/LU/IndicatorType/isIndustrial[LandUseIT/year/PreviousIT]"
+						", Classifications/LU/IndicatorType/isIndustrial[LandUseIT/year/StartingIT]"
+						", LandUseIT/year/CurrentIT  == classifications/LU/IndicatorType/Urban"
+						")";
+
+					container SemiNaturalToUrban: expr = 
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", Classifications/LU/IndicatorType/isSemiNatural[LandUseIT/year/PreviousIT]"
+						", Classifications/LU/IndicatorType/isSemiNatural[LandUseIT/year/StartingIT]"
+						", LandUseIT/year/CurrentIT  == classifications/LU/IndicatorType/Urban"
+						")";
+					
+					container ForestToUrban: expr = 
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", Classifications/LU/IndicatorType/isForest[LandUseIT/year/PreviousIT]"
+						", Classifications/LU/IndicatorType/isForest[LandUseIT/year/StartingIT]"
+						", LandUseIT/year/CurrentIT  == classifications/LU/IndicatorType/Urban"
+						")";
+					
+					container UrbanToIndustrial: expr =
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", Classifications/LU/IndicatorType/isUrban[LandUseIT/year/PreviousIT]"
+						", Classifications/LU/IndicatorType/isUrban[LandUseIT/year/StartingIT]"
+						", LandUseIT/year/CurrentIT  == classifications/LU/IndicatorType/Industrial"
+						")";
+						
+					container AgriToIndustrial: expr =
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", Classifications/LU/IndicatorType/isAgriculture[LandUseIT/year/PreviousIT]"
+						", Classifications/LU/IndicatorType/isAgriculture[LandUseIT/year/StartingIT]"
+						", LandUseIT/Year/CurrentIT  == classifications/LU/IndicatorType/Industrial"
+						")";
+					container SemiNaturalToIndustrial: expr =
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", Classifications/LU/IndicatorType/isSemiNatural[LandUseIT/year/PreviousIT]"
+						", Classifications/LU/IndicatorType/isSemiNatural[LandUseIT/year/StartingIT]"
+						", LandUseIT/Year/CurrentIT  == classifications/LU/IndicatorType/Industrial"
+						")";
+					container ForestToIndustrial: expr =
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", Classifications/LU/IndicatorType/isForest[LandUseIT/year/PreviousIT]"
+						", Classifications/LU/IndicatorType/isForest[LandUseIT/year/StartingIT]"
+						", LandUseIT/Year/CurrentIT  == classifications/LU/IndicatorType/Industrial"
+						")";
+				}
+				container LandCoverChange:
+					Label = "24 - Land Cover change", 
+					Descr = "Flows from forest/semi-natural to agricultural and vice-versa."
+				{
+					container ForestToSemiNatural: expr = 
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", LandUseIT/Year/PreviousIT == classifications/LU/IndicatorType/Forest"
+						", LandUseIT/Year/StartingIT == classifications/LU/IndicatorType/Forest"
+						", LandUseIT/Year/CurrentIT  == classifications/LU/IndicatorType/SemiNatural "
+						")";
+					container ForestToAgriculture: expr = 
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", LandUseIT/Year/PreviousIT == classifications/LU/IndicatorType/Forest"
+						", LandUseIT/Year/StartingIT == classifications/LU/IndicatorType/Forest"
+						", classifications/LU/IndicatorType/isAgriculture[LandUseIT/year/CurrentIT ] "
+						")";
+					container SemiNaturalToForest: expr = 
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", LandUseIT/Year/PreviousIT == classifications/LU/IndicatorType/SemiNatural"
+						", LandUseIT/Year/StartingIT == classifications/LU/IndicatorType/SemiNatural"
+						", LandUseIT/Year/CurrentIT  == classifications/LU/IndicatorType/Forest"
+						", LandUseIT/RegionData/SemiNatural"
+						")";
+					container SemiNaturalToAgriculture: expr = 
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", LandUseIT/Year/PreviousIT == classifications/LU/IndicatorType/SemiNatural"
+						", LandUseIT/Year/StartingIT == classifications/LU/IndicatorType/SemiNatural "
+						", classifications/LU/IndicatorType/isAgriculture[LandUseIT/year/CurrentIT ] "
+						")";
+					container AgricultureToForest: expr = 
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", Classifications/LU/IndicatorType/isAgriculture[LandUseIT/year/PreviousIT]"
+						", Classifications/LU/IndicatorType/isAgriculture[LandUseIT/year/StartingIT] "
+						", LandUseIT/Year/CurrentIT  == classifications/LU/IndicatorType/Forest "
+						")";
+					container AgricultureToSemiNatural: expr = 
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", Classifications/LU/IndicatorType/isAgriculture[LandUseIT/year/PreviousIT]"
+						", Classifications/LU/IndicatorType/isAgriculture[LandUseIT/year/StartingIT] "
+						", LandUseIT/Year/CurrentIT  == classifications/LU/IndicatorType/SemiNatural "
+						")";
+					container PastureToCrops: expr = 
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", (SpatialFilter ? PreviousLanduse : value(0 / 0, Classifications/LU/ModelType)) == Classifications/LU/ModelType/Pastures"
+						", (SpatialFilter ? StartingLanduse : value(0 / 0, Classifications/LU/ModelType)) == Classifications/LU/ModelType/Pastures"
+						", LandUseIT/year/CurrentIT == classifications/LU/IndicatorType/ArableLand "
+						")";
+				}
+				container BuiltupDevelopment:
+					Label = "15 - Builtup Patterns",
+					Descr = "Builtup areas."
+				{				
+					container LandUseMTNuts2
+					{
+						attribute<Units/luHa> Urban         (Regions): Expr = "Sum(value(SpatialFilter && (CurrentLandUse == Classifications/LU/ModelType/Urban),          luHa), RegionGrid)";
+						attribute<Units/luHa> Industrial    (Regions): Expr = "Sum(value(SpatialFilter && (CurrentLandUse == Classifications/LU/ModelType/Industrial),      luHa), RegionGrid)";
+					}
+					attribute<percent> Urban       (Regions): expr = "MakeDefined((LandUseMTNuts2/Urban        / LandUseIT/RegionData/Urban)      * value(100, percent), value(0, percent))";
+					attribute<percent> Industrial  (Regions): expr = "MakeDefined((LandUseMTNuts2/Industrial   / LandUseIT/RegionData/Industrial) * value(100, percent), value(0, percent))";				
+	
+					container UrbanLandtake: 
+						Label = "17- Urban land take", 
+						Descr = "Land area taken for new urban development.",
+						expr = 
+							"Templates/LandChange2"
+							"( domain, Regions, RegionGrid"
+							", Classifications/LU/IndicatorType/isUrban[LandUseIT/year/PreviousIT] "
+							", Classifications/LU/IndicatorType/isUrban[LandUseIT/year/StartingIT] "
+							", LandUseIT/Year/CurrentIT == classifications/LU/ModelType/Urban "
+							")";				
+					container IndustrialLandtake: 
+						Label = "18- Industrial land taken", 
+						Descr = "Land area taken for new industrial development",
+						expr = 
+							"Templates/LandChange2"
+							"( domain, Regions, RegionGrid"
+							", Classifications/LU/IndicatorType/isIndustrial[LandUseIT/year/PreviousIT] "
+							", Classifications/LU/IndicatorType/isIndustrial[LandUseIT/year/StartingIT] "
+							", LandUseIT/Year/CurrentIT == classifications/LU/IndicatorType/Industrial "
+							")";
+				}		
+				container CroppingPatterns:
+					Label = "13 - Cropping patterns",
+					Descr = "Area of land converted from agriculture to artificial surfaces."
+				{
+					container LandUseMTNuts2
+					{
+						attribute<Units/luHa> Arable        (Regions): Expr = "Sum(value(SpatialFilter && (CurrentLandUse == Classifications/LU/IndicatorType/ArableLand), luHa), RegionGrid)";
+						attribute<Units/luHa> PermanentCrops(Regions): Expr = "Sum(value(SpatialFilter && (CurrentLandUse == Classifications/LU/ModelType/PermanentCrops), luHa), RegionGrid)";
+						attribute<Units/luHa> Pastures      (Regions): Expr = "Sum(value(SpatialFilter && (CurrentLandUse == Classifications/LU/ModelType/Pastures)      , luHa), RegionGrid)";
+					}
+					attribute<percent> Arable        (Regions): expr = "MakeDefined((LandUseMTNuts2/Arable         / LandUseIT/RegionData/AgriCulture) * value(100, percent), value(0, percent))";
+					attribute<percent> PermanentCrops(Regions): expr = "MakeDefined((LandUseMTNuts2/PermanentCrops / LandUseIT/RegionData/AgriCulture) * value(100, percent), value(0, percent))";
+					attribute<percent> Pastures      (Regions): expr = "MakeDefined((LandUseMTNuts2/Pastures       / LandUseIT/RegionData/AgriCulture) * value(100, percent), value(0, percent))";
+				}
+				container LandScape:
+					Label = "32/35 - Landscape state/Landscape impact",
+					Descr = "Area of land converted from agriculture to artificial surfaces."
+				{
+					attribute<uint8> DiversityData(domain):  expr = "diversity(LandUseIT/Year/CurrentIT[domain/basisGrid], uint16(100), uint16(1))[domain/grid_rel]";
+					attribute<uint8> Diversity    (Regions): expr = "mean(DiversityData, RegionGrid)";
+				}
+				container AgriCulturalAbandonment: 
+					Label = "AgriCultural Abandonment", 
+					Descr = "Area of land converted from agriculture to artificial surfaces.",
+					expr = 
+						"Templates/LandChange2"
+						"( domain, Regions, RegionGrid"
+						", Classifications/LU/IndicatorType/isAgriculture[LandUseIT/year/PreviousIT]"
+						", Classifications/LU/IndicatorType/isAgriculture[LandUseIT/year/StartingIT] "
+						", LandUseIT/Year/CurrentIT == classifications/LU/IndicatorType/AbanAgriCulture "
+						")"
+				{		
+					container NetAbandoned
+					{
+						attribute<UInt32> Arable        (Regions): Expr = "sum(UInt32(SpatialFilter && NetAgriAbandonment/Arable        ), RegionGrid)";
+						attribute<UInt32> PermanentCrops(Regions): Expr = "sum(UInt32(SpatialFilter && NetAgriAbandonment/PermanentCrops), RegionGrid)";
+						attribute<UInt32> Pastures      (Regions): Expr = "sum(UInt32(SpatialFilter && NetAgriAbandonment/Pastures      ), RegionGrid)";
+					}
+				}
+				container MeanSpeciesAbundance:
+					Label = "Mean Species Abundance",
+					Descr = "Area of land converted from agriculture to artificial surfaces."
+				{
+				}
+				container SoilErosion:
+					Label = "Soil Erosion", 
+					Descr = "Area of land converted from agriculture to artificial surfaces."
+				{
+				}
+			}
+		}
+		
+		// these indicators are use in both OutputGeneration (per RunRegion per TimeStep) as in EvaluationIndicators100 (in simulation_results for each run region and once in /Indicators)
+		container SharedIndicators: IsTemplate = "True"
+		{
+			unit<UInt32> domain;
+			attribute<Classifications/LU/ModelType> StartingLandUse(domain);
+			attribute<Classifications/LU/ModelType> PreviousLandUse(domain);
+			attribute<Classifications/LU/ModelType> CurrentLandUse (domain);
+			container JrcFactorData;
+			
+			unit<UInt16> Regions;
+			attribute<Regions> RegionGrid(domain);
+			parameter<String>  DirName;
+
+			// end of Case Parameters
+			attribute<bool> LuStartDiff(domain):  Expr = "StartingLandUse <> CurrentLandUse";
+			attribute<Classifications/LU/ModelType> changed_from(domain): Expr = "LuStartDiff ? StartingLandUse : value(255, Classifications/LU/ModelType )";
+			attribute<Classifications/LU/ModelType> changed_to  (domain): Expr = "LuStartDiff ? CurrentLandUse  : value(255, Classifications/LU/ModelType )";
+			
+			unit<WPoint> xTabData: Expr = "Range(WPoint, Point(UInt16(0),UInt16(0)), Point(UInt16(#Classifications/LU/ModelType), UInt16(#Classifications/LU/ModelType)))", IsHidden = "True"
+			{
+				attribute<UInt32> Count: Expr = "PCount(Point(UInt16(StartingLandUse), UInt16(CurrentLandUse), xTabData))";
+			}
+			container xTab: Expr =  
+				"for_each_nedv("
+					"Classifications/LU/ModelType/Name, "
+					"'xTabData/Count["
+						"Point("
+							"UInt16(ID(Classifications/LU/ModelType)), "
+							"const('+String(ID(Classifications/LU/ModelType))+', Classifications/LU/ModelType, UInt16), "
+							"xTabData"
+						")"
+					"]', "
+					"Classifications/LU/ModelType, UInt32"
+					")",
+						StorageName = "=DirName + '_xTabMT.dbf'";
+			container Spatial
+			{
+				container NoFilter:          expr = "Templates/SpatialIndicator(domain, JrcFactorData, const(True, domain),                                             Regions, RegionGrid, DirName + 'All')";
+				container Riparian:          expr = "Templates/SpatialIndicator(domain, JrcFactorData, JrcFactorData/SpatialFilters/RiparianAreas    [domain/Grid_rel], Regions, RegionGrid, DirName + 'Riparian')";
+				container nat2k_buff500_out: expr = "Templates/SpatialIndicator(domain, JrcFactorData, JrcFactorData/SpatialFilters/nat2k_buff500_out[domain/Grid_rel], Regions, RegionGrid, DirName + 'n2k_b500Out')";
+				container nat2k_buff500:     expr = "Templates/SpatialIndicator(domain, JrcFactorData, JrcFactorData/SpatialFilters/nat2k_buff500    [domain/Grid_rel], Regions, RegionGrid, DirName + 'n2k_b500')";
+				container nat2k_2010_mask:   expr = "Templates/SpatialIndicator(domain, JrcFactorData, JrcFactorData/SpatialFilters/nat2k_2010_mask  [domain/Grid_rel], Regions, RegionGrid, DirName + 'n2k_2010')";
+			}
+		}
+		container OutputGenerator: IsTemplate = "True"
+		{
+			unit<WPoint> domainGrid;
+			unit<UInt32> domain;
+			parameter<String> OutputDirName;
+			parameter<String> ClippedLandUseVT_FileName: Expr = "OutputDirName + '.tif'";
+			parameter<String> Qi_FileName:				 Expr = "OutputDirName + '_Qi.tif'";
+			
+			attribute<Classifications/LU/ViewType> LandUseVT(domainGrid)
+				:	Expr = "MakeDefined( Classifications/LU/ModelType/VT[ LandUse_Grid ], Classifications/LU/Corine/VT[ CaseData/JrcFactorData/TiffData/CorineGrid/CorineLandUse ])";
+				
+			attribute<Classifications/LU/ViewType> ClippedLandUseVT(domainGrid)
+				:	Expr = "CaseData/Land/IsInRunRegion ? LandUseVT : value(0, Classifications/LU/ViewType)"
+				,	StorageName = "=ClippedLandUseVT_FileName"
+			{
+				attribute<UInt32> PaletteData(Classifications/LU/ViewType): Expr = "Classifications/LU/ViewType/Color";
+			}
+			attribute<int32> Clipped_Qi (domainGrid)
+				:   Expr = "CaseData/Land/IsInRunRegion ? Qi_Grid : 0[int32]"
+				,   StorageName = "=Qi_FileName";
+				
+			// decoupled simulation from mozaiking
+			attribute<Classifications/LU/ViewType> ClippedLandUseVT_ReadOnly(domainGrid)
+				:	StorageName = "=ClippedLandUseVT_FileName";
+			
+			attribute<Classifications/LU/IndicatorType> LandUseIT(domain): expr = "Classifications/LU/ModelType/IT[LandUse]";
+
+			
+			container TotalSuitability: Expr = 
+				"for_each_nedva("
+					"ModelType/Name, "
+					"'DynamicComponent/TotalSuitability/'+ModelType/Name+'[domain/BasisGrid]', "
+					"domain_grid, Float32, "
+					"TimeStepDirName+'/TotalSuitability/'+ModelType/Name+'.tif'"
+				")";
+			
+			container Expressiveness
+			{
+				unit<uint8> MT: Expr = "ModelType";
+				
+				container Actual {
+					attribute<Float32> Suitability     (Domain): Expr = "='merge(LandUse, Float32, '+AsItemList('DynamicComponent/Suitability/'+MT/Name)+')'";
+					attribute<Float32> DynamicNeighbour(Domain): Expr = "='merge(LandUse, Float32, '+AsItemList('DynamicComponent/DynamicNeighbour/'+MT/Name)+')'";
+					attribute<EUR_M2 > TotalSuitability(Domain): Expr = "='merge(LandUse, EUR_M2,  '+AsItemList('DynamicComponent/TotalSuitability/'+MT/Name+'[EUR_M2]')+')'";
+					attribute<EUR_M2 > TransPot        (Domain): Expr = "='merge(LandUse, EUR_M2,  '+AsItemList('DynamicComponent/TransPot/'+MT/Name)+')'";
+				}
+				
+				attribute<uint32> LandUseCount(MT): Expr = "pcount(LandUse)";
+				container sd
+				{
+					attribute<Float32> Suitability     (MT): Expr = "sd(Actual/Suitability,      LandUse)";
+					attribute<Float32> DynamicNeighbour(MT): Expr = "sd(Actual/DynamicNeighbour, LandUse)";
+					attribute<EUR_M2 > TotalSuitability(MT): Expr = "sd(Actual/TotalSuitability, LandUse)";
+					attribute<EUR_M2 > TransPot        (MT): Expr = "sd(Actual/TransPot,         LandUse)";
+				}
+			}
+						
+			container Indicators: Expr = 
+				"SharedIndicators("
+					"domain, "
+					"StartingState/landuse, PrevState/LandUse, ResultingState/LandUse, "
+					"CaseData/JrcFactorData, "
+					"RunRegions/UnitSets/Nuts2_LUISA, RunRegions/RasterSets/Nuts2_LUISA[domain/grid_rel],"
+					"OutPutDirName"
+				")";
+				
+			attribute<UInt8> written_ForestType(domainGrid): Expr = "ForestType", StorageName = "=OutputDirName+'/ForestType.tif'"
+			{
+				attribute<UInt32> PaletteData(Classifications/LU/ForestType): DialogType = "BrushColor", Expr = "Classifications/LU/ForestType/BrushColor";
+			}
+			
+			
+			container Results1: 
+				ExplicitSuppliers = 
+					"ClippedLandUseVT;Clipped_Qi;written_ForestType";
+
+			container Results5: 
+				ExplicitSuppliers = 
+					//"Indicators/Spatial/NoFilter/LandUseIT/written_RegionData;";
+					//"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;";
+					"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;Indicators/xTab;";
+					//"Indicators/Spatial/nat2k_buff500/LandUseIT/written_RegionData;"
+					//"TotalSuitability";
+			container ResultsFathomYears: ExplicitSuppliers = "ClippedLandUseVT"; // required for generating the data for the ReadOnly mozaiking
+
+			container Results: 
+				ExplicitSuppliers = 
+					"= 'Results1'"
+					"+ (IsDefined(rlookup(UInt16(CurrYear), Parameters/PeriodSet/Lustrum/Year)) ? ';ResultsFathomYears' : '')"
+					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results5' : '')";
+		}
+	}
+}

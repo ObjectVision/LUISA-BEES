@@ -1,0 +1,314 @@
+container LU
+{	
+	unit<UInt8> ModelType: NrOfRows = 18 // @USERINPUT: keep in sync with the actual nr of model classes
+	{
+		parameter<uint32> nrAttr: Expr = "9";
+		unit<UInt32> Elements: Expr = "Range(uint32, 0, nrAttr*#ModelType)"
+		{
+			attribute<String> Text: [ // @USERINPUT
+			//   VT, IT,    R,    G,    B, Label,                     	DemandcharacteristicsRel, 	MinClaimColumn, 	MaxClaimColumn
+				'1' ,'0','219','000','000','Urban',                   	'urban', 			'ZeroClaim',     	'ZeroClaim',
+				'2' ,'1','128','000','128','Industrial',              	'industrial',		'IndustryMin',   	'IndustryMax',
+				'3' ,'5','254','250','194','OtherArable',             	'agrimarket',		'OtherArableMin', 	'OtherArableMax',
+				'4' ,'6','207','152','107','PermanentCrops',          	'agrimarket',		'PermCropMin',   	'PermCropMax',
+				'5' ,'6','163','222','133','Pastures',                	'agrimarket',		'PastureMin',    	'PastureMax',
+				'6' ,'2','001','099','000','ForestsMature',             'forest',			'ForestsMatMin',    'ForestsMatMax', 
+				'7' ,'3','114','137','068','TransWoodlandShrub',    	null, 	 			null, 				null, 	
+				'8' ,'5','227','201','053','Cereals',                 	'agrimarket',		'CerealsMin',    	'CerealsMax',
+				'9' ,'5','254','254','000','Maize',                   	'agrimarket',		'MaizeMin',      	'MaizeMax',
+				'10' ,'5','236','110','050','RootCrops',               	'agrimarket',		'RootCropsMin',  	'RootCropsMax',
+				'11','4','216','213','164','AbanArable',         		null, 				null, 				null, // 'Capri',    'AbandonedArable',         null,
+				'12','4','153','130','120','AbanPermanentCrops', 		null, 				null,				null, // 'Capri',    'AbandonedPermanentCrops', null,
+				'13','4','137','170','125','AbanPastures',       		null, 				null, 				null, // 'Capri',    'AbandonedPastures',       null,
+				'14','0','160','000','000','AbanUrban',          		'abandoned_urban',	null, 				null, // amount is determined by decreased demand for Urban with low transition costs to Abandonment.
+				'15','1','071','000','117','AbanIndustry',        		null, 				null, 				null,  // amount is determined by decreased demand for Industry with low transition costs to Abandonment.
+				'16','6','000','200','000','NewEnergyCrops' ,         	'agrimarket',		'NewEnergyMin',     'NewEnergyMax',
+				'17' ,'3','166','242','000','SHVA',    					null, 				null, 				null,
+				'18' ,'2','036','130','056','ForestsYoung',            	'forest',			'ForestsYoMin',    	'ForestsYoMax'
+			];
+		}
+		attribute<String>           Name: Expr = "Label";
+		attribute<ViewType>           VT: Expr =" value(Elements/Text[value(UInt32(ID(.))* nrAttr + 0, Elements)], ViewType)";
+		attribute<IndicatorType>      IT: Expr =" value(Elements/Text[value(UInt32(ID(.))* nrAttr + 1, Elements)], IndicatorType)";
+		attribute<UInt8>               R: Expr =" UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 2, Elements)])";
+		attribute<UInt8>               G: Expr =" UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 3, Elements)])";
+		attribute<UInt8>               B: Expr =" UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 4, Elements)])";
+		attribute<String>          Label: Expr ="       Elements/Text[value(UInt32(ID(.))* nrAttr + 5, Elements)]" , DialogType = "LabelText";
+		attribute<uint32>          Color: Expr ="rgb(R,G,B)", DialogType = "BrushColor";
+		
+		attribute<String> DemandCharacteristics:  	Expr ="Elements/Text[value(UInt32(ID(.))* nrAttr + 6, Elements)]";
+		attribute<String> MinClaimColumn: Expr ="Elements/Text[value(UInt32(ID(.))* nrAttr + 7, Elements)]";
+		attribute<String> MaxClaimColumn: Expr ="Elements/Text[value(UInt32(ID(.))* nrAttr + 8, Elements)]";
+
+		attribute<MetaData/DemandCharacteristics> DemandCharacteristicsRel: expr = "rlookup(DemandCharacteristics, MetaData/DemandCharacteristics/Name)";
+
+		
+		// value enumeration
+		parameter<.> Urban:                   expr = "value( 0, .)";
+		parameter<.> Industrial:              expr = "value( 1, .)";
+		parameter<.> OtherArable:             expr = "value( 2, .)";
+		parameter<.> PermanentCrops:          expr = "value( 3, .)";
+		parameter<.> Pastures:                expr = "value( 4, .)";
+		parameter<.> ForestsMature:           expr = "value( 5, .)";
+		parameter<.> TransWoodlandShrub:   	  expr = "value( 6, .)";
+		parameter<.> Cereals:                 expr = "value( 7, .)";
+		parameter<.> Maize:                   expr = "value( 8, .)";
+		parameter<.> RootCrops:               expr = "value( 9, .)";
+		parameter<.> AbanArable:         	  expr = "value(10, .)";
+		parameter<.> AbanPermanentCrops: 	  expr = "value(11, .)";
+		parameter<.> AbanPastures:       	  expr = "value(12, .)";
+		parameter<.> AbanUrban:           	  expr = "value(13, .)";		
+		parameter<.> AbanIndustry:            expr = "value(14, .)";
+		parameter<.> NewEnergyCrops:          expr = "value(15, .)";
+		parameter<.> SHVA:					  expr = "value(16, .)";
+		parameter<.> ForestsYoung:			  expr = "value(17, .)";
+		attribute<bool> IsBuiltupArea:        expr = "ID(.) == Urban || ID(.) == Industrial || ID(.) == AbanUrban || ID(.) == AbanIndustry";
+		attribute<bool> IsUrban:              expr = "ID(.) == Urban";
+		attribute<bool> IsIndustrial:         expr = "ID(.) == Industrial";
+		attribute<bool>	IsAgriCultural:	 	  expr = "ID(.) == OtherArable || ID(.) == PermanentCrops || ID(.) == Pastures || ID(.) == Cereals  || ID(.) == Maize || ID(.) == Rootcrops || ID(.) == NewEnergyCrops";
+		attribute<bool> IsForest:         	  expr = "ID(.) == ForestsMature || ID(.) == ForestsYoung";
+		attribute<bool> IsAbandoned:          expr = "ID(.) == AbanArable || ID(.) == AbanPermanentCrops || ID(.) == AbanPastures || ID(.) == AbanUrban || ID(.) == AbanIndustry";
+		attribute<bool> IsAbandonedUrban: 	  expr = "ID(.) == AbanUrban";
+	}
+	unit<UInt32> ModelMatr: Expr = "Combine(ModelType, ModelType)";
+	
+	unit<UInt8> ViewType: Expr = "Range(UInt8, UInt8(0), UInt8(24))"
+	{
+		parameter<uint32> nrAttr: Expr = "6";
+		unit<UInt32> Elements: Expr = "Range(uint32, 0, nrAttr*#ViewType)"
+		{
+			attribute<String> Text: [
+			//   R,    G,    B,   IsNaturalArea, GridImpedance, Label,
+			//                                   [min/cell]
+			// Model Types
+				'255','255','255','false','0.4', 'None',
+				'219','000','000','false','0.4', 'Urban',
+				'128','000','128','false','0.4', 'Industrial',
+				'254','250','194','false','0.4', 'OtherArable',
+				'207','152','107','false','0.4', 'PermanentCrops',
+				'163','222','133','false','0.4', 'Pastures',
+				'001','099','000','true' ,'1.0', 'ForestsMature',
+				'114','137','068','true' ,'0.4', 'TransWoodlandShrub',
+				'227','201','053','false','0.4', 'Cereals',
+				'254','254','000','false','0.4', 'Maize',
+				'236','110','050','false','0.4', 'RootCrops',
+				'216','213','164','false','0.4', 'AbanArable',
+				'153','130','120','false','0.4', 'AbanPermanentCrops',
+				'137','170','125','false','0.4', 'AbanPastures',
+				'160','000','000','false','0.4', 'AbanUrban',
+				'071','000','117','false','0.4', 'AbanIndustry',
+				'080','200','050','false','0.9', 'NewEnergyCrops',
+				'166','242','000','true' ,'0.4', 'SHVA',
+				'001','099','000','true' ,'1.0', 'ForestsYoung',
+			// Exogenous Types
+				'064','064','064','false','0.4', 'Infrastructure', // other infrastructure (including construction sites and mine dumps)
+				'192','192','192','true' ,'1.0', 'OtherNature',
+				'100','100','254','true' ,'6.0', 'Wetlands',
+				'128','242','230','false','6.0', 'WaterBodies',
+				'173','254','47', 'true' ,'0.4', 'UrbanGreenLeisure'
+			];
+		}
+		attribute<String>  Name:                                    Expr = "Label";
+		attribute<UInt8>      R:                                    Expr = " UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 0, Elements)])";
+		attribute<UInt8>      G:                                    Expr = " UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 1, Elements)])";
+		attribute<UInt8>      B:                                    Expr = " UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 2, Elements)])";
+		attribute<Bool>IsNatural:                                   Expr = " Bool (Elements/Text[value(UInt32(ID(.))* nrAttr + 3, Elements)])";
+		attribute<units/min> GridImpedance: Expr = "(Elements/Text[value(UInt32(ID(.))* nrAttr + 4, Elements)])[units/min]";
+
+		attribute<String> Label: Expr = "       Elements/Text[value(UInt32(ID(.))* nrAttr + 5, Elements)]" , DialogType = "LabelText";
+		attribute<uint32> Color: Expr ="rgb(R,G,B)", DialogType = "BrushColor";		
+		
+		// value enumeration
+		parameter<.> Infrastructure: expr = "value(#ModelType + 1, .)";
+		parameter<.> OtherNature:    expr = "value(#ModelType + 2, .)";
+		parameter<.> Wetlands:       expr = "value(#ModelType + 3, .)";
+		parameter<.> WaterBodies:    expr = "value(#ModelType + 4, .)";
+		
+		// derived relations
+		attribute<ModelType>     MT: Expr = "invert(ModelType/VT)";
+		attribute<IndicatorType> IT: Expr = "lookup(MT, ModelType/IT)";
+		attribute<Bool>          IsBuiltupArea: Expr = "lookup(MT, ModelType/IsBuiltupArea)";
+		
+	}
+	unit<UInt8> IndicatorType: NrOfRows = 10
+	{
+		parameter<uint32> nrAttr: Expr = "5";
+		unit<UInt32> Elements: Expr = "Range(uint32, 0, nrAttr*#ViewType)"
+		{
+			attribute<String> Text: [
+			//	R,    G,    B,    isAgriculture, Label,
+				'219','000','000','False',       'Urban',
+				'128','000','128','False',       'Industrial',
+				'001','099','000','False',       'ForestMature',
+				'114','137','068','False',       'SemiNatural',
+				'153','130','120','False',       'AbanAgriCulture',
+				'254','250','194','True',        'ArableLand',
+				'207','152','107','True',        'OtherAgriculture',
+				'160','000','000','False',       'AbanUrban',
+				'071','000','117','False',       'AbanIndustry',
+				'001','099','000','False',       'ForestYoung'];
+		}
+		attribute<String>         Name: Expr = "Label";
+		attribute<UInt8>             R: Expr = " UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 0, Elements)])";
+		attribute<UInt8>             G: Expr = " UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 1, Elements)])";
+		attribute<UInt8>             B: Expr = " UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 2, Elements)])";
+		attribute<bool>  isAgriculture: Expr = "  Bool(Elements/Text[value(UInt32(ID(.))* nrAttr + 3, Elements)])";
+		attribute<String>        Label: Expr = "       Elements/Text[value(UInt32(ID(.))* nrAttr + 4, Elements)]" , DialogType = "LabelText";
+		attribute<bool> isUrban:        Expr = "Label = 'Urban'";
+		attribute<bool> isSemiNatural:  Expr = "Label = 'SemiNatural'";
+		attribute<bool> isForest:       Expr = "Label = 'Forest'";
+		attribute<bool>	isIndustrial:   Expr = "Label = 'Industrial'";
+		attribute<uint32>        Color: Expr ="rgb(R,G,B)", DialogType = "BrushColor";
+		
+		parameter<.> Urban:                expr = "value(0, .)";
+		parameter<.> Industrial:           expr = "value(1, .)";
+		parameter<.> Forest:               expr = "value(2, .)";
+		parameter<.> SemiNatural:          expr = "value(3, .)";
+		parameter<.> AbanAgriCulture: 		expr = "value(4, .)";
+		parameter<.> ArableLand:           expr = "value(5, .)";
+		parameter<.> OtherAgriculture:     expr = "value(6, .)";
+		parameter<.> AbanUrban:       		expr = "value(7, .)";
+		parameter<.> AbanIndustry:    		expr = "value(8, .)";
+	}
+	
+	unit<UInt8> Corine: Expr = "Range(uint8, UInt8(0), UInt8(46))"
+	{
+		unit<UInt32> Elements: Expr = "Range(uint32, 0, 12*#Corine)"
+		{
+			attribute<String> Text: [ // @USERINPUT: Edit columns MT and VT when changing the (definition of) the ModelType and/or ViewType
+       	//'Grid_Code',   'CLCr06',  'MT', 'VT',   'R',   'G',   'B', 'Label1',                        'Label2',                                          'Label3',                                   'PopulatedLandUseType', 'Water',
+       			'111',       '01',  '00', null, '160', '000', '000', 'Artificial surfaces',           'Urban fabric',                                    'Urban fabric dense (>50% built-up)',                          '0', '0',
+				'112',       '02',  '00', null, '220', '000', '000', 'Artificial surfaces',           'Urban fabric',                                    'Urban fabric medium density (30-50% built-up)',               '1', '0',
+				'113',       '45',  '00', null, '255', '120', '120', 'Artificial surfaces',           'Urban fabric',                                    'Urban fabric low density (10-30% built-up)', 			        '2', '0',
+				'114',       '45',  '00', null, '255', '175', '175', 'Artificial surfaces',           'Urban fabric',                                    'Urban fabric very low density and isolated (<10% built-up)',  '2', '0',
+				'121',	     '03',  '01', null, '204', '077', '242', 'Artificial surfaces',           'Industrial, commercial and transport units',      'Industrial or commercial units', 		                        '9', '0',
+				'122',	     '04',  null, '21', '078', '078', '078', 'Artificial surfaces',           'Industrial, commercial and transport units',      'Road and rail networks and associated land',                  '9', '0',
+				'123', 	     '05',  null, '21', '156', '156', '156', 'Artificial surfaces',           'Industrial, commercial and transport units',      'Port areas',                                                  '9', '0',
+				'124', 	     '06',  null, '21', '130', '130', '130', 'Artificial surfaces',           'Industrial, commercial and transport units',      'Airports',                                                    '9', '0',
+				'131',       '07',  null, '21', '137', '090', '068', 'Artificial surfaces',           'Mine, dump and construction sites',               'Mineral extraction sites',                                    '9', '0',
+				'132',       '08',  null, '21', '166', '077', '000', 'Artificial surfaces',           'Mine, dump and construction sites',               'Dump sites',                                                  '9', '0',
+				'133',       '09',  null, '21', '205', '137', '102', 'Artificial surfaces',           'Mine, dump and construction sites',               'Construction sites',                                          '9', '0',
+				'141',       '10',  null, '25', '085', '255', '000', 'Artificial surfaces',           'Artificial, non-agricultural vegetated areas',    'Green urban areas',                                           '9', '0',
+				'142',       '11',  null, '25', '170', '255', '000', 'Artificial surfaces',           'Artificial, non-agricultural vegetated areas',    'Sport and leisure facilities',                                '9', '0',
+				'143',       '46',  '00', null, '204', '180', '180', 'Artificial surfaces',           'Urban fabric',                                    'Leisure and touristic built-up',                             '99', '0', 
+				'211',       '12',  '02', null, '255', '255', '168', 'Agricultural areas',            'Arable land',                                     'Non-irrigated arable land',                                   '3', '0',
+				'212',       '13',  '02', null, '255', '255', '000', 'Agricultural areas',            'Arable land',                                     'Permanently irrigated land',                                  '3', '0',
+				'213',       '14',  '19', null, '230', '230', '000', 'Agricultural areas',            'Arable land',                                     'Rice fields',                                                 '3', '0',
+				'221',       '15',  '07', null, '230', '128', '000', 'Agricultural areas',            'Permanent crops',                                 'Vineyards',                                                   '7', '0',
+				'222',       '16',  '08', null, '242', '166', '077', 'Agricultural areas',            'Permanent crops',                                 'Fruit trees and berry plantations',                           '7', '0',
+				'223',       '17',  '09', null, '230', '166', '000', 'Agricultural areas',            'Permanent crops',                                 'Olive groves',                                                '7', '0',
+				'231',       '18',  '04', null, '230', '230', '077', 'Agricultural areas',            'Pastures',                                        'Pastures',                                                    '6', '0',
+				'241',       '19',  '03', null, '255', '230', '166', 'Agricultural areas',            'Heterogeneous agricultural areas',                'Annual crops associated with permanent crops',                '5', '0', 
+				'242',       '20',  '03', null, '255', '230', '077', 'Agricultural areas',            'Heterogeneous agricultural areas',                'Complex cultivation patterns',                                '5', '0', 
+				'243',       '21',  '03', null, '230', '204', '077', 'Agricultural areas',            'Heterogeneous agricultural areas',                'Land principally occupied by agriculture, with significant areas of natural vegetation', '5', '0',
+				'244',       '22',  '04', null, '242', '204', '166', 'Agricultural areas',            'Heterogeneous agricultural areas',                'Agro-forestry areas',                                         '5', '0',
+				'311',       '23',  '05', null, '056', '168', '000', 'Forest and semi natural areas', 'Forests',                                         'Broad-leaved forest',                                         '4', '0',
+				'312',       '24',  '05', null, '038', '115', '000', 'Forest and semi natural areas', 'Forests',                                         'Coniferous forest',                                           '4', '0',
+				'313',       '25',  '05', null, '056', '138', '000', 'Forest and semi natural areas', 'Forests',                                         'Mixed forest',                                                '4', '0',
+				'321',       '26',  '18', null, '211', '255', '190', 'Forest and semi natural areas', 'Scrub and/or herbaceous vegetation associations', 'Natural grasslands',                                          '8', '0',
+				'322',       '27',  '16', null, '205', '245', '122', 'Forest and semi natural areas', 'Scrub and/or herbaceous vegetation associations', 'Moors and heathland',                                         '8', '0',
+				'323',       '28',  '16', null, '165', '245', '122', 'Forest and semi natural areas', 'Scrub and/or herbaceous vegetation associations', 'Sclerophyllous vegetation',                                   '8', '0',
+				'324',       '29',  '06', null, '137', '205', '102', 'Forest and semi natural areas', 'Scrub and/or herbaceous vegetation associations', 'Transitional woodland-shrub',                                 '8', '0',
+				'331',       '30',  null, '22', '230', '230', '230', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Beaches, dunes, sands',                                      '99', '1', 
+				'332',       '31',  null, '22', '204', '204', '204', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Bare rocks',                                                 '99', '0',
+				'333',       '32',  null, '22', '204', '255', '204', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Sparsely vegetated areas',                                   '99', '0',
+				'334',       '33',  '06', null, '000', '000', '000', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Burnt areas',                                                '99', '0',
+				'335',       '34',  null, '22', '255', '255', '255', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Glaciers and perpetual snow',                                '99', '0',
+				'410',       '35',  null, '23', '166', '166', '255', 'Wetlands',                      'Inland wetlands',                                 'Inland marshes',                                             '99', '0',
+				'421',       '37',  null, '23', '204', '204', '255', 'Wetlands',                      'Maritime wetlands',                               'Salt marshes',                                               '99', '0',
+				'422',       '38',  null, '23', '230', '230', '255', 'Wetlands',                      'Maritime wetlands',                               'Salines',                                                    '99', '0',
+				'423',       '39',  null, '23', '166', '166', '230', 'Wetlands',                      'Maritime wetlands',                               'Intertidal flats',                                           '99', '0',
+				'511',       '40',  null, '24', '000', '180', '240', 'Water bodies',                  'Inland waters',                                   'Water courses',                                              '99', '1',
+				'512',       '41',  null, '24', '080', '220', '240', 'Water bodies',                  'Inland waters',                                   'Water bodies',                                               '99', '1',
+				'521',       '42',  null, '24', '000', '255', '166', 'Water bodies',                  'Marine waters',                                   'Coastal lagoons',                                            '99', '1',
+				'522',       '43',  null, '24', '166', '255', '230', 'Water bodies',                  'Marine waters',                                   'Estuaries',                                                  '99', '1',
+				'523',       '44',  null, '24', '230', '242', '255', 'Water bodies',                  'Marine waters',                                   'Sea and ocean',                                              '99', '1'
+			];
+		}
+		
+		attribute<uint16>    CLC12_code:Expr = "value(Elements/Text[value(UInt32(ID(.))*12, Elements)], uint16)";
+		attribute<uint8>     CLC06_code:Expr = "value(Elements/Text[value(UInt32(ID(.))*12+1, Elements)], uint8)";
+		attribute<ModelType> MT:        Expr = "value(Elements/Text[value(UInt32(ID(.))*12+2, Elements)], ModelType)";
+		attribute<ViewType>  VT:        Expr = "value(Elements/Text[value(UInt32(ID(.))*12+3, Elements)], ViewType)";
+		attribute<ViewType>  VT2:       Expr = "MakeDefined(ModelType/VT[MT], VT)";
+		
+		
+		attribute<UInt32> R: Expr = "uint32(Elements/Text[value(UInt32(ID(.))*12+4, Elements)])";
+		attribute<UInt32> G: Expr = "uint32(Elements/Text[value(UInt32(ID(.))*12+5, Elements)])";
+		attribute<UInt32> B: Expr = "uint32(Elements/Text[value(UInt32(ID(.))*12+6, Elements)])";
+		attribute<UInt32> BrushColor: Expr = "((B*256)+G)*256+R", DialogType = "BrushColor";
+
+//		attribute<Corine> nrClc:      Expr = "invert(Corine/Grid_Code)";
+		attribute<String> Label1:     Expr = "Elements/Text[value(UInt32(ID(.))*12+7, Elements)]";
+		attribute<String> Label2:     Expr = "Elements/Text[value(UInt32(ID(.))*12+8, Elements)]";
+		attribute<String> Label:      Expr = "Elements/Text[value(UInt32(ID(.))*12+9, Elements)]", DialogType = "LabelText";
+		
+		attribute<PopulatedLandUseTypes> 	PopulatedLandUseType: 	Expr = "rlookup(uint32(Elements/Text[value(UInt32(ID(.))*12+10, Elements)]), PopulatedLandUseTypes/Lookup)";
+		attribute<bool> 					Water:					Expr = "bool(value(Elements/Text[value(UInt32(ID(.))*12+11, Elements)], uint32))";
+		attribute<bool>						Burnt:					Expr = "id(.) = uint8(334)";
+	}
+	unit<uint8> ForestType: Expr = "Range(uint8, UInt8(0), UInt8(4))"
+	{
+		attribute<Corine> Corine_rel: [ null, 23, 24, 25 ];
+		attribute<.>      Back_rel(Corine): Expr = "invert(Corine_rel)"; // resulted in illegal abstract before GeoDms 6.061, see issue 212
+
+		attribute<String> Label: ['', 'Broad-leaved forest', 'Coniferous forest', 'Mixed forest'];
+		attribute<String> Name:  ['', 'BroadLeaved', 'Coniferous', 'Mixed' ];
+		//attribute<String> NameCLC:  ['', 'BroadLeavedCLC', 'ConiferousCLC', 'MixedCLC' ];
+		
+		// as enumeration
+		parameter<.> NoForest:    [ 0 ];
+		parameter<.> BroadLeaved: [ 1 ];
+		parameter<.> Coniferous:  [ 2 ];
+		parameter<.> Mixed:       [ 3 ];
+		
+		//parameter<Corine> NoForest:    [ 0 ];
+		//parameter<Corine> BroadLeaved: [ 23 ];
+		//parameter<Corine> Coniferous:  [ 24 ];
+		//parameter<Corine> Mixed:       [ 25 ];
+		
+		attribute<UInt32> BrushColor: Expr = "Corine/BrushColor[Corine_rel]", DialogType = "BrushColor";
+	}
+	unit<uint32> PopulatedLandUseTypes:	NrOfRows = 11
+	{
+		attribute<string> Name: 		['denseUrban', 'medUrban', 'lowUrban', 'arableLand', 'Forests', 'HeterogenousAgri', 'Pastures', 'PermanentCrops', 'Scrubs', 'UnlikelyPopulated', 'UnPopulated'];
+		attribute<uint32> Lookup:		[0,1,2,3,4,5,6,7,8,9,99];
+		attribute<string> Label:		DialogType = "LabelText", Expr = "Name";
+	}
+	
+	unit<uint8> GAEC_classes 
+	{
+		attribute<Corine> Corine_rel: [ null, 17, 18, 20, 21, 22, 26 ];
+		attribute<.>      Back_rel(Corine): Expr = "invert(Corine_rel)"; // resulted in illegal abstract before GeoDms 6.061, see issue 212
+		attribute<String> Label: ['', 'Olives', 'Pastures', 'Complex Cultivation', 'Mixed agri-vegetation', 'Agro-forestry', 'Natural Grasslands'];
+		attribute<String> Name:  ['', 'Olives', 'Pastures', 'ComplexCultiv', 'MixedAgri', 'AgroForestry', 'NaturalGrass' ];
+		
+		// as enumeration
+		parameter<.> NoGAECclass:    [ 0 ];
+		parameter<.> Olives: 		 [ 17 ];
+		parameter<.> Pastures: 		 [ 18 ];
+		parameter<.> ComplexCultiv:  [ 20 ];
+		parameter<.> MixedAgriVeg:   [ 21 ];
+		parameter<.> AgroFor:  		 [ 22 ];
+		parameter<.> Grassland:   	 [ 26 ];		
+		
+		attribute<UInt32> BrushColor: Expr = "Corine/BrushColor[Corine_rel]", DialogType = "BrushColor";
+	}
+	
+	unit<uint8> SNV
+	{
+		attribute<Corine> Corine_rel: [ null, 26, 29 ];
+		attribute<.>      Back_rel(Corine): Expr = "invert(Corine_rel)"; // resulted in illegal abstract before GeoDms 6.061, see issue 212
+
+		attribute<String> Label: ['', 'Natural grasslands', 'Transitional woodland-shrub'];
+		attribute<String> Name:  ['', 'NatGrass', 'TransWoodShrub' ];
+
+		// as enumeration		
+		parameter<.> NoSNV:    			[ 0 ];
+		parameter<.> NatGrass: 			[ 26 ];
+		parameter<.> TransWoodShrub:  	[ 29 ];
+		
+		attribute<UInt32> BrushColor: Expr = "Corine/BrushColor[Corine_rel]", DialogType = "BrushColor";
+	}
+}
+

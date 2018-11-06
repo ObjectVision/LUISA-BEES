@@ -1,0 +1,86 @@
+container StaticFactorDefinitions
+{
+	unit<uint32> StaticFactors: expr = "union_unit(OrgStaticFactors, NeighStaticFactors)"
+	{
+		attribute<FactorID> ID:        Expr = "rlookup(UniqueName, FactorId/Name)";
+		attribute<string> UniqueName: 	expr = "union_data(., OrgStaticFactors/UniqueName, NeighStaticFactors/UniqueName)";
+		attribute<string> Name:			expr = "union_data(., OrgStaticFactors/Name, NeighStaticFactors/Name)";
+		attribute<string> FactorExprs:	expr = "union_data(., 'value(JrcFactorData/'+ OrgStaticFactors/Name +', units/'+OrgStaticFactors/ValuesUnit2+')[domain/grid_rel]', NeighStaticFactors/FactorExprs)"; 
+		attribute<string> ValuesUnit2: 	expr = "union_data(., OrgStaticFactors/ValuesUnit2, NeighStaticFactors/ValuesUnit2)";
+		attribute<string> Descr:		expr = "union_data(., OrgStaticFactors/descr, NeighStaticFactors/descr)";
+		attribute<string> cdf2:			expr = "union_data(., OrgStaticFactors/cdf2, NeighStaticFactors/cdf2)";
+		attribute<string> url2:			expr = "union_data(., OrgStaticFactors/url2, NeighStaticFactors/url2)";
+	}
+	unit<uint32> NeighStaticFactors: expr = "OrgStaticFactors"
+	{
+		attribute<string> UniqueName: 	expr = "'Neigh_' + OrgStaticFactors/UniqueName";
+		attribute<string> Name: 		expr = "OrgStaticFactors/Name";
+		attribute<string> FactorExprs: 	expr = "'potential(value(float32(JrcFactorData/'+ OrgStaticFactors/Name +'), units/Continuous), Parameters/FuncKernels/QueensNeighbours/Matr)[domain/grid_rel]'";
+		attribute<string> ValuesUnit2:	expr = "const('Continuous',.,string)";
+		attribute<string> cdf2:			expr = "const('',.,string)";
+		attribute<string> descr:		expr = "'Neighbourhood values of ' + OrgStaticFactors/Descr";
+		attribute<string> url2:			expr = "OrgStaticFactors/url2";
+	}
+	unit<uint32> OrgStaticFactors: NrOfRows = 35 // internal set of actual factors, @USERINPUT: keep NrOfRows in sync with the actual nr of model classes
+	{
+		parameter<uint32> nrAttr: Expr = "8", isHidden = "True";
+		unit<UInt32> Elements: Expr = "Range(uint32, 0, nrAttr*#OrgStaticFactors)", isHidden = "True"
+		{
+			attribute<String> Text: // @USERINPUT
+			[	'65','slope_100'            		,'Slope in 6 classes'                                                                         ,'SlopeClass'    ,null         ,''                     ,'TRUE ','EU27'
+				,'66','sosl_100'            		,'Facades presenting south slope'                                                             ,'Boolean'       ,null         ,''                     ,'TRUE ','EU27'
+				,'67','natura2000_v2011'    		,'Natura 2000 areas'                                                                          ,'Boolean'       ,null         ,''                     ,'TRUE ','EU27'
+				,'68','Elevation_100'    			,'Elevation'                                                                                  ,null         ,null         ,''                     ,'TRUE ','EU27'
+				,'69','IndustryAllowed' 			,'IndustryAllowed'                                                                            ,'Boolean'       ,null         ,''                     ,'TRUE ','EU27'
+				,'76','DistToRoads'           		,'Distance to roads'                                                                          ,null         ,null         ,''                     ,'TRUE ',''
+				//,'78','SuitCereals'         		,'Suitability Cereals'                                                                        ,'Factor_uint8'  ,null         ,''                     ,'TRUE ',''
+				//,'79','SuitMaize'           		,'Suitability Maize'                                                                          ,'Factor_uint8'  ,null         ,''                     ,'TRUE ',''
+				//,'80','SuitRoot'           			,'Suitabily Rootcrops'                                                                        ,'Factor_uint8'  ,null         ,''                     ,'TRUE ',''
+				,'81','AllowDevelopmentSQ'  		,'AllowDevelopment in SQ scenario,building and no conversion from nature is allowed'          ,'Boolean'       ,null         ,'AllowDevelopmentSQ'   ,'TRUE ',''
+				,'82','DevelopmentTaxSQ'    		,'Development Tax in SQ scenario, building and conversion from nature is taxed with 1.5 [TP]' ,'EUR_m2'        ,null         ,'DevelopmentTaxSQ'     ,'TRUE ',''
+				,'83','DistToCity'          		,''                                                                                           ,'min'           ,null         ,''                     ,'TRUE ',''
+				,'84','DistToTown'          		,''                                                                                           ,'min'           ,null         ,''                     ,'TRUE ',''
+				,'85','CityAccess'        		  	,''                                                                                           ,null            ,null         ,''                     ,'TRUE ',''
+				,'86','TownAccess'          		,'Traveltime to nearest town'                                                                 ,'min'  		   ,null         ,''                     ,'TRUE ',''
+				,'87','PotentialAccess'				,'Dynamic accessibility Ai = Sum(Pj*f(Cij), i) -> f = based on gravity equation (c^1.5)'      ,null  			,null         ,''                     ,'TRUE ',''
+				,'88','Population_2006'				,'Population in 2006 based on maps documented in Batista et al. (2006)'   	 				  ,null 			,null         ,''                     ,'TRUE ',''
+				,'88','Population_2012'				,'Population in 2012 based on maps documented in Batista et al. (2006)'   	 				  ,null			   ,null         ,''                     ,'TRUE ',''
+				,'89','slope100_cont'				,'Slope in degrees, continuous scale'                                                         ,null     	   ,null         ,''                     ,'TRUE ','' // was in degrees, removed because of value compatibility errors CJ 19jan17
+				,'90','SuitNECR'					,'Suitability New Energy Crops'                                                               ,null           ,null         ,''                     ,'TRUE ',''
+				,'91','aspect100'					,'Orientation, degrees'                                                              		  ,null 	      ,null         ,''                     ,'TRUE ',''	 // was in degrees, removed because of value compatibility errors CJ 19jan17						
+				,'97','DomesticAccess'				,'Dynamic accessibility Ai = Sum(Pj*f(Cij), i) -> f = based on gravity equation (c^1.5)'      ,null           ,null         ,''             ,'TRUE ',''
+				,'98','ForeignAccess'				,'Dynamic accessibility Ai = Sum(Pj*f(Cij), i) -> f = based on gravity equation (c^1.5)'      ,null           ,null         ,''             ,'TRUE ',''
+				,'99','DistToWater'					,'Distance in metres to nearest surfacewater (max 10km)'     								   ,null           ,null         ,''                     ,'TRUE ',''
+				,'100','ln_water'            	   	,'ln(Distance in metres to nearest surfacewater (max 10km))'  								   ,null           ,null         ,''                     ,'TRUE ',''
+				,'101','ln_roads'					,'ln(Distance to roads)'									     							   ,null           ,null         ,''                     ,'TRUE ',''
+				,'102','SuitFor'					,'Crown closure'     							   											   ,null           ,null         ,''                     ,'TRUE ',''
+				,'103','SuitForTF'					,'Crown closure * -0.05'						   											   ,null           ,null         ,''                     ,'TRUE ',''
+				//,'104','SuitCerealsPost2030'		,'Suitability Cereals change (after 2030)'						   						   ,'Factor_int16' ,null         ,''                     ,'TRUE ',''
+				//,'105','SuitMaizePost2030'			,'Suitability Maize change (after 2030)'						   						   ,'Factor_int16' ,null         ,''                     ,'TRUE ',''
+				//,'106','SuitRootPost2030'			,'Suitability RootCrops change (after 2030)'						   					   ,'Factor_int16' ,null         ,''                     ,'TRUE ',''
+				//,'107','SuitOtherArablePost2030'	,'Suitability Other Arable change (after 2030)'						   				   		,'Factor_int16' ,null         ,''                     ,'TRUE ',''
+				//,'108','SuitCerealsPost2030TF'		,'Suitability Cereals (after 2030) * -0.05'						   					   		,'EUR_m2' 	   ,null         ,''                     ,'TRUE ',''
+				//,'109','SuitMaizePost2030TF'		,'Suitability Maize (after 2030) * -0.05'						   					       ,'EUR_m2'       ,null         ,''                     ,'TRUE ',''
+				//,'110','SuitRootPost2030TF'			,'Suitability RootCrops (after 2030) * -0.05'						   					   ,'EUR_m2'       ,null         ,''                     ,'TRUE ',''
+				//,'111','SuitOtherArablePost2030TF'	,'Suitability Other Arable (after 2030) * -0.05'						   				   ,'EUR_m2'       ,null         ,''                     ,'TRUE ',''
+				,'114','nda'						,'National designated areas'																,'Boolean'	   ,null		 ,''					 ,'TRUE ',''
+				];
+		}
+
+		//attribute<String> FileName:    Expr = "     Elements/Text[value(UInt32(ID(.))* nrAttr +  1, Elements)]"; irrelevant (hardcoded)
+		//attribute<String> EuFileName:  Expr = "IsDefined(FileName) ? 'DRIVERS/'+Name : FileName";
+		attribute<String> Name:        Expr = "     Elements/Text[value(UInt32(ID(.))* nrAttr +  1, Elements)]";
+		attribute<string> UniqueName:  Expr = "IsNull(rlookup(Name, DynamicFactors/Name)) ? Name : 'Static_' + Name";
+		attribute<String> Descr:       Expr = "     Elements/Text[value(UInt32(ID(.))* nrAttr +  2, Elements)]";
+		attribute<string> ValuesUnit:  Expr = "     Elements/Text[value(UInt32(ID(.))* nrAttr +  3, Elements)]";
+		attribute<string> cdf:         Expr = "     Elements/Text[value(UInt32(ID(.))* nrAttr +  4, Elements)]";
+		attribute<string> url:         Expr = "     Elements/Text[value(UInt32(ID(.))* nrAttr +  5, Elements)]";
+		attribute<string> ValuesUnit2: Expr = "MakeDefined(valuesUnit, 'Continuous')";
+		attribute<string> cdf2:        Expr = "MakeDefined('Classifications/'+cdf+'/Classes', '')";
+		attribute<string> url2:        Expr ="'%sourcedataprojdir%/DRIVERS/doc/'+MakeDefined(url, name)+'.pdf'";
+		attribute<string> Label:       Expr = "Name";
+		attribute<bool>   Is100m:      Expr = " bool(Elements/Text[value((UInt32(ID(.))* nrAttr) +  6, Elements)])";
+		attribute<String> Coverage:    Expr = "      Elements/Text[value((UInt32(ID(.))* nrAttr) +  7, Elements)]";
+	}
+
+}

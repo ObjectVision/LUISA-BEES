@@ -1,0 +1,272 @@
+container Geography: Using = "Units", IsHidden = "True"
+{
+	unit<dpoint> LambertEA: Descr = "ETRS_1989_LAEA_52N_10E" // "coords from SW to NE";
+		,	Format = "EPSG:3035" // EPSG code for Lambert EA
+	{
+		parameter<LambertEA> Origin: Expr = "point(1500000.0,  900000.0, LambertEA)"; // Left-Bottom coord
+		parameter<LambertEA> Extent: Expr = "point(6000000.0, 4530000.0, LambertEA)";
+
+		parameter<LambertEA> LeftBottom: Expr = "Origin";
+		parameter<LambertEA> LeftTop:    Expr = "point(pointcol(Origin), pointrow(Origin)+pointrow(Extent), LambertEA)";
+		unit<wpoint> m1000:
+			Expr  =
+				"range("
+					"gridset(LambertEA, "
+						"point(1000.0, -1000.0, LambertEA), "
+						"LeftTop, "
+						"wpoint"
+					"), "
+					"Point(UInt16(0),UInt16(0)),"
+					"WPoint(Extent  / point(1000.0, 1000.0, LambertEA))"
+				")"
+		{
+			attribute<LambertEA> pixelPoint: expr = "LeftTop + (dpoint(id(.)) * point(1000.0, -1000.0, LambertEA))";
+		}
+		unit<wpoint> m100:
+			Expr  =
+				"range("
+					"gridset(LambertEA, "
+						"point(100.0, -100.0, LambertEA), "
+						"LeftTop, "
+						"wpoint"
+					"), "
+					"Point(UInt16(0),UInt16(0)),"
+					"WPoint(Extent  / point(100.0, 100.0, LambertEA))"
+				")";
+		container Tiles
+		{
+			parameter<UInt16> TileSizeY: [ 256 ];
+			parameter<UInt16> TileSizeX: Expr = "PointCol(BoundRange(m100))";
+			parameter<m100>   JrcTileExtent: Expr = "point(TileSizeX, TileSizeY, m100)";
+			unit<wpoint> JrcStripes:
+				Expr  = 
+					"range("
+						"gridset(m100, "
+							"JrcTileExtent, "
+							"point(UInt16(0), UInt16(0), m100), "
+							"wpoint"
+						"), "
+						"point(UInt16(0), UInt16(0)),"
+						"WPoint((UPoint(BoundRange(m100)) + UPoint(JrcTileExtent) - UPoint(point(UInt16(1), UInt16(1), m100))) / UPoint(JrcTileExtent))"
+					")"
+			{
+				attribute<m100> LB100_7013:    Expr = "value(ID(.) * JrcTileExtent, m100)", KeepData = "True";
+				attribute<m100> LB100_7014:    Expr = "value(ID(.), m100)", KeepData = "True";
+				attribute<m100> LB100:    Expr = "=(GeoDmsVersion() < 7.014) ? 'LB100_7013' : 'LB100_7014'", KeepData = "True";
+				attribute<m100> UB100Org: Expr = "LB100 + JrcTileExtent", KeepData = "True";
+				attribute<m100> UB100:    
+					Expr     = "Point(min_elem(PointCol(UB100Org), PointCol(UpperBound(m100))),min_elem(PointRow(UB100Org), PointRow(UpperBound(m100))), m100)", 
+					KeepData = "True";
+			}
+		}
+	}
+
+// Projection    ALBERS
+// Datum         WGS72
+// Spheroid      WGS72
+// Units         METERS
+// Zunits        NO
+// Xshift        0.0
+// Yshift        0.0
+// Parameters    
+//   32 30  0.0 /* 1st standard parallel
+//   54 30  0.0 /* 2nd standard parallel
+//   22 39  0.0 /* central meridian
+//   51 24  0.0 /* latitude of projection's origin
+// 0.0 /* false easting (meters)
+// 0.0 /* false northing (meters)
+
+
+	unit<dpoint> AlbersEA  // "coords from SW to NE";
+		:	Descr      = "Albers Equal_Area WGS72"
+		,	Expr       = "range(dpoint, point(-3932373.5, -1869965.125), point(-3932373.5 + 1000.0*5856.0, -1869965.125+1000.0* 4092.0))"
+		,	Format = "+proj=aea +lat_1=32.5 +lat_2=54.5 +lat_0=51.40 +lon_0=22.65 +x_0=0 +y_0=0 +ellps=intl +units=m +no_defs ";
+	unit<fpoint> AlbersEA_F32: Expr = "range(AlbersEA, FPoint(LowerBound(AlbersEA)), FPoint(UpperBound(AlbersEA)))";
+
+
+// ncols         5856
+// nrows         4092
+// xllcorner     -3932373.5
+// yllcorner     -1869965.125
+// cellsize      1000
+// xurcorner     -3932373.500 + 5856*1000 = 1923626.500
+// yurcorner     -1869965.125 + 4092*1000 = 2222034.875
+
+	unit<wpoint> Albers1kmGrid:
+		Expr  = 
+			"range("
+				"gridset(AlbersEA, "
+					"point( 1000.0, -1000.0,      AlbersEA), "
+					"point(-3932373.5, -1869965.125 + 1000.0 * 4092.0     , AlbersEA), "
+					"wpoint), "
+				"point(UInt16(0), UInt16(0)),"
+				"point(UInt16(5856), UInt16(4092))"
+			")"
+	{
+		attribute<fpoint> P:   Expr = "(FPoint(id(.)) + point(Float32(0.5), Float32(0.5))) *  FPoint(GetProjectionFactor(.)) + FPoint(GetProjectionOffset(.))";
+		attribute<AlbersEA> Q: Expr = "(ID(.)[AlbersEA] + (ID(.)+point(UInt16(1),UInt16(1)))[AlbersEA])*point(0.5, 0.5)";
+	}
+	unit<wpoint> Lambert100mStripedGrid: Expr = "TiledUnit(LambertEA/Tiles/JrcStripes/LB100, LambertEA/Tiles/JrcStripes/UB100)";
+	unit<wpoint> Lambert100mGrid:        Expr = "RegionGrids_100m/Tiles/Lambert100mSelectedTileGrid"
+	{
+		attribute<uint16> pcol1k: 	expr = "pointcol(id(.)) / uint16(10)";
+		attribute<uint16> prow1k: 	expr = "pointrow(id(.)) / uint16(10)";
+		attribute<LambertEA/m1000>  m1000_rel:expr = "point(pcol1k, prow1k, LambertEA/m1000)"; 
+	}
+	
+	// http://spatialreference.org/
+	// http://www.gdal.org/ogr/classOGRSpatialReference.html#a096b8dde4fd2eb475acd376060940b02
+	unit<dpoint> WGS84: Format = "EPSG:4326"; // could also be WGS84
+	
+	#include<AdministrativeBoundaries.dms>
+	
+	container Regions: expr = "AdministrativeBoundaries/BoundaryDomains", KeepData = "True"
+	{
+		
+		unit<uint32> base_zones: expr = "AdministrativeBoundaries/sets/LAU2/UniqueZones";
+		
+		// Runs is now read from /ConfigSettings/Overridable/RunRegions, 
+		// which is overridable by the registry with can be edited by the Tools->Options->ConfigSettings in the GUI.
+		unit<UInt16> Runs: Expr= "=Expand(., '%RunRegions%')"; 
+		
+		unit<uint16> JrcRegion: Expr = "range(uint16, uint16(0), uint16(#AdministrativeBoundaries/LUISA_zones/RunAreas))", DialogType = "Map", DialogData = "Geometry"
+		{
+			attribute<AdministrativeBoundaries/LUISA_zones/RunAreas> Ra_id: expr = "id(.)[AdministrativeBoundaries/LUISA_zones/RunAreas]";
+			attribute<String> Label:             Expr = "AdministrativeBoundaries/LUISA_zones/RunAreas/Name[Ra_id]"; 
+			attribute<String> Name:              Expr = "Label";
+			attribute<String> AllocDirName:      Expr = "ICC"; // always use parameterization per country
+			attribute<String> AllocDirNameN0:    Expr = "ICC"; // no fall-back
+			attribute<String> DemandDirName:     Expr = "ICC";
+			attribute<string> ZoneId: 			 Expr = "ICC";
+			attribute<String> ICC:               Expr = "AdministrativeBoundaries/LUISA_zones/RunAreas/ICC[Ra_id]"; 
+			//attribute<Nuts0>  Nuts0_rel:		 Expr = "rlookup(ICC, Nuts0/ICC)";
+			//attribute<Nuts0>  Nuts0Code:         Expr = "nr_OrgEntity"; 
+			attribute<String> SuitabilityTraits: Expr = "const('MNL100',.)"; 
+			
+			attribute<.> Grid(Lambert100mGrid):  Expr = "poly2grid(Geometry, Lambert100mGrid, 1)";
+
+			attribute<LambertEA> Geometry(poly): Expr = "AdministrativeBoundaries/LUISA_zones/RunAreas/Polygons[Ra_id]";
+			
+			attribute<LambertEA> lb: 			 Expr = "lower_bound(Geometry)";
+			attribute<LambertEA> ub:			 Expr = "upper_bound(Geometry)";	
+			
+			attribute<UInt32>   Width   : Expr = "UInt32(pointCol(ub)-pointCol(lb))+1", KeepData = "True"; 
+			attribute<UInt32>   Height  : Expr = "UInt32(pointRow(ub)-pointRow(lb))+1", KeepData = "True"; 
+			attribute<UInt32>   RectArea: Expr = "Width*Height", KeepData = "True"; 
+			
+			attribute<Lambert100mGrid> LB100: Expr = "lb[Lambert100mGrid]", KeepData = "True"; 
+			attribute<Lambert100mGrid> UB100: Expr = "ub[Lambert100mGrid]", KeepData = "True"; 
+			
+			parameter<String> RegionDomainSetName: Expr = "'JrcRegions100m'";
+		}
+		unit<uint32> MicroStates: nrofrows = 3
+		{
+			attribute<string> GTAPnames:        ['Andorra', 'SanMarino', 'LiechtenStein'];
+			attribute<string> ClueCountryNames: ['France', 'Italy', 'Austria'];
+		}
+		unit<uint32> Capri: Expr = "unique(getCapriData/CapriLookup/CapriCode)", DialogData = "Geometry", DialogType = "map", IntegrityCheck = "all(getCapriData/CapriLookup/Nuts2Found)"
+		{
+			attribute<LambertEA> Geometry (poly): expr = "partitioned_union_polygon(value(Geography/getCapriData/Nuts2/Geometry, ipoint), /Geography/getCapriData/Nuts2/Capri_rel)[LambertEA]";
+			attribute<String> Code: Expr = "Values";
+			attribute<string> ZoneId: expr = "Code";
+			attribute<string> Name: Expr = "rjoin(Values, getCapriData/CapriLookup/CapriCode, getCapriData/CapriLookup/CapriName)";
+			attribute<string> Label: Expr = "Code+': '+Name", DialogType = "LabelText";
+	
+			#include<CLCTranslate.dms>
+		}
+		
+	}
+	container RegionDomainSets
+	{
+		container JrcRegions100m
+			:	Expr = 
+					"for_each_ind('nex', Regions/JrcRegion/Label, "
+						"'Range(Lambert100mGrid, "
+							"Regions/JrcRegion/LB100[value('+String(ID(Regions/JrcRegion))+', Regions/JrcRegion)], "
+							"Regions/JrcRegion/UB100[value('+String(ID(Regions/JrcRegion))+', Regions/JrcRegion)]+point(UInt16(1),UInt16(1),LambertEA/m100)"
+						")'"
+					",  WPoint)";
+	}
+	unit<UInt8> IndicatorRegions: NrOfRows = 5 { attribute<String> Name: [ 'Nuts0', 'Nuts1', 'Nuts2', 'Nuts2_Merged', 'Nuts3' ]; }
+	
+	container RegionGrids: expr = "AdministrativeBoundaries/RegionGrids";
+	
+	container RegionGrids_100m
+	{
+		attribute<Regions/Nuts2All>  Nuts2GridOrg(Lambert100mStripedGrid):
+			StorageReadOnly = "True",
+			StorageName = "%sourceDataDir%/EUCS_100m/nuts2_100m/Nuts2All.tif";
+		
+		container Tiles
+		{
+			parameter<UInt16> TileSizeY: [ 1024 ];
+			parameter<UInt16> TileSizeX: [ 1024 ];
+			parameter<Lambert100mStripedGrid>  JrcTileExtent: Expr = "point(TileSizeX, TileSizeY, Lambert100mStripedGrid)";
+			unit<wpoint> TileSetNew:
+				Expr  = 
+					"range("
+						"gridset(Lambert100mStripedGrid, "
+							"JrcTileExtent, "
+							"point(UInt16(0), UInt16(0), Lambert100mStripedGrid), "
+							"wpoint"
+						"), "
+						"point(UInt16(0), UInt16(0)),"
+						"WPoint((BoundRange(Lambert100mStripedGrid) + JrcTileExtent - point(UInt16(1), UInt16(1), Lambert100mStripedGrid)) / JrcTileExtent)"
+					")"
+			{
+				attribute<Lambert100mStripedGrid> LB100_7013:    Expr = "value(ID(.) * JrcTileExtent, Lambert100mStripedGrid)", KeepData = "True"; // COMPATIBILITY ISSUE
+				attribute<Lambert100mStripedGrid> LB100_7014:    Expr = "value(ID(.), Lambert100mStripedGrid)", KeepData = "True"; // COMPATIBILITY ISSUE
+				attribute<Lambert100mStripedGrid> LB100:    Expr = "=(GeoDmsVersion() < 7.014) ? 'LB100_7013' : 'LB100_7014'", KeepData = "True";
+				attribute<Lambert100mStripedGrid> UB100Org: Expr = "LB100 + JrcTileExtent", KeepData = "True";
+				attribute<Lambert100mStripedGrid> UB100:    Expr = "Point(min_elem(PointCol(UB100Org), PointCol(UpperBound(Lambert100mStripedGrid))),min_elem(PointRow(UB100Org), PointRow(UpperBound(Lambert100mStripedGrid))), Lambert100mStripedGrid)", KeepData = "True";
+			}
+			attribute<TileSetNew> AggrRel(Lambert100mStripedGrid): Expr = "value((ID(Lambert100mStripedGrid) - LowerBound(Lambert100mStripedGrid)) / JrcTileExtent, TileSetNew)";
+			attribute<Bool> HasLandOrg(TileSetNew): Expr = "any(IsDefined(Nuts2GridOrg), AggrRel)", StorageName = "%ProjDir%/data/SelectedTiles.bmp"
+			{
+				attribute<UInt32> PaletteData(Bool): Expr = "Classifications/Boolean/Palette";
+			}
+
+			#include <HasLand.dms>
+
+			unit<uint32> SelectedTiles: Expr = "Subset(HasLand)", KeepData = "True"
+			{
+				attribute<Lambert100mStripedGrid> LB100: Expr = "TileSetNew/LB100[nr_OrgEntity]";
+				attribute<Lambert100mStripedGrid> UB100: Expr = "TileSetNew/UB100[nr_OrgEntity]";
+			}
+			unit<wpoint> Lambert100mSelectedTileGrid: Expr = "TiledUnit(SelectedTiles/LB100, SelectedTiles/UB100)";
+		}
+	}
+	container AggrRegions
+	{
+		
+		container km10 
+		{
+			
+			// BEGIN redundant data 
+			unit<uint32> poly: storagename = "%sourcedatadir%/EUCS_100m/Geography/Grid_LAEA5210_10K_polygons.dbf"
+			{
+				attribute<LambertEA> Geometry(poly): storagename = "%sourcedatadir%/EUCS_100m/Geography/Grid_LAEA5210_10K_polygons.shp";
+			}
+			// END redundand data
+			
+// 			parameter<LambertEA> Origin: Expr = "point(1500000.0,  900000.0, LambertEA)"; // Left-Bottom coord
+// 			parameter<LambertEA> Extent: Expr = "point(6000000.0, 4530000.0, LambertEA)";
+			parameter<LambertEA> Origin: Expr = "point(      0.0,  700000.0, LambertEA)"; // Left-Bottom coord
+			parameter<LambertEA> Extent: Expr = "point(8400000.0, 6700000.0, LambertEA)";
+			
+			parameter<LambertEA> LeftTop:    Expr = "point(pointcol(Origin), pointrow(Origin)+pointrow(Extent), LambertEA)";
+			unit<wpoint> grid:
+				Expr  =
+					"range("
+						"gridset(LambertEA, "
+							"point(10000.0, -10000.0, LambertEA), "
+							"LeftTop, "
+							"wpoint"
+						"), "
+						"Point(UInt16(0),UInt16(0)),"
+						"WPoint(Extent  / point(10000.0, 10000.0, LambertEA))"
+					")";
+		}
+	}
+	#include<CapriLookup.dms>
+}

@@ -1,0 +1,45 @@
+container getOptimalk
+{
+	unit<uint16> PopModelZones: 						expr = "RunRegions/UnitSets/NUTS3_EuroStat";
+	attribute<PopModelZones> PopModelRaster (domain): 	expr = "RunRegions/RasterSets/NUTS3_EuroStat[domain/grid_rel]";
+	
+	parameter<float32> ComingPeriodLength: expr = "float32(2012 - 2011)";
+	unit<uint8> ModelType: expr = "Classifications/LU/ModelType";
+	Container 		PrevState
+	{
+		attribute<Classifications/LU/ModelType> LandUse	(domain): expr = "PrepareVariables/LandUseGrid[domain/grid_rel]";
+		attribute<float32>	Qi							(domain): expr = "float32(CaseData/PrepareVariables/Variables/Qi)";
+		attribute<float32>	PotQi 						(domain): expr = "potential(CaseData/PrepareVariables/Variables/Qi[domain/basisgrid], Parameters/FuncKernels/RooksNeighbours/Matr)[domain/grid_rel]";
+		attribute<float32>  PotentialAccess				(domain): expr = "PrepareVariables/Variables/PotentialAccess";
+		attribute<float32>  TownAccess					(domain): expr = "PrepareVariables/TownAccess[domain/grid_rel]";
+		
+		container Variables: expr = "CaseData/PrepareVariables/Variables";
+	}
+	container ResultingState: Expr = "PrevState";
+ 	container HousingStock {
+		attribute<float32> Si (domain): expr = "PrevState/Qi";
+	}
+	Container Demographics {
+		container NaturalChanges {
+			container PopulationStock {
+				attribute<float32> summed (domain): expr = "PrevState/Qi";
+			}
+		}
+		container InternalMovements {
+			container RemainingStock {
+				attribute<float32> summed (domain): expr = "NaturalChanges/PopulationStock/summed * (float32(1) - float32(0.036)^ComingPeriodLength)";
+			}
+		}
+		container ProjectedTotals {
+			container Population {
+				attribute<float32> summed (PopModelZones): expr = "Parameters/DemandSets/Global/Pop2012/InColumns/y2012[PopModelZones/Nr_OrgEntity]";
+			}
+		}
+		container Kj {
+			attribute<float32> summed (PopModelZones): expr = "ProjectedTotals/Population/summed - sum(InternalMovements/RemainingStock/summed, PopModelRaster)";
+		}
+		attribute<bool>	   popdecline 	(PopModelZones):   Expr = "Kj/summed < float32(0)";
+	}
+	container PopulationDistribution: expr = "LandUseModels/ModelTraits/PopulationDistribution(domain, PopModelZones, PopModelRaster)";
+	
+}

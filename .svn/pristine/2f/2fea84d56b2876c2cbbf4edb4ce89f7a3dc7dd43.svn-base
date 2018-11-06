@@ -1,0 +1,45 @@
+container ExploreTools: IsHidden = "True"
+{
+	container CompareLanduse: IsTemplate = "True"
+	{
+		attribute<Classifications/LU/ViewType> map1(Geography/Lambert100mGrid):
+			ParamType = "SimilarList", 
+			ParamData = "/Indicators;/GenerateContainer;/Runs;$ExpandCases;$ExactValues";
+
+		attribute<Classifications/LU/ViewType> map2(Geography/Lambert100mGrid):
+			ParamType = "SimilarList", 
+			ParamData = "/Indicators;/GenerateContainer;/Runs;$ExpandCases;$ExactValues";
+		
+		attribute<Classifications/LU/ViewType> diff1(Geography/Lambert100mGrid): Expr = "map1!=map2 ? map1 : value(255, Classifications/LU/ViewType)";
+		attribute<Classifications/LU/ViewType> diff1_e1(Geography/Lambert100mGrid):
+			Expr = "MakeDefined(diff1, "
+				"diff1[ID(Geography/Lambert100mGrid)+point(UInt16(0),UInt16(1),Geography/Lambert100mGrid)], "
+				"diff1[ID(Geography/Lambert100mGrid)-point(UInt16(0),UInt16(1),Geography/Lambert100mGrid)], "
+				"diff1[ID(Geography/Lambert100mGrid)+point(UInt16(1),UInt16(0),Geography/Lambert100mGrid)], "
+				"diff1[ID(Geography/Lambert100mGrid)-point(UInt16(1),UInt16(0),Geography/Lambert100mGrid)]"
+			")";
+		attribute<Classifications/LU/ViewType> diff1_e2(Geography/Lambert100mGrid):
+			Expr = "MakeDefined(diff1_e1, "
+				"diff1_e1[ID(Geography/Lambert100mGrid)+point(UInt16(0),UInt16(1),Geography/Lambert100mGrid)], "
+				"diff1_e1[ID(Geography/Lambert100mGrid)-point(UInt16(0),UInt16(1),Geography/Lambert100mGrid)], "
+				"diff1_e1[ID(Geography/Lambert100mGrid)+point(UInt16(1),UInt16(0),Geography/Lambert100mGrid)], "
+				"diff1_e1[ID(Geography/Lambert100mGrid)-point(UInt16(1),UInt16(0),Geography/Lambert100mGrid)]"
+			")";
+		
+		attribute<Classifications/LU/ViewType> diff2(Geography/Lambert100mGrid): Expr = "map1!=map2 ? map2 : value(255, Classifications/LU/ViewType)";
+		attribute<Classifications/LU/ViewType> diff2_e1(Geography/Lambert100mGrid):
+			Expr = "MakeDefined(diff2, "
+				"diff2[ID(Geography/Lambert100mGrid)+point(UInt16(0),UInt16(1),Geography/Lambert100mGrid)], "
+				"diff2[ID(Geography/Lambert100mGrid)-point(UInt16(0),UInt16(1),Geography/Lambert100mGrid)], "
+				"diff2[ID(Geography/Lambert100mGrid)+point(UInt16(1),UInt16(0),Geography/Lambert100mGrid)], "
+				"diff2[ID(Geography/Lambert100mGrid)-point(UInt16(1),UInt16(0),Geography/Lambert100mGrid)]"
+			")";
+		attribute<Classifications/LU/ViewType> diff2_e2(Geography/Lambert100mGrid):
+			Expr = "MakeDefined(diff2_e1, "
+				"diff2_e1[ID(Geography/Lambert100mGrid)+point(UInt16(0),UInt16(1),Geography/Lambert100mGrid)], "
+				"diff2_e1[ID(Geography/Lambert100mGrid)-point(UInt16(0),UInt16(1),Geography/Lambert100mGrid)], "
+				"diff2_e1[ID(Geography/Lambert100mGrid)+point(UInt16(1),UInt16(0),Geography/Lambert100mGrid)], "
+				"diff2_e1[ID(Geography/Lambert100mGrid)-point(UInt16(1),UInt16(0),Geography/Lambert100mGrid)]"
+			")";
+	}		
+}
