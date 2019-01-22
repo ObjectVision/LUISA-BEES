@@ -195,7 +195,7 @@ container Geography: Using = "Units", IsHidden = "True"
 	{
 		attribute<Regions/Nuts2All>  Nuts2GridOrg(Lambert100mStripedGrid):
 			StorageReadOnly = "True",
-			StorageName = "%sourceDataDir%/EUCS_100m/nuts2_100m/Nuts2All.tif";
+			StorageName = "%EUCS_100mDir%/nuts2_100m/Nuts2All.tif";
 		
 		container Tiles
 		{
@@ -243,9 +243,9 @@ container Geography: Using = "Units", IsHidden = "True"
 		{
 			
 			// BEGIN redundant data 
-			unit<uint32> poly: storagename = "%sourcedatadir%/EUCS_100m/Geography/Grid_LAEA5210_10K_polygons.dbf"
+			unit<uint32> poly: storagename = "%EUCS_100mDir%/Geography/Grid_LAEA5210_10K_polygons.dbf"
 			{
-				attribute<LambertEA> Geometry(poly): storagename = "%sourcedatadir%/EUCS_100m/Geography/Grid_LAEA5210_10K_polygons.shp";
+				attribute<LambertEA> Geometry(poly): storagename = "%EUCS_100mDir%/Geography/Grid_LAEA5210_10K_polygons.shp";
 			}
 			// END redundand data
 			

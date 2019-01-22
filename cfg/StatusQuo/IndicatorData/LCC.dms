@@ -2,7 +2,7 @@ container LCC: url = "=LCC/FactSheetName"
 {
 	parameter<String> FactSheetName:
 	[
-		'%sourcedataprojdir%/Indicators/Land cover connectivity.pdf' 
+		'%LuisettaDataDir%/Indicators/Land cover connectivity.pdf' 
 	];
 	unit<Float32> FLEURO: Expr = "BaseUnit('FLEURO', Float32)", cdf = "FLEURO/k30/ClassBreaks"
 	{

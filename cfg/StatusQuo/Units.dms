@@ -57,12 +57,12 @@ container Units:
 	// EuRuralis indicator related units
 	unit<float32> tonneC_km2:       
 		Expr = "Range(tonne_km2, Float32(-40), Float32(150))", 
-		url  = "%sourceDataProjDir%/IndicatorData/CarbonSequestration/Doc/carbon method factsheet.doc", 
+		url  = "%LuisettaDataDir%/IndicatorData/CarbonSequestration/Doc/carbon method factsheet.doc", 
 		cdf  = "Classifications/tonneC_km2_K7/Classes";
 		
 	unit<float32> tonneE_ha:        
 		Expr = "Range(tonne_ha, Float32(0), Float32(10000))", 
-		url  = "%sourceDataProjDir%/IndicatorData/Erosion/Doc/Factsheet soil erosion.doc", 
+		url  = "%LuisettaDataDir%/IndicatorData/Erosion/Doc/Factsheet soil erosion.doc", 
 		cdf  = "Classifications/tonneE_ha_K7/Classes";
 	
 	unit<Float32> kgN:          Expr = "BaseUnit('kg N', float32)";

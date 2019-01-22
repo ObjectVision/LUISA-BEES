@@ -7,7 +7,7 @@ Container Templates {
 		parameter<string> 	inPath;
 		unit<wpoint> 		TargetRaster: expr = "geometries/SelectedTiledRaster1k";
 		attribute<inFile> RasterIds (TargetRaster): expr = "poly2grid(inFile/Geometry, TargetRaster)";
-		unit<uint32> inFile: StorageName = "= '%sourceDataDir%/Luisetta/'+ inPath+'.shp'", StorageType = "gdal.vect", StorageReadOnly = "True", DialogData = "Geometry", DialogType = "map"
+		unit<uint32> inFile: StorageName = "= '%LuisettaDataDir%/'+ inPath+'.shp'", StorageType = "gdal.vect", StorageReadOnly = "True", DialogData = "Geometry", DialogType = "map"
 		{
 			attribute<CoordSys> Geometry (poly);
 		}
@@ -16,7 +16,7 @@ Container Templates {
 		parameter<string> 	inPath;
 		unit<wpoint> 		TargetRaster: expr = "geometries/SelectedTiledRaster1k";
 		attribute<inFile> RasterIds (TargetRaster): expr = "poly2grid(inFile/Geometry, TargetRaster)";
-		unit<uint32> inFile: StorageName = "= '%sourceDataDir%/Luisetta/'+ inPath+'.shp'", StorageType = "gdal.vect", StorageReadOnly = "True", DialogData = "Geometry", DialogType = "map"
+		unit<uint32> inFile: StorageName = "= '%LuisettaDataDir%/'+ inPath+'.shp'", StorageType = "gdal.vect", StorageReadOnly = "True", DialogData = "Geometry", DialogType = "map"
 		{
 			attribute<CoordSys> Geometry (arc);
 		}
@@ -24,7 +24,7 @@ Container Templates {
 	Template loadDataFile_uint2tiff {
 		parameter<string> 	inPath;
 		unit<wpoint> 		TargetRaster: expr = "geometries/SelectedTiledRaster1k";
-		unit<wpoint>		inFile: StorageName = "= '%sourceDataDir%/Luisetta/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
+		unit<wpoint>		inFile: StorageName = "= '%LuisettaDataDir%/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
 		{
 			attribute<uint2> GridData;
 			attribute<uint2> ReadData (TargetRaster);
@@ -33,7 +33,7 @@ Container Templates {
 	Template loadDataFile_uint8tiff {
 		parameter<string> 	inPath;
 		unit<wpoint> 		TargetRaster: expr = "geometries/SelectedTiledRaster1k";
-		unit<wpoint>		inFile: StorageName = "= '%sourceDataDir%/Luisetta/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
+		unit<wpoint>		inFile: StorageName = "= '%LuisettaDataDir%/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
 		{
 			attribute<uint8> GridData;
 			attribute<uint8> ReadData (TargetRaster);
@@ -42,7 +42,7 @@ Container Templates {
 	Template loadDataFile_int8tiff {
 		parameter<string> 	inPath;
 		unit<wpoint> 		TargetRaster: expr = "geometries/SelectedTiledRaster1k";
-		unit<wpoint>		inFile: StorageName = "= '%sourceDataDir%/Luisetta/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
+		unit<wpoint>		inFile: StorageName = "= '%LuisettaDataDir%/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
 		{
 			attribute<int8> GridData;
 			attribute<int8> ReadData (TargetRaster);
@@ -51,7 +51,7 @@ Container Templates {
 	Template loadDataFile_uint16tiff {
 		parameter<string> 	inPath;
 		unit<wpoint> 		TargetRaster: expr = "geometries/SelectedTiledRaster1k";
-		unit<wpoint>		inFile: StorageName = "= '%sourceDataDir%/Luisetta/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
+		unit<wpoint>		inFile: StorageName = "= '%LuisettaDataDir%/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
 		{
 			attribute<uint16> GridData;
 			attribute<uint16> ReadData (TargetRaster);
@@ -60,7 +60,7 @@ Container Templates {
 	Template loadDataFile_int16tiff {
 		parameter<string> 	inPath;
 		unit<wpoint> 		TargetRaster: expr = "geometries/SelectedTiledRaster1k";
-		unit<wpoint>		inFile: StorageName = "= '%sourceDataDir%/Luisetta/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
+		unit<wpoint>		inFile: StorageName = "= '%LuisettaDataDir%/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
 		{
 			attribute<int16> GridData;
 			attribute<int16> ReadData (TargetRaster);
@@ -69,7 +69,7 @@ Container Templates {
 	Template loadDataFile_int32tiff {
 		parameter<string> 	inPath;
 		unit<wpoint> 		TargetRaster: expr = "geometries/SelectedTiledRaster1k";
-		unit<wpoint>		inFile: StorageName = "= '%sourceDataDir%/Luisetta/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
+		unit<wpoint>		inFile: StorageName = "= '%LuisettaDataDir%/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
 		{
 			attribute<int32> GridData;
 			attribute<int32> ReadData (TargetRaster);
@@ -78,7 +78,7 @@ Container Templates {
 	Template loadDataFile_float32tiff {
 		parameter<string> 	inPath;
 		unit<wpoint> 		TargetRaster: expr = "geometries/SelectedTiledRaster1k";
-		unit<wpoint>		inFile: StorageName = "= '%sourceDataDir%/Luisetta/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
+		unit<wpoint>		inFile: StorageName = "= '%LuisettaDataDir%/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
 		{
 			attribute<float32> GridData;
 			attribute<float32> ReadData (TargetRaster);

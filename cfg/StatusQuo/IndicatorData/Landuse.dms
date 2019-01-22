@@ -30,7 +30,7 @@ container Landuse
 		attribute<Regions> Partition(Domain_Grid): Expr = "Qualifications/IsLand ? value(RegionGrid, Regions) : value(0 / 0, Regions)", IsHidden = "True";
 		attribute<Float32> LandArea (Regions):     Expr = "Float32(sum(UInt32(Qualifications/IsLand), Partition))";
 
-		container Agricultural: url = "%sourcedataprojdir%/Indicators/Shares of agriculture.pdf"
+		container Agricultural: url = "%LuisettaDataDir%/Indicators/Shares of agriculture.pdf"
 		{
 			container State
 			{		
@@ -48,7 +48,7 @@ container Landuse
 				attribute<Percent> PermanentCrops        (Regions): Expr = "State/PermanentCrops         - StartState/PermanentCrops"        , cdf = "Classifications/PercentChange_11K/Classes";
 			}
 		}
-		container Natural: url = "%sourcedataprojdir%/Indicators/Shares of nature.pdf"
+		container Natural: url = "%LuisettaDataDir%/Indicators/Shares of nature.pdf"
 		{
 			container State
 			{		
@@ -165,7 +165,7 @@ container Landuse
 			attribute<Float32> NearUrbanDevelopment       (Domain_Grid): Expr = "potential(Float32(Qualifications/UrbanDevelopment),         km10FocalPointMatr/RelWeight)";
 		}
 		
-		container ChangeHotspots: url = "%sourcedataprojdir%/Indicators/change hotspots.pdf"
+		container ChangeHotspots: url = "%LuisettaDataDir%/Indicators/change hotspots.pdf"
 		{
 			attribute<Legends/HotspotClass> AgriculturalAbandonment(Domain_Grid):
 				Expr =

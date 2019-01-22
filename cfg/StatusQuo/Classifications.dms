@@ -418,7 +418,7 @@ container Classifications: Using = "Units", KeepData = "True", IsHidden = "True"
 		attribute<string> CapriCode:  expr = "Elements/Text[value(uint32(id(.)) * nrAttr + 0, elements)]";
 		attribute<string> CLCCode:    expr = "Elements/Text[value(uint32(id(.)) * nrAttr + 1, elements)]";
 	}
-	unit<uint8> EnvZoneClass: StorageName = "%SourceDataDir%/EUCS_100m/SensitiveAreas/Env_mask.tif.vat.dbf"
+	unit<uint8> EnvZoneClass: StorageName = "%EUCS_100mDir%/SensitiveAreas/Env_mask.tif.vat.dbf"
 	{
 		attribute<uint8> VALUE;
 		attribute<String> ENZ_NAME;

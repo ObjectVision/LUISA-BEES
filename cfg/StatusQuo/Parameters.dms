@@ -38,7 +38,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			attribute<String>  PrevRef: Expr = "MakeDefined(Name[ID(.)-UInt16(1)]+'/ResultingState', 'StartingState')";
 			unit<UInt16> Decennium: Expr = "../Decennium";
 			unit<UInt16> Lustrum: Expr = "../Lustrum";
-			parameter<String> BaseYearCorineDataFileName: Expr = "'%sourceDataDir%/EUCS_100m/landuse/LUISA_Basemap_v1_3.tif'"; // was, in chronological order, "'%sourceDataDir%/EUCS_100m/landuse/elc100_00_laea_lzw.tif'"; "'%sourceDataDir%/EUCS_100m/landuse/clc06.tif'"
+			parameter<String> BaseYearCorineDataFileName: Expr = "'%EUCS_100mDir%/landuse/LUISA_Basemap_v1_3.tif'"; // was, in chronological order, "'%EUCS_100mDir%/landuse/elc100_00_laea_lzw.tif'"; "'%EUCS_100mDir%/landuse/clc06.tif'"
 		}
 		unit<UInt16> Decennium: NrOfRows = 5
 		{
@@ -1425,7 +1425,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			parameter<String> ParamName:   Expr = "'StatusQuo'";  	// @USERINPUT
 			
 			parameter<String> ParamPath:   Expr = "'%projdir%/ParamSets/'+ ParamName";
-			parameter<String> LocSpecPath: Expr = "'%sourcedataprojdir%/LocSpec/' + ParamName";
+			parameter<String> LocSpecPath: Expr = "'%LuisettaDataDir%/LocSpec/' + ParamName";
 			unit<UInt8>       ModelType: Expr = "Classifications/LU/ModelType";
 			parameter<String> OrgLandUseExpr: Expr= "'CorineGrid/Jrc9Data'";
 			

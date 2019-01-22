@@ -70,7 +70,7 @@ container Capri: using = "Units"
 	{
 		parameter<String> country;
 		
-		parameter<String>  FileName: expr = "'%sourcedatadir%/EUCS_100m/capri/CAPRI_COCO1990-2005/' + country + '.txt'";
+		parameter<String>  FileName: expr = "'%EUCS_100mDir%/capri/CAPRI_COCO1990-2005/' + country + '.txt'";
 		
 		parameter<String> FileData: StorageType = "str", StorageName = "=FileName";
 		unit<uint32> Lines:   Expr = "Range(uint32, 0, strcount(FileData, '\n')+1)"
@@ -115,7 +115,7 @@ container Capri: using = "Units"
 		parameter<String> country;
 		parameter<String> year;
 		
-		parameter<String>  FileName: expr = "'%sourcedatadir%/EUCS_100m/capri/CAPRI_2010_2050/' + year + '/'  + country + '.txt'";
+		parameter<String>  FileName: expr = "'%EUCS_100mDir%/capri/CAPRI_2010_2050/' + year + '/'  + country + '.txt'";
 		
 		parameter<String> FileData: StorageType = "str", StorageName = "=FileName";
 		unit<uint32>      Lines:   Expr = "Range(uint32, 0, strcount(FileData, '\n')+1)"
@@ -131,7 +131,7 @@ container Capri: using = "Units"
 	
 	container CLCData
 	{
-		parameter<String>  FileName: expr = "'%sourcedatadir%/EUCS_100m/capri/CLC/tabul06r_v2.csv'";
+		parameter<String>  FileName: expr = "'%EUCS_100mDir%/capri/CLC/tabul06r_v2.csv'";
 		
 		parameter<String> FileData
 		:  StorageType = "str"

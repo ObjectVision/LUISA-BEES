@@ -18,44 +18,44 @@ container JrcFactorDataTempl: IsTemplate = "True", IsHidden = "true"  //, Expr =
 			attribute<Classifications/LU/ModelType> ModelLandUse 	(domain_grid): Expr = "Classifications/LU/Corine/MT [CorineLandUse]";
 			attribute<Classifications/LU/ViewType>  ViewLandUse  	(domain_grid): Expr = "Classifications/LU/Corine/VT2[CorineLandUse]";
 		}
-		Unit<WPoint> Eu27_e: StorageName = "%SourceDataDir%/Luisetta/Elevation/eu27_e_ha.tif", StorageReadOnly = "True", DialogData = "Geography/LambertEA"
+		Unit<WPoint> Eu27_e: StorageName = "%LuisettaDataDir%/Elevation/eu27_e_ha.tif", StorageReadOnly = "True", DialogData = "Geography/LambertEA"
 		{
 			attribute<units/meter> Elevation (domain_grid): Expr="value(ReadData, units/meter)" ;
 			attribute<Int16> GridData: IsHidden = "True";
 			attribute<Int16> ReadData(domain_grid);
 		}
-		Unit<WPoint> slope_continuous: StorageName = "%SourceDataDir%/Luisetta/Elevation/slope_deg_int16.tif", StorageReadOnly = "True", DialogData = "Geography/LambertEA"
+		Unit<WPoint> slope_continuous: StorageName = "%LuisettaDataDir%/Elevation/slope_deg_int16.tif", StorageReadOnly = "True", DialogData = "Geography/LambertEA"
 		{
 			attribute<units/degrees> slope (domain_grid): expr="value(ReadData, units/degrees)" ;
 			attribute<Int16> GridData (Eu27_e): IsHidden = "True";
 			attribute<Int16> ReadData(domain_grid);
 		}				
 		
-		unit<WPoint> erosionRisk: StorageName = "%sourceDataDir%/Luisetta/SensitiveAreas/erosion_peseta.tif", StorageReadOnly = "True", DialogData = "Geography/LambertEA"
+		unit<WPoint> erosionRisk: StorageName = "%LuisettaDataDir%/SensitiveAreas/erosion_peseta.tif", StorageReadOnly = "True", DialogData = "Geography/LambertEA"
 		{
 			attribute<units/tonne_ha> erosionRisk(domain_grid): expr = "value(replace_value(ReadData, Int16(-32768), Int16(0 / 0)), units/tonne_ha)" ;
 			attribute<Int16> GridData: IsHidden = "True";
 			attribute<Int16> ReadData(domain_grid);
 		}
-		unit<wpoint> salinity2: StorageName = "%SourceDataDir%/Luisetta/NECR/salinity.tif", DialogData = "Geography/LambertEA"
+		unit<wpoint> salinity2: StorageName = "%LuisettaDataDir%/NECR/salinity.tif", DialogData = "Geography/LambertEA"
 		{
 			attribute<uint8>	GridData: IsHidden = "True";
 			attribute<uint8>	ReadData (domain_grid);
 		}
 			
-		unit<WPoint> Natura2000: StorageName = "%sourceDataDir%/Luisetta/SensitiveAreas/n2k_v2011_bin.tif", StorageReadOnly = "True", DialogData = "Geography/LambertEA"
+		unit<WPoint> Natura2000: StorageName = "%LuisettaDataDir%/SensitiveAreas/n2k_v2011_bin.tif", StorageReadOnly = "True", DialogData = "Geography/LambertEA"
 		{
 			attribute<units/boolean> Natura2000 (domain_grid): Expr = "value(replace_value(ReadData, Int8(-1), Int8(0 / 0)),units/boolean)";
 			attribute<int8> GridData: IsHidden = "True";
 			attribute<int8> ReadData(domain_grid);
 		}
-		unit<WPoint> Natura2000Priority: StorageName = "%sourceDataDir%/Luisetta/SensitiveAreas/Natura2000_End2011_clean_union_Priority_bin.tif", StorageReadOnly = "True", DialogData = "Geography/LambertEA"
+		unit<WPoint> Natura2000Priority: StorageName = "%LuisettaDataDir%/SensitiveAreas/Natura2000_End2011_clean_union_Priority_bin.tif", StorageReadOnly = "True", DialogData = "Geography/LambertEA"
 		{
 			attribute<uint2> Natura2000Priority (domain_grid);
 			attribute<uint2> GridData: IsHidden = "True";
 			attribute<uint2> ReadData(domain_grid);
 		}
-		unit<WPoint> NDA_Cat: StorageName = "%sourceDataDir%/Luisetta/SensitiveAreas/CDDA_v9_clean_unionCat.tif", StorageReadOnly = "True", DialogData = "Geography/LambertEA"
+		unit<WPoint> NDA_Cat: StorageName = "%LuisettaDataDir%/SensitiveAreas/CDDA_v9_clean_unionCat.tif", StorageReadOnly = "True", DialogData = "Geography/LambertEA"
 		{
 			attribute<uint8> NDA_Cat (domain_grid);
 			attribute<uint8> GridData: IsHidden = "True";
@@ -76,11 +76,11 @@ container JrcFactorDataTempl: IsTemplate = "True", IsHidden = "true"  //, Expr =
 			attribute<uint16>   FileValue: [0, 1, 2, 3, 4, 5, 6];
 			attribute<Float32> SuitValue: [null, 0, 0, 0, 10, 20, 25];									
 		}
-			attribute<ErodibilityClass> Erodibility(domain_grid): StorageName = "%SourceDataDir%/Luisetta/NECR/erodibility.tif"; 	
+			attribute<ErodibilityClass> Erodibility(domain_grid): StorageName = "%LuisettaDataDir%/NECR/erodibility.tif"; 	
 			
 				
 		unit<wpoint> ContaminatedLands:
-             StorageName       = "%SourceDataDir%/Luisetta/NECR/PotentialContaminatedLand.tif"
+             StorageName       = "%LuisettaDataDir%/NECR/PotentialContaminatedLand.tif"
              , StorageReadOnly = "True"
              , DialogData      = "Geography/LambertEA"
           {
@@ -122,9 +122,9 @@ container JrcFactorDataTempl: IsTemplate = "True", IsHidden = "true"  //, Expr =
 
 	container BurntAreas
 	{
-		unit<uint32> BurntAreas_shape: StorageName = "%SourceDataDir%/Luisetta/forests/BurntAreas2000-2012.dbf", StorageReadOnly = "True", DialogData = "Geometry", DialogType = "map"
+		unit<uint32> BurntAreas_shape: StorageName = "%LuisettaDataDir%/forests/BurntAreas2000-2012.dbf", StorageReadOnly = "True", DialogData = "Geometry", DialogType = "map"
 		{
-			attribute<Geography/LambertEA> 	Geometry (polygon): StorageName = "%SourceDataDir%/Luisetta/forests/BurntAreas2000-2012.shp", StorageReadOnly = "True";
+			attribute<Geography/LambertEA> 	Geometry (polygon): StorageName = "%LuisettaDataDir%/forests/BurntAreas2000-2012.shp", StorageReadOnly = "True";
 			attribute<uint32>				YearSeason;
 		}
 		attribute<BurntAreas_shape> 	BurntGrid_id (domain_grid):	expr = "poly2grid(BurntAreas_shape/Geometry, domain_grid, 1)";
