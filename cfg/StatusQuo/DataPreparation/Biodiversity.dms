@@ -5,7 +5,7 @@ container Biodiversity: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 	    unit<uint16> RegionDomain: Expr = "Geography/Regions/JrcRegion";
 		attribute<RegionDomain> RegionGrid(Geography/Lambert100mGrid):  expr = "Geography/Regions/JrcRegion/Grid";
 		
-		//attribute<JrcFactorData/ShapeData/natura2000_v2011> n2k_grid 	(Geography/Lambert100mGrid):        Expr = "poly2grid(JrcFactorData/ShapeData/natura2000_v2011/Geometry, Geography/Lambert100mGrid, 1)", FreeData = "False";
+		//attribute<JrcFactorData/ShapeData/natura2000_v2011> n2k_grid 	(Geography/Lambert100mGrid):        Expr = "poly2grid(JrcFactorData/ShapeData/natura2000_v2011/Geometry, Geography/Lambert100mGrid)", FreeData = "False";
 	    
 		attribute<bool> Natura2000		    	(JrcFactorData/domain_grid): 	    Expr = "JrcFactorData/TiffData/Natura2000/Natura2000", DisableStorage = "True";
 	    attribute<bool> Natura2000Priority		(JrcFactorData/domain_grid): 	    Expr = "JrcFactorData/TiffData/Natura2000Priority/Natura2000Priority == uint2(1)", DisableStorage = "True";//"bool(JrcFactorData/TiffData/Natura2000Priority/Natura2000Priority)", DisableStorage = "True";

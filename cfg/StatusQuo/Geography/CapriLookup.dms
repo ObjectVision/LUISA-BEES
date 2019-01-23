@@ -29,7 +29,7 @@ container getCapriData: Using = "Geography/AdministrativeBoundaries/BoundaryDoma
 			attribute<JrcRegion> JrcRegion_rel: Expr = "rlookup(nuts0_ICC, JrcRegion/ICC)";
 		}
 		
-		//attribute<uint32> Nuts2All_grid (Lambert100mGrid): expr = "poly2grid(Nuts2All/Geometry, Lambert100mGrid, 1)", StorageName = "%EUCS_100mDir%/nuts2_100m/Nuts2All_jul16.tif";
+		//attribute<uint32> Nuts2All_grid (Lambert100mGrid): expr = "poly2grid(Nuts2All/Geometry, Lambert100mGrid)", StorageName = "%EUCS_100mDir%/nuts2_100m/Nuts2All_jul16.tif";
 		
 		unit<uint32> Nuts2_sel: expr = "subset(IsDefined(Nuts2All/JrcRegionId))";
 		

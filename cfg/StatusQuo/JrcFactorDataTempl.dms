@@ -127,7 +127,7 @@ container JrcFactorDataTempl: IsTemplate = "True", IsHidden = "true"  //, Expr =
 			attribute<Geography/LambertEA> 	Geometry (polygon): StorageName = "%LuisettaDataDir%/forests/BurntAreas2000-2012.shp", StorageReadOnly = "True";
 			attribute<uint32>				YearSeason;
 		}
-		attribute<BurntAreas_shape> 	BurntGrid_id (domain_grid):	expr = "poly2grid(BurntAreas_shape/Geometry, domain_grid, 1)";
+		attribute<BurntAreas_shape> 	BurntGrid_id (domain_grid):	expr = "poly2grid(BurntAreas_shape/Geometry, domain_grid)";
 		attribute<uint32>				BurntInYear	 (domain_grid):	expr = "BurntAreas_shape/YearSeason[BurntGrid_id]";
 	}
 	#include <Biodiversity.dms>

@@ -1,7 +1,7 @@
 container RunRegions: Using = "Geography/AdministrativeBoundaries;"
 {
 	
-	attribute<UnitSets/base_zones> base_raster (domain_grid): expr = "poly2grid(UnitSets/base_zones/Geometry, domain_grid, 1)";
+	attribute<UnitSets/base_zones> base_raster (domain_grid): expr = "poly2grid(UnitSets/base_zones/Geometry, domain_grid)";
 	
 	container RasterSets: expr = "for_each_nedvn(BoundarySets/uniName, 'base_rels/'+ BoundarySets/uniName +'[base_raster]', domain_grid, UnitSets, BoundarySets/uniName)", FreeData = "False"
 	{

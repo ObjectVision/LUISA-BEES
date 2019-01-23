@@ -31,7 +31,7 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 			attribute<bool> art20_partially 	(domain_grid): 	 	Expr = "lfaRef/art20_partially[lfa_grid]", DisableStorage="True";		
 			attribute<bool> floodRiskMap        (domain_grid):  	Expr = "bool(DataContainer/FloodRisk/inFile/ReadData)", DisableStorage = "True";
 			attribute<bool> coastMap        	(domain_grid):   	Expr = "bool(VariableContainer/coastalZone)[domain/BasisGrid]", DisableStorage = "True";	
-	//	    attribute<JrcFactorData/ShapeData/coastalZones> cz_grid (domain_grid): expr = "poly2grid(JrcFactorData/ShapeData/coastalZones/Geometry, Geography/Lambert100mGrid, 1)", FreeData = "False";
+	//	    attribute<JrcFactorData/ShapeData/coastalZones> cz_grid (domain_grid): expr = "poly2grid(JrcFactorData/ShapeData/coastalZones/Geometry, Geography/Lambert100mGrid)", FreeData = "False";
 			attribute<bool> buff_ndaMap (domain_grid) : 			Expr = "bool(VariableContainer/NDA)[domain/BasisGrid]", DisableStorage = "True";
 			attribute<bool> riparianAreaMap  	(domain_grid):  	Expr = "bool(DataContainer/RiparianAreas/inFile/ReadData)", DisableStorage = "True";
 			attribute<Int16> erosionRiskMap     (domain_grid):  	Expr = "int16(VariableContainer/erosionRisk)[domain/BasisGrid]", DisableStorage = "True";

@@ -143,7 +143,7 @@ container Geography: Using = "Units", IsHidden = "True"
 			//attribute<Nuts0>  Nuts0Code:         Expr = "nr_OrgEntity"; 
 			attribute<String> SuitabilityTraits: Expr = "const('MNL100',.)"; 
 			
-			attribute<.> Grid(Lambert100mGrid):  Expr = "poly2grid(Geometry, Lambert100mGrid, 1)";
+			attribute<.> Grid(Lambert100mGrid):  Expr = "poly2grid(Geometry, Lambert100mGrid)";
 
 			attribute<LambertEA> Geometry(poly): Expr = "AdministrativeBoundaries/LUISA_zones/RunAreas/Polygons[Ra_id]";
 			
@@ -193,9 +193,10 @@ container Geography: Using = "Units", IsHidden = "True"
 	
 	container RegionGrids_100m
 	{
-		attribute<Regions/Nuts2All>  Nuts2GridOrg(Lambert100mStripedGrid):
-			StorageReadOnly = "True",
-			StorageName = "%EUCS_100mDir%/nuts2_100m/Nuts2All.tif";
+// REMOVE	
+//		attribute<Regions/Nuts2All>  Nuts2GridOrg(Lambert100mStripedGrid):
+//			StorageReadOnly = "True",
+//			StorageName = "%EUCS_100mDir%/nuts2_100m/Nuts2All.tif";
 		
 		container Tiles
 		{
@@ -221,10 +222,10 @@ container Geography: Using = "Units", IsHidden = "True"
 				attribute<Lambert100mStripedGrid> UB100:    Expr = "Point(min_elem(PointCol(UB100Org), PointCol(UpperBound(Lambert100mStripedGrid))),min_elem(PointRow(UB100Org), PointRow(UpperBound(Lambert100mStripedGrid))), Lambert100mStripedGrid)", KeepData = "True";
 			}
 			attribute<TileSetNew> AggrRel(Lambert100mStripedGrid): Expr = "value((ID(Lambert100mStripedGrid) - LowerBound(Lambert100mStripedGrid)) / JrcTileExtent, TileSetNew)";
-			attribute<Bool> HasLandOrg(TileSetNew): Expr = "any(IsDefined(Nuts2GridOrg), AggrRel)", StorageName = "%ProjDir%/data/SelectedTiles.bmp"
-			{
-				attribute<UInt32> PaletteData(Bool): Expr = "Classifications/Boolean/Palette";
-			}
+//REMOVE	attribute<Bool> HasLandOrg(TileSetNew): Expr = "any(IsDefined(Nuts2GridOrg), AggrRel)", StorageName = "%ProjDir%/data/SelectedTiles.bmp"
+//			{
+//				attribute<UInt32> PaletteData(Bool): Expr = "Classifications/Boolean/Palette";
+//			}
 
 			#include <HasLand.dms>
 

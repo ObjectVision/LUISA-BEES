@@ -4,7 +4,7 @@ container CAP: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 	container sourceData : IsHidden = "True" 
 	{
 
-		attribute<JrcFactorData/ShapeData/lfa> lfa_grid (JrcFactorData/domain_grid):        expr = "poly2grid(JrcFactorData/ShapeData/lfa/Geometry, Geography/Lambert100mGrid, 1)", FreeData = "False";
+		attribute<JrcFactorData/ShapeData/lfa> lfa_grid (JrcFactorData/domain_grid):        expr = "poly2grid(JrcFactorData/ShapeData/lfa/Geometry, Geography/Lambert100mGrid)", FreeData = "False";
 		attribute<bool> art18_totally		(JrcFactorData/domain_grid): 		Expr = "JrcFactorData/ShapeData/lfa/art18_totally[lfa_grid]", DisableStorage = "True";
 		attribute<bool> art18_partially 	(JrcFactorData/domain_grid): 	 	Expr = "JrcFactorData/ShapeData/lfa/art18_partially[lfa_grid]", DisableStorage="True";
 		attribute<bool> art19_all 			(JrcFactorData/domain_grid): 		Expr = "JrcFactorData/ShapeData/lfa/art19_all[lfa_grid]", DisableStorage="True";
@@ -12,7 +12,7 @@ container CAP: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 		attribute<bool> art20_partially 	(JrcFactorData/domain_grid): 	 	Expr = "JrcFactorData/ShapeData/lfa/art20_partially[lfa_grid]", DisableStorage="True";		
 		attribute<bool> floodRiskMap        (JrcFactorData/domain_grid):  		Expr = "JrcFactorData/TiffData/floodRisk/floodRisk",DisableStorage = "True";
 		attribute<bool> coastMap        	(JrcFactorData/domain_grid):   		Expr = "JrcFactorData/TiffData/coastalZone/Coast",DisableStorage = "True";	
-//	    attribute<JrcFactorData/ShapeData/coastalZones> cz_grid (JrcFactorData/domain_grid): expr = "poly2grid(JrcFactorData/ShapeData/coastalZones/Geometry, Geography/Lambert100mGrid, 1)", FreeData = "False";
+//	    attribute<JrcFactorData/ShapeData/coastalZones> cz_grid (JrcFactorData/domain_grid): expr = "poly2grid(JrcFactorData/ShapeData/coastalZones/Geometry, Geography/Lambert100mGrid)", FreeData = "False";
 		attribute<bool> buff_ndaMap (JrcFactorData/domain_grid) : 				Expr = "JrcFactorData/TiffData/NDAs/NDA", DisableStorage = "True";
 		attribute<bool> riparianAreaMap  	(JrcFactorData/domain_grid):  		Expr = "JrcFactorData/TiffData/RiparianAreas/RiparianAreas", DisableStorage = "True";
 		attribute<Int16> erosionRiskMap     (JrcFactorData/domain_grid):  		Expr = "JrcFactorData/TiffData/erosionRisk/erosionRisk ", DisableStorage = "True";
