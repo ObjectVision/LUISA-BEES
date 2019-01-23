@@ -1,6 +1,6 @@
 container LU
 {	
-	unit<UInt8> ModelType: NrOfRows = 10 // @USERINPUT: keep in sync with the actual nr of model classes
+	unit<UInt8> ModelType: NrOfRows = 13 // @USERINPUT: keep in sync with the actual nr of model classes
 	{
 		parameter<uint32> nrAttr: Expr = "9";
 		unit<UInt32> Elements: Expr = "Range(uint32, 0, nrAttr*#ModelType)"
@@ -17,14 +17,14 @@ container LU
 			//	'8' ,'5','227','201','053','Cereals',                 	'agrimarket',		'CerealsMin',    	'CerealsMax',
 			//	'9' ,'5','254','254','000','Maize',                   	'agrimarket',		'MaizeMin',      	'MaizeMax',
 			//	'10' ,'5','236','110','050','RootCrops',               	'agrimarket',		'RootCropsMin',  	'RootCropsMax',
-			//	'8','4','216','213','164','AbanArable',         		null, 				null, 				null, // 'Capri',    'AbandonedArable',         null,
-			//	'9','4','153','130','120','AbanPermanentCrops', 		null, 				null,				null, // 'Capri',    'AbandonedPermanentCrops', null,
-			//	'10','4','137','170','125','AbanPastures',       		null, 				null, 				null, // 'Capri',    'AbandonedPastures',       null,
+				'8','4','216','213','164','AbanArable',         		null, 				null, 				null, // 'Capri',    'AbandonedArable',         null,
+				'9','4','153','130','120','AbanPermanentCrops', 		null, 				null,				null, // 'Capri',    'AbandonedPermanentCrops', null,
+				'10','4','137','170','125','AbanPastures',       		null, 				null, 				null, // 'Capri',    'AbandonedPastures',       null,
 			//	'11','0','160','000','000','AbanUrban',          		null,				null, 				null, // amount is determined by decreased demand for Urban with low transition costs to Abandonment.
 			//	'12','1','071','000','117','AbanIndustry',        		null, 				null, 				null,  // amount is determined by decreased demand for Industry with low transition costs to Abandonment.
-				'8','6','000','200','000','NewEnergyCrops' ,         	'agrimarket',		'NewEnergyMin',     'NewEnergyMax',
-				'9' ,'3','166','242','000','SHVA',    					null, 				null, 				null,
-				'10' ,'2','036','130','056','ForestsYoung',            	'forest',			'ForestsYoMin',    	'ForestsYoMax'
+				'11','6','000','200','000','NewEnergyCrops' ,         	'agrimarket',		'NewEnergyMin',     'NewEnergyMax',
+				'12','3','166','242','000','SHVA',    					null, 				null, 				null,
+				'13','2','036','130','056','ForestsYoung',            	'forest',			'ForestsYoMin',    	'ForestsYoMax'
 			];
 		}
 		attribute<String>           Name: Expr = "Label";
