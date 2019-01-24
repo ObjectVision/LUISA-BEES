@@ -13,8 +13,7 @@ container Luisetta
 ,	FreeData = "True"
 {
 	container ConfigSettings : IsHidden = "True"
-	{
-		
+	{		
 		container Overridable: Descr = "From 6.069 on only this container will be overridable with Tools->Options->ConfigSettings that sets user/machine specific overrides in the registry"
 		{
 			parameter<String> RunRegions: [ 'JrcRegion' ]; // @USERINPUT: Nuts1 or JrcRegion
@@ -22,15 +21,6 @@ container Luisetta
 			parameter<String> LuisettaDataDir := '%SourceRootDir%/Luisetta';
 			parameter<String> EUCS_100mDir    := '%SourceRootDir%/EUCS_100m';
 			parameter<String> DGRegioDir      := '%SourceRootDir%/DGRegio';
-		}
-		
-		// driver name is different on x64, after installing new x64 drivers (incl related SP1), see http://www.mantis.objectvision.nl/view.php?id=249
-		parameter<String> OdbcExcelDriver: Expr = "(GeoDmsPlatform()=='Win32') ? '{Microsoft Excel Driver (*.xls)}' : '{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}'"; 
-		parameter<String> OdbcTxtDriver:   Expr = "(GeoDmsPlatform()=='Win32') ? '{Microsoft Text Driver (*.txt; *.csv)}' : '{Microsoft Access Text Driver (*.txt, *.csv)}'"; 
-		
-		container Tools
-		{
-			parameter<Int32> NrGroups: [ 1 ]; // 1 for Zoom tools; 2 for additional selection tools; and 3 for addtional edit tools.
 		}
 	}
 	

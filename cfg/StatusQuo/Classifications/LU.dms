@@ -237,7 +237,6 @@ container LU
 		attribute<String> Label2:     Expr = "Elements/Text[value(UInt32(ID(.))*12+8, Elements)]";
 		attribute<String> Label:      Expr = "Elements/Text[value(UInt32(ID(.))*12+9, Elements)]", DialogType = "LabelText";
 		
-//REMOVE		attribute<PopulatedLandUseTypes> 	PopulatedLandUseType: 	Expr = "rlookup(uint32(Elements/Text[value(UInt32(ID(.))*12+10, Elements)]), PopulatedLandUseTypes/Lookup)";
 		attribute<bool> 					Water:					Expr = "bool(value(Elements/Text[value(UInt32(ID(.))*12+11, Elements)], uint32))";
 		attribute<bool>						Burnt:					Expr = "id(.) = uint8(334)";
 	}
