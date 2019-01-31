@@ -141,19 +141,19 @@ container ModelTraits
 			container ClaimTableSelections: Expr = "for_each_ne(ClaimTable/Values, 'ClaimTableSelectionTemplate(CaseData/ClaimTables/'+ClaimTable/Values+',CurrYear)')" {
 				container Population:	expr = "ClaimTableSelectionTemplate(DemandSet/Global/PopProjections, CurrYear)";
 				container MinUrban: 	expr = "ClaimTableSelectionTemplate(DemandSet/Global/MinUrban, CurrYear)" {
-					attribute<float32> Claim (UrbanClaimZones): expr = "rjoin(uint32(id(UrbanClaimZones)), "
+					attribute<float32> Claim (UrbanClaimZones): expr = "rjoin(uint32(UrbanClaimZones/Nr_OrgEntity), "
 						"Parameters/DemandSets/Global/MinUrban/Data/ZoneRel[sel/nr_OrgEntity], "
 						"float32(Parameters/DemandSets/Global/MinUrban/Data/Pop[sel/nr_OrgEntity]))";	
 				}
 				container MaxUrban: 	expr = "ClaimTableSelectionTemplate(DemandSet/Global/MaxUrban, CurrYear)" {
-					attribute<float32> Claim (UrbanClaimZones): expr = "rjoin(uint32(id(UrbanClaimZones)), "
+					attribute<float32> Claim (UrbanClaimZones): expr = "rjoin(uint32(UrbanClaimZones/Nr_OrgEntity), "
 						"Parameters/DemandSets/Global/MaxUrban/Data/ZoneRel[sel/nr_OrgEntity], "
 						"float32(Parameters/DemandSets/Global/MaxUrban/Data/Pop[sel/nr_OrgEntity]))";	
 				}
 			}
 			
 			// do transformation of min/max separately, then integrate in final demand containers.
-			
+			attribute<float32> AllowedSuitableUrban 	(UrbanClaimZones): expr = "= 'sum(float32(DynamicComponent/TransPot/Urban > float32(0) && !DynamicComponent/Allowed/ForestsMature), CaseData/RegionData/'+ ClaimTableName[uint8(0)] +')'";
 			
 			container CollectMinDemandFromClaimTables:
 				Expr = 
@@ -170,7 +170,7 @@ container ModelTraits
 							"') - CaseData/adapt_claim/' + ModelType/Name + "
 						"', float32(0))'"
 						", CaseData/RegionNumbers, ClaimTableName, float32)" {
-							attribute<float32> Urban (UrbanClaimZones): expr = "min_elem(ClaimTableSelections/MinUrban/Claim, ClaimTableSelections/MaxUrban/Claim) * float32(0.9)";
+							attribute<float32> Urban (UrbanClaimZones): expr = "min_elem(ClaimTableSelections/MinUrban/Claim, ClaimTableSelections/MaxUrban/Claim, AllowedSuitableUrban) * float32(0.9)";
 						}
 					
 			container CollectMaxDemandFromClaimTables:
@@ -190,14 +190,13 @@ container ModelTraits
 						", CaseData/RegionNumbers, ClaimTableName, float32)" {
 							attribute<float32> Urban (UrbanClaimZones): expr = "max_elem(ClaimTableSelections/MinUrban/Claim, ClaimTableSelections/MaxUrban/Claim) * float32(1.1111)";
 						}		
-	
 	// demand containers below aggregate the demands to the wanted aggregation level
 			Container DemandMin: expr = "for_each_nednv(ModelType/Name, "
 					"IsDefined(ModelType/DemandCharacteristics) ? "
 						"'(MakeDefined(uint32((sum(CollectMinDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * "
 						"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, "
 							"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)"
-								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')) * float32(0.9)), 0))' "
+								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')) * float32(0.8)), 0))' "
 					" : 'uint32(CollectMinDemandFromClaimTables/'+ModelType/Name+')', "
 				 	" CaseData/RegionNumbers, DestClaimTableName, uint32)";
 			Container DemandMax: expr = "for_each_nednv(ModelType/Name, "
@@ -205,7 +204,7 @@ container ModelTraits
 						"'(MakeDefined(uint32((sum(CollectMaxDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * "
 						"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, "
 							"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)"
-								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +'))* float32(1.1111)), 0))' "
+								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +'))* float32(1.25)), 0))' "
 					" : 'uint32(CollectMaxDemandFromClaimTables/'+ModelType/Name+')', "
 				 	" CaseData/RegionNumbers, DestClaimTableName, uint32)";				
 		}
