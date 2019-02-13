@@ -697,15 +697,16 @@ container ModelTraits
 				}
 				container GHG
 				{
-					unit<uint32> table:= /Parameters/GHG_Factors/table;
+					unit<uint8> transition := /Parameters/GHG_Factors/transition;
 					parameter<string> PartyCode := rjoin(JrcRegionID, /Parameters/GHG_Factors/Parties/JrcRegion_rel, /Parameters/GHG_Factors/Parties/party_code);
 					
 					unit<uint32> LUC := /Parameters/GHG_Factors/LUC;
 					unit<uint32> LUC_2 := combine(LUC, LUC) {
-						attribute<table> table_rel := invert(per_table);
-						attribute<.> per_table(table) := combine_data(	., table/from, table/to);
-						attribute<string> table_name := table/name[table_rel];
-						attribute<string> factor_lookup_expr := 'rjoin(PartyCode, /Parameters/GHG_Factors/Tables/'+table_name+'/Party, float32(/Parameters/GHG_Factors/Tables/'+table_name+'/EF))';
+						attribute<string> Label := LUC/name[nr_1] + ' -> '+LUC/name[nr_2], DialogType = 'LabelText';
+						attribute<transition> transition_rel := invert(per_transition);
+						attribute<.> per_transition(transition) := combine_data(	., transition/from, transition/to);
+						attribute<string> transition_name := transition/name[transition_rel];
+						attribute<string> factor_lookup_expr := 'rjoin(PartyCode, /Parameters/GHG_Factors/transitions/'+transition_name+'/Party, float32(/Parameters/GHG_Factors/transitions/'+transition_name+'/EF))';
 						// tonnes CO2 per ha.
 						attribute<float32> EF := ='union_data(., '+AsItemList(MakeDefined(factor_lookup_expr, '0f / 0f'))+')' ;
 					}
@@ -716,30 +717,25 @@ container ModelTraits
 						attribute<LUC> StartingIT(domain) := SpatialFilter ? LUC/per_ModelType[StartingLanduse] : value(0 / 0, LUC);
 						attribute<LUC> PreviousIT(domain) := SpatialFilter ? LUC/per_ModelType[PreviousLanduse] : value(0 / 0, LUC);
 						attribute<LUC_2> from_to(domain) := combine_data(LUC_2, PreviousIT, CurrentIT);
+						attribute<transition> transition_rel(domain) := LUC_2/transition_rel[from_to];
 						attribute<float32> EF(domain) := LUC_2/Ef[from_to];
 					}
 					container RegionData: 
-						Expr = "for_each_nedv(Classifications/LU/IndicatorType/name"
-						       ", 'sum(value(year/CurrentIT   == value(' + String(id(Classifications/LU/IndicatorType)) +',Classifications/LU/IndicatorType), luHa) "
+						Expr = "for_each_nedv(transition/name"
+						       ", 'sum(value(year/transition_rel == value(' + String(id(transition)) +',transition), luHa) "
 						       "   , RegionGrid)'"
 						       ",  Regions"
 						       ",  luHa"
-						       ")"
-					{
-						attribute<luHa> AgriCulture (Regions): Expr = "ArableLand + OtherAgriculture";
-						attribute<luHa> Builtup (Regions): Expr = "Urban + Industrial";
-					}
+						       ")";
+							   
 					container written_RegionData: 
 						Expr = 
-							"for_each_nedv(Classifications/LU/IndicatorType/name"
-							", 'RegionData/'+Classifications/LU/IndicatorType/name"
+							"for_each_nedv(transition/name"
+							", 'RegionData/'+transition/name"
 						    ",  Regions"
 						    ",  luHa"
 						    ")",
-						StorageName = "=DirName + '_LandUseIT.dbf'"
-					{
-						attribute<luHa> AgriCulture (Regions): Expr = "RegionData/Agriculture";
-					}
+						StorageName = "=DirName + '_GHG.dbf'";
 				}
 			}
 		}

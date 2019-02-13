@@ -1549,6 +1549,13 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 	container GHG_Factors {
 		unit<uint32> LUC: nrofrows = 4 {
 			attribute<string> name: ['Forest', 'Cropland', 'Grassland', 'Settlement'];
+			attribute<string> Label := name, DialogType = "LabelText";
+			attribute<uint32> ColorBase: 
+			[
+				rgb(0, 1, 0), rgb(1, 1, 0), rgb(0, 1, 1), rgb(1, 0, 0)
+			];
+			attribute<uint32> BrushColor := ColorBase * 128 + (255-128)*rgb(1,1,1), DialogType = "BrushColor";
+			
 			attribute<.> per_ModelType(Classifications/LU/ModelType): [
 				3, 3,  // Urban, Industrial
 				2, 2,  // OtherArable, PermanentCrops
@@ -1560,13 +1567,20 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			]
 			;
 		}
-		unit<uint32> Table : nrofrows = 13 {
+		unit<uint8> transition : nrofrows = 13 {
 			attribute<string> Name : [ 
 				'A1',  'A21', 'A22',
 				'B21', 'B1',  'B22',
 				'C21', 'C22', 'C1',
 				'E21', 'E22', 'E23', 'E1'
 			];
+			attribute<string> Label := name + ': '+LUC/name[from]+'-> '+LUC/name[to], DialogType = "LabelText";
+			attribute<uint32> BrushColor := 
+				(from == to)
+					? LUC/ColorBase[to] * 64 + (255-64) * rgb(1,1,1)
+					: LUC/ColorBase[to] * 128 + LUC/ColorBase[from]*96
+			,	DialogType = "BrushColor";
+			
 			attribute<string> FileName := '4'+Name;
 			attribute<LUC> from: [
 				0, 1, 2,
@@ -1583,7 +1597,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 		}
 		unit<uint32> Parties : nrofrows = 31 {
 			attribute<string> Party_code: [
-				'AUT','BEL','BGR','HRV','CYP','CZE','DNM','EST','FIN','FRK','DEU','GRC','HUN','IRL','ITA','LVA','LTU','LUX''MLT','NLD','POL','PRT','ROU','SVK','SVN','ESP','SWE','GBE','EU-28','ISL','GBK'
+				'AUT','BEL','BGR','HRV','CYP','CZE','DNM','EST','FIN','FRK','DEU','GRC','HUN','IRL','ITA','LVA','LTU','LUX','MLT','NLD','POL','PRT','ROU','SVK','SVN','ESP','SWE','GBE','EU-28','ISL','GBK'
 			];
 			attribute<string> ICC_code: [ 
 				'AT','BELUX','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','BELUX', 'MT','NL','PL','PT','RO','SK','SI','ES','SE','UK','EU-28','IS','???'
@@ -1591,7 +1605,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			attribute<Geography/Regions/JrcRegion> JrcRegion_rel := rlookup(ICC_code, Geography/Regions/JrcRegion/ICC);
 		}
 		
-		container Tables := for_each_ind('nxat', Table/name, uint32, '%projdir%/ParamSets/GHG/'+Table/FileName+'.csv', 'gdal.vect');
+		container transitions := for_each_ind('nxat', transition/name, uint32, '%projdir%/ParamSets/GHG/'+transition/FileName+'.csv', 'gdal.vect');
 	}
 	attribute<String> AllocSetComposer(Meta/Run): Expr = 
 				"'Templ/AllocSet('"
