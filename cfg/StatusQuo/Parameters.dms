@@ -1546,7 +1546,53 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				"Meta/NeighbourhoodSet/UniqueFiles/name, "
 				"'Templ/NeighbTempl('+Quote(Meta/NeighbourhoodSet/UniqueFiles/Values)+')'"
 			")";
-
+	container GHG_Factors {
+		unit<uint32> LUC: nrofrows = 4 {
+			attribute<string> name: ['Forest', 'Cropland', 'Grassland', 'Settlement'];
+			attribute<.> per_ModelType(Classifications/LU/ModelType): [
+				3, 3,  // Urban, Industrial
+				2, 2,  // OtherArable, PermanentCrops
+				1,     // Pastures
+				0, 0,  // ForestsMature, TransWoodlandShrub
+				2,     // NewEnergyCrops
+				null,  // SHVA
+				0      // ForestsYoung
+			]
+			;
+		}
+		unit<uint32> Table : nrofrows = 13 {
+			attribute<string> Name : [ 
+				'A1',  'A21', 'A22',
+				'B21', 'B1',  'B22',
+				'C21', 'C22', 'C1',
+				'E21', 'E22', 'E23', 'E1'
+			];
+			attribute<string> FileName := '4'+Name;
+			attribute<LUC> from: [
+				0, 1, 2,
+				0, 1, 2,
+				0, 1, 2,
+				0, 1, 2, 3
+			];
+			attribute<LUC> to: [
+				0, 0, 0, 
+				1, 1, 1,
+				2, 2, 2,
+				3, 3, 3, 3
+			];
+		}
+		unit<uint32> Parties : nrofrows = 31 {
+			attribute<string> Party_code: [
+				'AUT','BEL','BGR','HRV','CYP','CZE','DNM','EST','FIN','FRK','DEU','GRC','HUN','IRL','ITA','LVA','LTU','LUX''MLT','NLD','POL','PRT','ROU','SVK','SVN','ESP','SWE','GBE','EU-28','ISL','GBK'
+			];
+			attribute<string> ICC_code: [ 
+				'AT','BELUX','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','BELUX', 'MT','NL','PL','PT','RO','SK','SI','ES','SE','UK','EU-28','IS','???'
+			];
+			attribute<Geography/Regions/JrcRegion> JrcRegion_rel := rlookup(ICC_code, Geography/Regions/JrcRegion/ICC);
+		}
+		
+		container Tables := for_each_ind('nxat', Table/name, uint32, '%projdir%/ParamSets/GHG/'+Table/FileName+'.csv', 'gdal.vect');
+	}
 	attribute<String> AllocSetComposer(Meta/Run): Expr = 
 				"'Templ/AllocSet('"
 					"+Quote(ParamSets/ActiveSet/ParamPath)+','"
