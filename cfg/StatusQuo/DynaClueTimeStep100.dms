@@ -180,7 +180,7 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 		parameter<bool> cumulStatusFlag: Expr = "and(PrevState/cumulStatusFlag, d_alloc/statusFlag)";
 		
 //		container endstate;	
-		container OutputGeneration: Expr = "ModelTraits/OutputGenerators/OutputGenerator(domain_grid, domain, TimeStepDirName)";
+		container OutputGeneration:= ModelTraits/OutputGenerators/OutputGenerator(domain_grid, domain, TimeStepDirName);
 			
 //	NYI: ALSO WRITE: TotalSuitability
 		parameter<string> GeneratedFiles: 

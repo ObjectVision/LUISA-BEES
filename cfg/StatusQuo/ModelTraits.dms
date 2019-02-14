@@ -737,11 +737,24 @@ container ModelTraits
 						    ")",
 						StorageName = "=DirName + '_GHG.dbf'";
 				}
+				container ESS {
+					unit<uint8> LUC := /Parameters/CapMod/LUC;
+					unit<uint16> capri_regs := RunRegions/UnitSets/Capri {
+						container PerLUC := for_each_nedv(LUC/name
+						,	replace('rjoin(rlookup(Label, Geography/Regions/Capri/code), xxx/Capri_rel, xxx/intensity)','xxx','/Parameters/CapMod/Data/'+LUC/name+'/Years/P'+String(CurrYear)+'/year_data')
+						, ., float32
+						);
+						attribute<.> per_domain(domain) := CaseData/RegionGrids/Capri;
+					}
+					
+					attribute<LUC> CurrentLUC(domain) := SpatialFilter ? LUC/per_ModelType[CurrentLanduse ] : value(0 / 0, LUC);						
+					attribute<Float32> Intensity(domain) := ='merge(CurrentLUC, Float32, '+AsItemList('capri_regs/PerLUC/'+LUC/name+'[Capri_regs/per_domain]')+')';
+				}
 			}
 		}
 		
 		// these indicators are use in both OutputGeneration (per RunRegion per TimeStep) as in EvaluationIndicators100 (in simulation_results for each run region and once in /Indicators)
-		container SharedIndicators: IsTemplate = "True"
+		template SharedIndicators
 		{
 			unit<UInt32> domain;
 			attribute<Classifications/LU/ModelType> StartingLandUse(domain);
@@ -777,10 +790,10 @@ container ModelTraits
 						StorageName = "=DirName + '_xTabMT.dbf'";
 			container Spatial
 			{
-				container NoFilter:          expr = "Templates/SpatialIndicator(domain, JrcFactorData, const(True, domain),                                             Regions, RegionGrid, DirName + 'All')";
+				container NoFilter := Templates/SpatialIndicator(domain, JrcFactorData, const(True, domain), Regions, RegionGrid, DirName + 'All');
 			}
 		}
-		container OutputGenerator: IsTemplate = "True"
+		template OutputGenerator
 		{
 			unit<WPoint> domainGrid;
 			unit<UInt32> domain;
@@ -837,14 +850,14 @@ container ModelTraits
 				}
 			}
 						
-			container Indicators: Expr = 
-				"SharedIndicators("
-					"domain, "
-					"StartingState/landuse, PrevState/LandUse, ResultingState/LandUse, "
-					"CaseData/JrcFactorData, "
-					"RunRegions/UnitSets/Nuts2_LUISA, RunRegions/RasterSets/Nuts2_LUISA[domain/grid_rel],"
-					"OutPutDirName"
-				")";
+			container Indicators := 
+				SharedIndicators(
+					domain, 
+					StartingState/landuse, PrevState/LandUse, ResultingState/LandUse, 
+					CaseData/JrcFactorData, 
+					RunRegions/UnitSets/Nuts2_LUISA, RunRegions/RasterSets/Nuts2_LUISA[domain/grid_rel],
+					OutPutDirName
+				);
 				
 			attribute<UInt8> written_ForestType(domainGrid): Expr = "ForestType", StorageName = "=OutputDirName+'/ForestType.tif'"
 			{

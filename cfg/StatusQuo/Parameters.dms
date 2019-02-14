@@ -1546,7 +1546,8 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				"Meta/NeighbourhoodSet/UniqueFiles/name, "
 				"'Templ/NeighbTempl('+Quote(Meta/NeighbourhoodSet/UniqueFiles/Values)+')'"
 			")";
-	container GHG_Factors {
+	container GHG_Factors: Descr = "http://www.mantis.objectvision.nl/view.php?id=1189" 
+	{
 		unit<uint32> LUC: nrofrows = 4 {
 			attribute<string> name: ['Forest', 'Cropland', 'Grassland', 'Settlement'];
 			attribute<string> Label := name, DialogType = "LabelText";
@@ -1564,8 +1565,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				2,     // NewEnergyCrops
 				null,  // SHVA
 				0      // ForestsYoung
-			]
-			;
+			];
 		}
 		unit<uint8> transition : nrofrows = 13 {
 			attribute<string> Name : [ 
@@ -1607,6 +1607,51 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 		
 		container transitions := for_each_ind('nxat', transition/name, uint32, '%projdir%/ParamSets/GHG/'+transition/FileName+'.csv', 'gdal.vect');
 	}
+	container CapMod: Descr = "http://www.mantis.objectvision.nl/view.php?id=1189"
+	{
+		unit<uint8>  LUC: nrofrows = 5
+		{
+			attribute<string> name: [ 'arable_fert', 'grass_fert', 'necr_fert', 'perm_fert', 'livestock'];
+			attribute<string> colName: [ 'fert_kg_ha', 'fert_kg_ha', 'fert_kg_ha', 'fert_kg_ha', 'numheads_1000s'];
+			attribute<.> per_ModelType(Classifications/LU/ModelType): [
+				null, null,  // Urban, Industrial
+				0, 3,  // OtherArable, PermanentCrops
+				1,     // Pastures
+				null, null,  // ForestsMature, TransWoodlandShrub
+				2,     // NewEnergyCrops
+				null,  // SHVA
+				null   // ForestsYoung
+			];
+			attribute<classifications/LU/ModelType> ModelType_rel := invert(per_ModelType);
+			attribute<uint32> Color := classifications/LU/ModelType/Color[ModelType_rel], DialogType = "BrushColor";
+		}
+		unit<uint16> Period := PeriodSet/result;
+		
+		template oneYearT {
+			unit<uint32> all_data;
+			parameter<Period> Period_rel;
+			unit<uint32> year_data := subset(Float32(all_data/year) == period/ProjectedYear[period_rel])
+			,	DialogType = "Map", DialogData = "Capri_rel"
+			{
+				attribute<Geography/Regions/Capri> Capri_rel := all_data/Capri_rel[nr_OrgEntity];
+				attribute<Float32> intensity := all_data/Intensity[nr_OrgEntity];
+			}
+		}
+		template readT {
+			parameter<string> luc_name;
+			parameter<string> column_name;
+			unit<uint32> all_data: StorageName = "='%SourceRootDir%/EFDM/data/capmod/'+luc_name+'.csv'", StorageType = "gdal.vect", StorageReadOnly = "True"
+			,	DialogType = "Map", DialogData = "Capri_rel"
+			{
+				attribute<Geography/Regions/Capri> Capri_rel := rlookup(left(region,4), Geography/Regions/Capri/code);				
+				attribute<Float32> Intensity := ='Float32('+column_name+')';
+			}
+			container Years := for_each_ne(Period/name, 'oneYearT(all_data,'+string(id(Period))+'w)');
+		}
+		container data := for_each_ne(LUC/name, 'readT('+Quote(LUC/name)+','+Quote(LUC/colName)+')');
+		
+	}
+
 	attribute<String> AllocSetComposer(Meta/Run): Expr = 
 				"'Templ/AllocSet('"
 					"+Quote(ParamSets/ActiveSet/ParamPath)+','"
