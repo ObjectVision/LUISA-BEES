@@ -1546,6 +1546,111 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				"Meta/NeighbourhoodSet/UniqueFiles/name, "
 				"'Templ/NeighbTempl('+Quote(Meta/NeighbourhoodSet/UniqueFiles/Values)+')'"
 			")";
+	container GHG_Factors: Descr = "http://www.mantis.objectvision.nl/view.php?id=1189" 
+	{
+		unit<uint32> LUC: nrofrows = 4 {
+			attribute<string> name: ['Forest', 'Cropland', 'Grassland', 'Settlement'];
+			attribute<string> Label := name, DialogType = "LabelText";
+			attribute<uint32> ColorBase: 
+			[
+				rgb(0, 1, 0), rgb(1, 1, 0), rgb(0, 1, 1), rgb(1, 0, 0)
+			];
+			attribute<uint32> BrushColor := ColorBase * 128 + (255-128)*rgb(1,1,1), DialogType = "BrushColor";
+			
+			attribute<.> per_ModelType(Classifications/LU/ModelType): [
+				3, 3,  // Urban, Industrial
+				2, 2,  // OtherArable, PermanentCrops
+				1,     // Pastures
+				0, 0,  // ForestsMature, TransWoodlandShrub
+				2,     // NewEnergyCrops
+				null,  // SHVA
+				0      // ForestsYoung
+			];
+		}
+		unit<uint8> transition : nrofrows = 13 {
+			attribute<string> Name : [ 
+				'A1',  'A21', 'A22',
+				'B21', 'B1',  'B22',
+				'C21', 'C22', 'C1',
+				'E21', 'E22', 'E23', 'E1'
+			];
+			attribute<string> Label := name + ': '+LUC/name[from]+'-> '+LUC/name[to], DialogType = "LabelText";
+			attribute<uint32> BrushColor := 
+				(from == to)
+					? LUC/ColorBase[to] * 64 + (255-64) * rgb(1,1,1)
+					: LUC/ColorBase[to] * 128 + LUC/ColorBase[from]*96
+			,	DialogType = "BrushColor";
+			
+			attribute<string> FileName := '4'+Name;
+			attribute<LUC> from: [
+				0, 1, 2,
+				0, 1, 2,
+				0, 1, 2,
+				0, 1, 2, 3
+			];
+			attribute<LUC> to: [
+				0, 0, 0, 
+				1, 1, 1,
+				2, 2, 2,
+				3, 3, 3, 3
+			];
+		}
+		unit<uint32> Parties : nrofrows = 31 {
+			attribute<string> Party_code: [
+				'AUT','BEL','BGR','HRV','CYP','CZE','DNM','EST','FIN','FRK','DEU','GRC','HUN','IRL','ITA','LVA','LTU','LUX','MLT','NLD','POL','PRT','ROU','SVK','SVN','ESP','SWE','GBE','EU-28','ISL','GBK'
+			];
+			attribute<string> ICC_code: [ 
+				'AT','BELUX','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','BELUX', 'MT','NL','PL','PT','RO','SK','SI','ES','SE','UK','EU-28','IS','???'
+			];
+			attribute<Geography/Regions/JrcRegion> JrcRegion_rel := rlookup(ICC_code, Geography/Regions/JrcRegion/ICC);
+		}
+		
+		container transitions := for_each_ind('nxat', transition/name, uint32, '%projdir%/ParamSets/GHG/'+transition/FileName+'.csv', 'gdal.vect');
+	}
+	container CapMod: Descr = "http://www.mantis.objectvision.nl/view.php?id=1189"
+	{
+		unit<uint8>  LUC: nrofrows = 5
+		{
+			attribute<string> name: [ 'arable_fert', 'grass_fert', 'necr_fert', 'perm_fert', 'livestock'];
+			attribute<string> colName: [ 'fert_kg_ha', 'fert_kg_ha', 'fert_kg_ha', 'fert_kg_ha', 'numheads_1000s'];
+			attribute<.> per_ModelType(Classifications/LU/ModelType): [
+				null, null,  // Urban, Industrial
+				0, 3,  // OtherArable, PermanentCrops
+				1,     // Pastures
+				null, null,  // ForestsMature, TransWoodlandShrub
+				2,     // NewEnergyCrops
+				null,  // SHVA
+				null   // ForestsYoung
+			];
+			attribute<classifications/LU/ModelType> ModelType_rel := invert(per_ModelType);
+			attribute<uint32> Color := classifications/LU/ModelType/Color[ModelType_rel], DialogType = "BrushColor";
+		}
+		unit<uint16> Period := PeriodSet/result;
+		
+		template oneYearT {
+			unit<uint32> all_data;
+			parameter<Period> Period_rel;
+			unit<uint32> year_data := subset(Float32(all_data/year) == period/ProjectedYear[period_rel])
+			,	DialogType = "Map", DialogData = "Capri_rel"
+			{
+				attribute<Geography/Regions/Capri> Capri_rel := all_data/Capri_rel[nr_OrgEntity];
+				attribute<Float32> intensity := all_data/Intensity[nr_OrgEntity];
+			}
+		}
+		template readT {
+			parameter<string> luc_name;
+			parameter<string> column_name;
+			unit<uint32> all_data: StorageName = "='%SourceRootDir%/EFDM/data/capmod/'+luc_name+'.csv'", StorageType = "gdal.vect", StorageReadOnly = "True"
+			,	DialogType = "Map", DialogData = "Capri_rel"
+			{
+				attribute<Geography/Regions/Capri> Capri_rel := rlookup(left(region,4), Geography/Regions/Capri/code);				
+				attribute<Float32> Intensity := ='Float32('+column_name+')';
+			}
+			container Years := for_each_ne(Period/name, 'oneYearT(all_data,'+string(id(Period))+'w)');
+		}
+		container data := for_each_ne(LUC/name, 'readT('+Quote(LUC/name)+','+Quote(LUC/colName)+')');
+		
+	}
 
 	attribute<String> AllocSetComposer(Meta/Run): Expr = 
 				"'Templ/AllocSet('"

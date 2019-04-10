@@ -148,10 +148,10 @@ container LU
 		attribute<UInt8>             B: Expr = " UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 2, Elements)])";
 		attribute<bool>  isAgriculture: Expr = "  Bool(Elements/Text[value(UInt32(ID(.))* nrAttr + 3, Elements)])";
 		attribute<String>        Label: Expr = "       Elements/Text[value(UInt32(ID(.))* nrAttr + 4, Elements)]" , DialogType = "LabelText";
-		attribute<bool> isUrban:        Expr = "Label = 'Urban'";
-		attribute<bool> isSemiNatural:  Expr = "Label = 'SemiNatural'";
-		attribute<bool> isForest:       Expr = "Label = 'Forest'";
-		attribute<bool>	isIndustrial:   Expr = "Label = 'Industrial'";
+		attribute<bool> isUrban:        Expr = "Label == 'Urban'";
+		attribute<bool> isSemiNatural:  Expr = "Label == 'SemiNatural'";
+		attribute<bool> isForest:       Expr = "Label == 'Forest'";
+		attribute<bool>	isIndustrial:   Expr = "Label == 'Industrial'";
 		attribute<uint32>        Color: Expr ="rgb(R,G,B)", DialogType = "BrushColor";
 		
 		parameter<.> Urban:                expr = "value(0, .)";
@@ -237,7 +237,6 @@ container LU
 		attribute<String> Label2:     Expr = "Elements/Text[value(UInt32(ID(.))*12+8, Elements)]";
 		attribute<String> Label:      Expr = "Elements/Text[value(UInt32(ID(.))*12+9, Elements)]", DialogType = "LabelText";
 		
-//REMOVE		attribute<PopulatedLandUseTypes> 	PopulatedLandUseType: 	Expr = "rlookup(uint32(Elements/Text[value(UInt32(ID(.))*12+10, Elements)]), PopulatedLandUseTypes/Lookup)";
 		attribute<bool> 					Water:					Expr = "bool(value(Elements/Text[value(UInt32(ID(.))*12+11, Elements)], uint32))";
 		attribute<bool>						Burnt:					Expr = "id(.) = uint8(334)";
 	}

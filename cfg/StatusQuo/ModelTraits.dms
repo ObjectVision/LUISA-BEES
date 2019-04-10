@@ -141,19 +141,19 @@ container ModelTraits
 			container ClaimTableSelections: Expr = "for_each_ne(ClaimTable/Values, 'ClaimTableSelectionTemplate(CaseData/ClaimTables/'+ClaimTable/Values+',CurrYear)')" {
 				container Population:	expr = "ClaimTableSelectionTemplate(DemandSet/Global/PopProjections, CurrYear)";
 				container MinUrban: 	expr = "ClaimTableSelectionTemplate(DemandSet/Global/MinUrban, CurrYear)" {
-					attribute<float32> Claim (UrbanClaimZones): expr = "rjoin(uint32(id(UrbanClaimZones)), "
+					attribute<float32> Claim (UrbanClaimZones): expr = "rjoin(uint32(UrbanClaimZones/Nr_OrgEntity), "
 						"Parameters/DemandSets/Global/MinUrban/Data/ZoneRel[sel/nr_OrgEntity], "
 						"float32(Parameters/DemandSets/Global/MinUrban/Data/Pop[sel/nr_OrgEntity]))";	
 				}
 				container MaxUrban: 	expr = "ClaimTableSelectionTemplate(DemandSet/Global/MaxUrban, CurrYear)" {
-					attribute<float32> Claim (UrbanClaimZones): expr = "rjoin(uint32(id(UrbanClaimZones)), "
+					attribute<float32> Claim (UrbanClaimZones): expr = "rjoin(uint32(UrbanClaimZones/Nr_OrgEntity), "
 						"Parameters/DemandSets/Global/MaxUrban/Data/ZoneRel[sel/nr_OrgEntity], "
 						"float32(Parameters/DemandSets/Global/MaxUrban/Data/Pop[sel/nr_OrgEntity]))";	
 				}
 			}
 			
 			// do transformation of min/max separately, then integrate in final demand containers.
-			
+			attribute<float32> AllowedSuitableUrban 	(UrbanClaimZones): expr = "= 'sum(float32(DynamicComponent/TransPot/Urban > float32(0) && !DynamicComponent/Allowed/ForestsMature), CaseData/RegionData/'+ ClaimTableName[uint8(0)] +')'";
 			
 			container CollectMinDemandFromClaimTables:
 				Expr = 
@@ -170,7 +170,7 @@ container ModelTraits
 							"') - CaseData/adapt_claim/' + ModelType/Name + "
 						"', float32(0))'"
 						", CaseData/RegionNumbers, ClaimTableName, float32)" {
-							attribute<float32> Urban (UrbanClaimZones): expr = "min_elem(ClaimTableSelections/MinUrban/Claim, ClaimTableSelections/MaxUrban/Claim) * float32(0.9)";
+							attribute<float32> Urban (UrbanClaimZones): expr = "min_elem(ClaimTableSelections/MinUrban/Claim, ClaimTableSelections/MaxUrban/Claim, AllowedSuitableUrban) * float32(0.9)";
 						}
 					
 			container CollectMaxDemandFromClaimTables:
@@ -190,14 +190,13 @@ container ModelTraits
 						", CaseData/RegionNumbers, ClaimTableName, float32)" {
 							attribute<float32> Urban (UrbanClaimZones): expr = "max_elem(ClaimTableSelections/MinUrban/Claim, ClaimTableSelections/MaxUrban/Claim) * float32(1.1111)";
 						}		
-	
 	// demand containers below aggregate the demands to the wanted aggregation level
 			Container DemandMin: expr = "for_each_nednv(ModelType/Name, "
 					"IsDefined(ModelType/DemandCharacteristics) ? "
 						"'(MakeDefined(uint32((sum(CollectMinDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * "
 						"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, "
 							"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)"
-								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')) * float32(0.9)), 0))' "
+								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')) * float32(0.8)), 0))' "
 					" : 'uint32(CollectMinDemandFromClaimTables/'+ModelType/Name+')', "
 				 	" CaseData/RegionNumbers, DestClaimTableName, uint32)";
 			Container DemandMax: expr = "for_each_nednv(ModelType/Name, "
@@ -205,7 +204,7 @@ container ModelTraits
 						"'(MakeDefined(uint32((sum(CollectMaxDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * "
 						"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, "
 							"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)"
-								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +'))* float32(1.1111)), 0))' "
+								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +'))* float32(1.25)), 0))' "
 					" : 'uint32(CollectMaxDemandFromClaimTables/'+ModelType/Name+')', "
 				 	" CaseData/RegionNumbers, DestClaimTableName, uint32)";				
 		}
@@ -434,7 +433,7 @@ container ModelTraits
 				container StartYear:    expr = "Templates/LandChange(domain, Regions, RegionGrid, wasS, isY)";
 			}
 			
-			container SpatialIndicator: IsTemplate = "True"
+			template SpatialIndicator
 			{
 				// begin case parameters
 				
@@ -451,9 +450,9 @@ container ModelTraits
 				{
 					container year
 					{
-						attribute<Classifications/LU/IndicatorType> CurrentIT (domain): Expr = "SpatialFilter ? Classifications/LU/ModelType/IT[CurrentLanduse ] : value(0 / 0, Classifications/LU/IndicatorType)";
-						attribute<Classifications/LU/IndicatorType> StartingIT(domain): Expr = "SpatialFilter ? Classifications/LU/ModelType/IT[StartingLanduse] : value(0 / 0, Classifications/LU/IndicatorType)";
-						attribute<Classifications/LU/IndicatorType> PreviousIT(domain): Expr = "SpatialFilter ? Classifications/LU/ModelType/IT[PreviousLanduse] : value(0 / 0, Classifications/LU/IndicatorType)";
+						attribute<Classifications/LU/IndicatorType> CurrentIT (domain) := SpatialFilter ? Classifications/LU/ModelType/IT[CurrentLanduse ] : value(0 / 0, Classifications/LU/IndicatorType);
+						attribute<Classifications/LU/IndicatorType> StartingIT(domain) := SpatialFilter ? Classifications/LU/ModelType/IT[StartingLanduse] : value(0 / 0, Classifications/LU/IndicatorType);
+						attribute<Classifications/LU/IndicatorType> PreviousIT(domain) := SpatialFilter ? Classifications/LU/ModelType/IT[PreviousLanduse] : value(0 / 0, Classifications/LU/IndicatorType);
 					}
 					container RegionData: 
 						Expr = "for_each_nedv(Classifications/LU/IndicatorType/name"
@@ -696,11 +695,66 @@ container ModelTraits
 					Descr = "Area of land converted from agriculture to artificial surfaces."
 				{
 				}
+				container GHG
+				{
+					unit<uint8> transition := /Parameters/GHG_Factors/transition;
+					parameter<string> PartyCode := rjoin(JrcRegionID, /Parameters/GHG_Factors/Parties/JrcRegion_rel, /Parameters/GHG_Factors/Parties/party_code);
+					
+					unit<uint32> LUC := /Parameters/GHG_Factors/LUC;
+					unit<uint32> LUC_2 := combine(LUC, LUC) {
+						attribute<string> Label := LUC/name[nr_1] + ' -> '+LUC/name[nr_2], DialogType = 'LabelText';
+						attribute<transition> transition_rel := invert(per_transition);
+						attribute<.> per_transition(transition) := combine_data(	., transition/from, transition/to);
+						attribute<string> transition_name := transition/name[transition_rel];
+						attribute<string> factor_lookup_expr := 'rjoin(PartyCode, /Parameters/GHG_Factors/transitions/'+transition_name+'/Party, float32(/Parameters/GHG_Factors/transitions/'+transition_name+'/EF))';
+						// tonnes CO2 per ha.
+						attribute<float32> EF := ='union_data(., '+AsItemList(MakeDefined(factor_lookup_expr, '0f / 0f'))+')' ;
+					}
+					
+					container year
+					{
+						attribute<LUC> CurrentIT (domain) := SpatialFilter ? LUC/per_ModelType[CurrentLanduse ] : value(0 / 0, LUC);
+						attribute<LUC> StartingIT(domain) := SpatialFilter ? LUC/per_ModelType[StartingLanduse] : value(0 / 0, LUC);
+						attribute<LUC> PreviousIT(domain) := SpatialFilter ? LUC/per_ModelType[PreviousLanduse] : value(0 / 0, LUC);
+						attribute<LUC_2> from_to(domain) := combine_data(LUC_2, PreviousIT, CurrentIT);
+						attribute<transition> transition_rel(domain) := LUC_2/transition_rel[from_to];
+						attribute<float32> EF(domain) := LUC_2/Ef[from_to];
+					}
+					container RegionData: 
+						Expr = "for_each_nedv(transition/name"
+						       ", 'sum(value(year/transition_rel == value(' + String(id(transition)) +',transition), luHa) "
+						       "   , RegionGrid)'"
+						       ",  Regions"
+						       ",  luHa"
+						       ")";
+							   
+					container written_RegionData: 
+						Expr = 
+							"for_each_nedv(transition/name"
+							", 'RegionData/'+transition/name"
+						    ",  Regions"
+						    ",  luHa"
+						    ")",
+						StorageName = "=DirName + '_GHG.dbf'";
+				}
+				container ESS {
+					unit<uint8> LUC := /Parameters/CapMod/LUC;
+					unit<uint16> capri_regs := RunRegions/UnitSets/Capri {
+						container PerLUC := for_each_nedv(LUC/name
+						,	replace('rjoin(rlookup(Label, Geography/Regions/Capri/code), xxx/Capri_rel, xxx/intensity)','xxx','/Parameters/CapMod/Data/'+LUC/name+'/Years/P'+String(CurrYear)+'/year_data')
+						, ., float32
+						);
+						attribute<.> per_domain(domain) := CaseData/RegionGrids/Capri;
+					}
+					
+					attribute<LUC> CurrentLUC(domain) := SpatialFilter ? LUC/per_ModelType[CurrentLanduse ] : value(0 / 0, LUC);						
+					attribute<Float32> Intensity(domain) := ='merge(CurrentLUC, Float32, '+AsItemList('capri_regs/PerLUC/'+LUC/name+'[Capri_regs/per_domain]')+')';
+				}
 			}
 		}
 		
 		// these indicators are use in both OutputGeneration (per RunRegion per TimeStep) as in EvaluationIndicators100 (in simulation_results for each run region and once in /Indicators)
-		container SharedIndicators: IsTemplate = "True"
+		template SharedIndicators
 		{
 			unit<UInt32> domain;
 			attribute<Classifications/LU/ModelType> StartingLandUse(domain);
@@ -736,10 +790,10 @@ container ModelTraits
 						StorageName = "=DirName + '_xTabMT.dbf'";
 			container Spatial
 			{
-				container NoFilter:          expr = "Templates/SpatialIndicator(domain, JrcFactorData, const(True, domain),                                             Regions, RegionGrid, DirName + 'All')";
+				container NoFilter := Templates/SpatialIndicator(domain, JrcFactorData, const(True, domain), Regions, RegionGrid, DirName + 'All');
 			}
 		}
-		container OutputGenerator: IsTemplate = "True"
+		template OutputGenerator
 		{
 			unit<WPoint> domainGrid;
 			unit<UInt32> domain;
@@ -796,14 +850,14 @@ container ModelTraits
 				}
 			}
 						
-			container Indicators: Expr = 
-				"SharedIndicators("
-					"domain, "
-					"StartingState/landuse, PrevState/LandUse, ResultingState/LandUse, "
-					"CaseData/JrcFactorData, "
-					"RunRegions/UnitSets/Nuts2_LUISA, RunRegions/RasterSets/Nuts2_LUISA[domain/grid_rel],"
-					"OutPutDirName"
-				")";
+			container Indicators := 
+				SharedIndicators(
+					domain, 
+					StartingState/landuse, PrevState/LandUse, ResultingState/LandUse, 
+					CaseData/JrcFactorData, 
+					RunRegions/UnitSets/Nuts2_LUISA, RunRegions/RasterSets/Nuts2_LUISA[domain/grid_rel],
+					OutPutDirName
+				);
 				
 			attribute<UInt8> written_ForestType(domainGrid): Expr = "ForestType", StorageName = "=OutputDirName+'/ForestType.tif'"
 			{
