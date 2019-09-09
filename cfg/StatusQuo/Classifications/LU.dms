@@ -69,7 +69,7 @@ container LU
 	}
 	unit<UInt32> ModelMatr: Expr = "Combine(ModelType, ModelType)";
 	
-	unit<UInt8> ViewType: Expr = "Range(UInt8, UInt8(0), UInt8(16))"
+	unit<UInt8> ViewType: Expr = "Range(UInt8, UInt8(0), UInt8(19))"
 	{
 		parameter<uint32> nrAttr: Expr = "6";
 		unit<UInt32> Elements: Expr = "Range(uint32, 0, nrAttr*#ViewType)"
@@ -89,8 +89,8 @@ container LU
 				'216','213','164','false','0.4', 'AbanArable',
 				'153','130','120','false','0.4', 'AbanPermanentCrops',
 				'137','170','125','false','0.4', 'AbanPastures',
-				//'160','000','000','false','0.4', 'AbanUrban',
-				//'071','000','117','false','0.4', 'AbanIndustry',
+			  //'160','000','000','false','0.4', 'AbanUrban',
+			  //'071','000','117','false','0.4', 'AbanIndustry',
 				'080','200','050','false','0.9', 'NewEnergyCrops',
 				'166','242','000','true' ,'0.4', 'SHVA',
 				'001','099','000','true' ,'1.0', 'ForestsYoung',
@@ -135,7 +135,7 @@ container LU
 				'128','000','128','False',       'Industrial',
 				'001','099','000','False',       'ForestMature',
 				'114','137','068','False',       'SemiNatural',
-				'153','130','120','False',       'AbanAgriCulture',
+				'153','130','120','False',       'AbanAgriculture',
 				'254','250','194','True',        'ArableLand',
 				'207','152','107','True',        'OtherAgriculture',
 				//'160','000','000','False',       'AbanUrban',
