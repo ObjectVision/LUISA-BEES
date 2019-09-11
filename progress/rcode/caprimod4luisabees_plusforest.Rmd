@@ -1,0 +1,654 @@
+---
+title: "exploit capri output for land use and ecosystem services modelling"
+author: "Sarah, Paul"
+date: "February 13, 2019"
+output:
+  word_document: 
+    toc: yes
+  html_document: 
+      toc: yes
+---
+
+```{r setup, include=TRUE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "..") # file path relative to the root of the project directory
+#install.packages("E:\\mubarsa\\Documents\\Downloads\\rlang_0.3.1.gz", repos = NULL, type = "source")
+#install.packages("ggplot2", dep = TRUE)
+#install.packages("dplyr", dep = TRUE)
+#install.packages("tidyverse", dep = TRUE)
+library(ggplot2)
+library(rlang)
+library(purrr)
+library(dplyr)
+library(hms)
+library(tidyverse)
+library(readxl)
+#library(ggplot2)
+library(gdxrrw)
+library(zoo)
+library(data.table)
+
+# Setup Sarah's machine
+igdx(gamsSysDir = "C:\\GAMS\\win64\\26.1")
+```
+
+# Install packages
+
+## Install the GDXRRW package to read gdx data
+```{r eval=FALSE}
+#install.packages("C:\\LUISETTA\\Rproject\\gdxrrw_1.0.2.tar.gz", repos = NULL, type = "source")
+library(gdxrrw)
+igdx()
+datapath <- "C:\\LUISETTA\\Rproject\\ReferenceScenarioLTS\\original\\"
+
+```
+# Read gdx files directly using rgdx.param from the gdxrrw package
+## Read one file
+```{r}
+
+gdxfile <- list.files(datapath, ".gdx", full.names = TRUE)
+gdxfile[1]
+```
+## Create a function that reads many files
+```{r}
+
+#' @param gdxfile character name of a gdx file
+#' @return data frame 
+readcaprioutput <- function(gdxfile, symName = "dataout",
+                            names = c("RALL","EMPTY","COLS","ROWS","Y","VALUE")){
+    message("\nReading ", gdxfile)
+    capriout <- rgdx.param(gdxfile, symName = symName, names = names) 
+    # Change factor to character variables
+    capriout$RALL <- as.character(capriout$RALL)
+    capriout$EMPTY <- as.character(capriout$EMPTY)
+    capriout$COLS <- as.character(capriout$COLS)
+    capriout$ROWS <- as.character(capriout$ROWS)
+    # Change year from factor to a numeric variable
+    capriout$Y <- as.numeric(as.character(capriout$Y))
+    return(capriout)
+}
+
+# Use the function to read one file (takes 6 seconds)
+#system.time(res_2_0810mtr_rd_ref <- readcaprioutput(gdxfiles[1]))
+
+# Use the function to read 13 files (should take more than a minute)
+caprilist <- lapply(gdxfiles, readcaprioutput)
+capriout <- Reduce(rbind, caprilist)
+
+
+# save the output to an R file
+saveRDS(capriout, file.path(datapath, "capriout.rds"))
+
+if(FALSE){ # Read the file
+    readRDS(file.path(datapath, "capriout.rds"))
+}
+```
+
+# Parse capriout data
+## Create demand files for land use classes
+```{r}
+arable<-capriout %>% 
+  select(-EMPTY) %>% 
+  filter(COLS == "ARAB") %>%
+  filter(ROWS == "LEVL") %>% 
+  dplyr::arrange(RALL, Y)  
+perm<-capriout %>% 
+  select(-EMPTY) %>% 
+  filter(COLS == "PERM") %>% 
+  filter(ROWS == "LEVL") %>% 
+  dplyr::arrange(RALL, Y)
+necr<-capriout %>% 
+  select(-EMPTY) %>% 
+  filter(COLS == "NECR") %>% 
+  filter(ROWS == "LEVL") %>% 
+  dplyr::arrange(RALL, Y)
+grass<-capriout %>% 
+  select(-EMPTY) %>% 
+  filter(grepl("GRAI|GRAE" ,COLS)) %>%
+  filter(ROWS == "LEVL") %>% 
+  dplyr::arrange(RALL, Y) %>%
+  group_by(RALL,ROWS,Y) %>%
+  summarise(amount_1000ha = sum(VALUE)) 
+grass<-add_column(grass, COLS="GRASS", .after=1)
+heads<-capriout %>% 
+  select(-EMPTY) %>% 
+  filter(grepl("HEIF|HEIL|BULL|BULF" ,COLS)) %>%
+  filter(ROWS == "LEVL") %>% 
+  dplyr::arrange(RALL, Y) %>%
+  group_by(RALL,ROWS,Y) %>%
+  summarise(amount_1000heads = sum(VALUE)) 
+heads<-add_column(heads, COLS="COWS", .after=1)
+
+```
+# Parse forest data
+## Create demand files
+```{r}
+rawforest <- read_excel("E:\\data\\globiomg4m\\IIASA_Reference2016_2070_forest_area_G4M_iso.xlsx") 
+longforest <-rawforest %>%
+  gather(year,forestarea,as.character(2000):as.character(2070)) %>%
+  arrange(X__1) 
+longforestnoblcf<-longforest[-grep("areaused", longforest$X__2),]
+forestLTS<-ddply(longforestnoblcf,c("X__1", "year"), summarise, forestarea=sum(forestarea)) 
+demandforest<-forestLTS %>%
+  rename(Region:=X__1, Year:=year,Forest:=forestarea)%>%
+  mutate_all(funs(replace(., is.na(.), 0)))
+
+```
+## expand forest data to annual values (nomin, nomax)
+```{r}
+cols <- c("Year", "Forest")
+#requires library(data.table)
+temptointerpolate <- setDT(demandforest)[, .SD[match(2000:2070, Year)], by = Region] 
+#requires library(zoo)
+temptointerpolate[, (cols) := lapply(.SD, na.approx, na.rm = FALSE), .SDcols = cols]
+forestinterpolated <- temptointerpolate %>%  
+  mutate(ForestsMatMin=as.integer(Forest*0.7),ForestsMatMax=as.integer(Forest*1.3), ForestsYoMin = 0,ForestsYoMax=0)
+
+```
+## write to files 
+```{r}
+
+forestLTSfinal <- "E:\\data\\globiomg4m\\demandluisabees\\"
+#requires library(purrr)
+forestinterpolated %>% 
+  mutate(countryiso2 = substr(Region, 1,2)) %>% 
+  group_by(countryiso2) %>% 
+  nest() %>% 
+  walk2(
+    .x = .$countryiso2,
+    .y = .$data,
+    .f = ~ write.csv(.y, file.path(enddata, str_c(.x, ".csv")), row.names=FALSE)
+  )
+
+```
+
+## GENERATE DEMAND FILES FOR LUISABEES,PARSE DATA BY COUNTRY  
+## isolate useful data
+```{r}
+temp<-bind_cols(arable, perm, grass) 
+temp2<-left_join(temp, necr,  by = c("RALL", "Y"))
+demandall<-temp2 %>%
+  select(-ROWS.x, -COLS.x,-RALL1, -COLS1, -ROWS1, -Y1, -COLS2, -RALL2, -ROWS2, -Y2, -COLS.y,-ROWS.y) %>%
+  rename(Region:=RALL, Year:=Y,OtherArableMax:=VALUE.x, PermCropMax:=VALUE1,PastureMax:=amount_1000ha, NewEnergyMax:=VALUE.y)%>%
+  mutate(OtherArableMax=as.integer(OtherArableMax*1000.),PermCropMax=as.integer(PermCropMax*1000.),PastureMax=as.integer(PastureMax*1000.),NewEnergyMax=as.integer(NewEnergyMax*1000.)) %>%
+  mutate_all(funs(replace(., is.na(.), 0)))
+
+```
+
+## expand to annual values (nomin, nomax)
+```{r}
+cols <- c("Year", "OtherArableMax","PermCropMax","PastureMax","NewEnergyMax")
+temptointerpolate<-setDT(demandall)[, .SD[match(2010:2070, Year)], by = Region] 
+temptointerpolate[, (cols) := lapply(.SD, na.approx, na.rm = FALSE), .SDcols = cols]
+interpolated<-temptointerpolate%>%  
+  mutate(OtherArable=as.integer(OtherArableMax), PermCrop=as.integer(PermCropMax),Pasture=as.integer(PastureMax), NewEnergy=as.integer(NewEnergyMax)) %>%
+  select(-OtherArableMax) %>%
+  select(-PermCropMax) %>%
+  select(-PastureMax) %>%
+  select(-NewEnergyMax)
+interpolated$Region<-substr(interpolated$Region,0,4) 
+
+```
+## write to files 
+```{r}
+
+enddata <- "C:\\LUISETTA\\Rproject\\capri4luisabees\\enddata_july2019\\nominmax"
+
+interpolated 
+
+interpolated %>% 
+  mutate(countryiso2 = substr(Region, 1,2)) %>% 
+  group_by(countryiso2) %>% 
+  nest() %>% 
+  walk2(
+    .x = .$countryiso2,
+    .y = .$data,
+    .f = ~ write_csv(.y, file.path(enddata, str_c(.x, ".csv")))
+   #.f = ~ write_csv(.y, file.path(enddatanew, str_c(.x, ".csv")))
+  )
+
+```
+## expand to annual and min values
+```{r}
+cols <- c("Year", "OtherArableMax","PermCropMax","PastureMax","NewEnergyMax")
+temptointerpolate<-setDT(demandall)[, .SD[match(2010:2070, Year)], by = Region] 
+temptointerpolate[, (cols) := lapply(.SD, na.approx, na.rm = FALSE), .SDcols = cols]
+interpolated<-temptointerpolate%>%  
+  add_column(OtherArableMin = 0, .before = "OtherArableMax")%>%
+  add_column(PermCropMin = 0, .before = "PermCropMax")%>%
+  add_column(PastureMin = 0, .before = "PastureMax")%>%
+  add_column(NewEnergyMin = 0, .before = "NewEnergyMax") %>%
+  mutate(OtherArableMin=as.integer(OtherArableMax*0.7), PermCropMin=as.integer(PermCropMax*0.7),PastureMin=as.integer(PastureMax*0.7), NewEnergyMin=as.integer(NewEnergyMax*0.7)) %>%
+  mutate(OtherArableMax=as.integer(OtherArableMax), PermCropMax=as.integer(PermCropMax),PastureMax=as.integer(PastureMax), NewEnergyMax=as.integer(NewEnergyMax)) 
+interpolated$Region<-substr(interpolated$Region,0,4)
+  
+```
+#countries<-unique(substr(arable$RALL,1,2))
+## write to files 
+```{r}
+
+enddata <- "C:\\LUISETTA\\Rproject\\capri4luisabees\\enddata_july2019"
+#enddatanew <- "E:/dev/CAPRI/capri4luisabees/enddatanew/"
+
+interpolated 
+
+interpolated %>% 
+  mutate(countryiso2 = substr(Region, 1,2)) %>% 
+  group_by(countryiso2) %>% 
+  nest() %>% 
+  walk2(
+    .x = .$countryiso2,
+    .y = .$data,
+   .f = ~ write_csv(.y, file.path(enddata, str_c(.x, "_new.csv")))
+   #.f = ~ write_csv(.y, file.path(enddatanew, str_c(.x, ".csv")))
+  )
+
+```
+## PLOT LTS DATA AGAINST RefScen2017 DATA  ; OVERLAY CLC2012 data
+## open original data files
+```{r}
+oldcapripath <- "E:\\dev\\LUISETTA_originaldeliveryOct2018\\Demand\\StatusQuo\\Capri\\"
+oldforestpath <- "E:\\dev\\Luisetta\\Demand\\StatusQuo\\ForestDemandRegions\\"
+newcapripath  <- "E:\\dev\\CAPRI\\capri4luisabees\\enddata\\"
+newforestpath <- "E:\\data\\globiomg4m\\demandluisabees\\"
+
+#Tidy CLC data (gather - wide to long)
+# requires libraries tibble, plyr, tidyr
+clcdata <- read_excel("E:\\data\\Land_Cover\\LUISA_base_map_\\tabArea_LU_N0.xlsx")
+landuses <- c("urban","industry","infrastructure","greenurban","crops", "permcrops", "pasture", "forest",
+              "grassland","transwood","novegnatural", "wetland", "water")
+clc<-gather(clcdata, VT_CODE) %>%
+  add_column(landuse = "0", .before = "value") 
+clc$landuse=rep(landuses, 35)
+clc$source="clc"
+#TEST PLOT
+#ggplot(subset(clc, VT_CODE=="AT"),aes(x=landuse, y=value,group=landuse)) + geom_point() +labs (title = "AT",y="hectares", x="landuse")
+oldcaprifiles<-list.files(oldcapripath)
+newcaprifiles<-list.files(newcapripath)
+oldforestfiles<-list.files(oldforestpath)
+newforestfiles<-list.files(newforestpath)
+
+for (i in seq_along(oldfiles)) {
+  country<-strsplit(oldfiles[i],".csv")[[1]][1]
+  print(country)
+  oldcapridata<-read.csv(paste0(oldcapripath,oldcaprifiles[i])) 
+  oldcapridata$source<-"rs17"
+  oldforestdata<-read.csv(paste0(oldforestpath,oldcaprifiles[i])) 
+  oldforestdata$source<-"rs17"
+  newcapridata<-read.csv(paste0(newcapripath,oldcaprifiles[i])) 
+  newcapridata$source<-"lts"
+  newforestdata<-read.csv(paste0(newforestpath,oldcaprifiles[i])) 
+  newforestdata$source<-"lts"
+  clcloop<-subset(clc, VT_CODE ==country)
+  clccrops    <- subset(clcloop, landuse == "crops")
+  clcpasture  <- subset(clcloop, landuse == "pasture")
+  clcgrass    <- subset(clcloop, landuse == "grassland")
+  clcpermcrop <- subset(clcloop, landuse == "permcrops")
+  clcforest   <- subset(clcloop, landuse == "forest")
+  #column bind OLD capri and OLD forest data. Get rid of trailing "00" on country isocode
+  n0<-grep("00", oldcapridata$Region)
+  oldcapridata<-oldcapridata[n0,]
+  joinolddata<-left_join(oldcapridata,oldforestdata, by = c("Year")) %>%
+    mutate(source = source.y) %>%
+    add_column(Forest = 0, .before = "ForestsMatMin") %>%
+    mutate(Forest=ForestsMatMax + ForestsYoMax) %>%
+    select(-source.y, -source.x, -Region.y)
+  names(joinolddata)[1]<-"Region"
+  #column bind NEW capri and NEW forest data. Get rid of trailing "00" on country isocode
+  n0<-grep("00", newcapridata$Region)
+  newcapridata<-newcapridata[n0,]
+  joinnewdata<-left_join(newcapridata,newforestdata, by = c("Year")) %>%
+    mutate(source = source.y) %>%
+    select(-source.x, -source.y, -Region.y)
+  names(joinnewdata)[1]<-"Region"
+ #####
+   #stack all new and old to make graphs
+  forplot<-rbind(joinolddata, joinnewdata)
+#  forplot<-rbind(oldcapridata, newcapridata)
+  n0<-grep("00",forplot$Region)
+  necr<-forplot[n0,]$NewEnergyMax
+  plot<-ggplot(forplot[n0,],aes(y=PastureMax, x=Year, group=source, colour="pasturemax")) +   geom_point(aes(shape=source)) + labs(title=country, y="hectares", x = "year", colour = "landuse")  +  
+#add forest
+geom_point(aes(y=Forest, color="forest",shape=source) ) + 
+#add crops
+geom_point(aes(y=OtherArableMax, color="arablemax",shape=source) )+ geom_point(aes(y=PermCropMax, color="permcropmax",shape=source) )+ geom_point(aes(y=NewEnergyMax, color="necrmax",shape=source) ) +  geom_hline(yintercept = (clcpasture$value), color = "grey", linetype = "dashed", size = 1.5) +  geom_hline(yintercept = (clcpasture$value+clcgrass$value), color = "cornflowerblue", linetype = "dashed", size = 1.5) + geom_hline(yintercept = clccrops$value, color = "red", linetype = "dashed", size = 1.5) + geom_hline(yintercept = clcpermcrop$value, color = "purple", linetype = "dashed", size = 1.5) + geom_hline(yintercept = clcforest$value, color = "darkkhaki", linetype = "dashed", size = 1.5)+ labs(subtitle = "dashed lines represent CLC values in 2012:\n green=forest; red=arable; permcrops=purple; teal=pasture + grassland; grey=pasture only")
+ 
+  
+  ggsave(paste0("E:\\dev\\CAPRI\\capri4luisabees\\graphs\\",country,"forestsmax.pdf"))
+ 
+#   plotmin<-ggplot(forplot[n0,],aes(y=PastureMin, x=Year, group=source, colour="pasturemin")) + #geom_point(aes(shape=source)) +labs(title=country, y="hectares", x = "year", colour = "landuse")  + #geom_point(aes(y=OtherArableMin, color="arablemin",shape=source) )+ geom_point(aes(y=NewEnergyMin, #color="necrmin",shape=source) )+geom_hline(yintercept = clcpasture$value, color = "blue", linetype = "dashed", size = #1.5) +geom_hline(yintercept = clccrops$value, color = "red", linetype = "dashed", size = 1.5) + labs(subtitle = #"dashed lines represent CLC values in 2012")
+#  ggsave(paste0("C:\\LUISETTA\\Rproject\\results\\",country,"min.pdf"))
+
+  }
+```
+
+
+## Create fertilizer files for land use classes
+```{r}
+arablef<-capriout %>% 
+  select(-EMPTY) %>% 
+  filter(COLS == "ARAB") %>% 
+  filter(grepl("NITF|PHOF|POTF" ,ROWS)) %>%
+  dplyr::arrange(RALL, Y) %>% 
+  group_by(RALL, COLS, Y) %>% 
+  summarise(fert_kg_ha = sum(VALUE))
+write.csv(arablef, file="C:/Users/mubarsa/jrcbox/capri/ReferenceScenarioLTS/arable_fert.csv")
+permf<-capriout %>% 
+  select(-EMPTY) %>% 
+  filter(COLS == "PERM") %>% 
+  filter(grepl("NITF|PHOF|POTF" ,ROWS)) %>%
+  dplyr::arrange(RALL, Y) %>% 
+  group_by(RALL, COLS, Y) %>% 
+  summarise(fert_kg_ha = sum(VALUE))
+write.csv(permf, file="C:/Users/mubarsa/jrcbox/capri/ReferenceScenarioLTS/perm_fert.csv")
+necrf<-capriout %>% 
+  select(-EMPTY) %>% 
+  filter(COLS == "NECR") %>% 
+  filter(grepl("NITF|PHOF|POTF" ,ROWS)) %>%
+  dplyr::arrange(RALL, Y) %>% 
+  group_by(RALL, COLS, Y) %>% 
+  summarise(fert_kg_ha = sum(VALUE))
+write.csv(necrf, file="C:/Users/mubarsa/jrcbox/capri/ReferenceScenarioLTS/necr_fert.csv")
+grassf<-capriout %>% 
+  select(-EMPTY) %>% 
+  group_by(RALL, COLS, Y) %>% 
+  filter(grepl("GRAI|GRAE" ,COLS)) %>%
+  filter(grepl("NITF|PHOF|POTF" ,ROWS)) %>%
+  dplyr::arrange(RALL, Y) %>% 
+  group_by(RALL, Y) %>% 
+  summarise(fert_kg_ha = sum(VALUE)) %>%
+grassf<-add_column(grassf, COLS="GRASS", .after=1)
+write.csv(grassf, file="C:/Users/mubarsa/jrcbox/capri/ReferenceScenarioLTS/grass_fert.csv")
+
+```
+#*****************************************
+# IF USING EXCEL OUTPUT FROM GDX READER:
+##Read and format all CAPMOD LEVL sheets
+```{r}
+pathexcellevl <- file.path(datapath, "CAPRI_lts_RefScenoutput_parsed_levl.xlsx")
+
+# Read all sheets, keep sheet names as a variable and store data in a list-column
+levl <- data_frame(sheet = excel_sheets(pathexcellevl)) %>% 
+  # Load data from all sheets
+  mutate(data = map2(pathexcellevl, sheet, readxl::read_excel, range =  "A1:F9999")) %>% 
+  unnest() %>% 
+  filter(!is.na(region))
+```
+```{r}
+levl$year<-(as.character(levl$year))
+levl$amount_1000ha<-(as.integer(levl$amount_1000ha))
+
+```
+# Create demand files for land use classes
+```{r}
+arable<-levl %>% 
+  select(-empty, -attribute,-sheet) %>% 
+  filter(landuse == "ARAB") %>% 
+  dplyr::arrange(region)  
+write.csv(arable, file="C:/Users/mubarsa/jrcbox/capri/ReferenceScenarioLTS/arable.csv")
+
+perm<-levl %>% 
+  select(-empty, -attribute,-sheet) %>% 
+  filter(landuse == "PERM") %>% 
+  dplyr::arrange(region)  
+write.csv(perm, file="C:/Users/mubarsa/jrcbox/capri/ReferenceScenarioLTS/perm.csv")
+
+necr<-levl %>% 
+  select(-empty, -attribute,-sheet) %>% 
+  filter(landuse == "NECR") %>% 
+  dplyr::arrange(region)  
+write.csv(necr, file="C:/Users/mubarsa/jrcbox/capri/ReferenceScenarioLTS/necr.csv")
+
+grass<-levl %>% 
+  select(-empty, -attribute,-sheet) %>% 
+  dplyr::arrange(region)  %>%
+  group_by(region, year, landuse) %>% 
+  filter(grepl("GRAI|GRAE" ,landuse)) %>%
+  group_by(region,year) %>%
+  summarise(amount_1000ha = sum(amount_1000ha)) 
+grass<-add_column(grass, landuse="GRASS", .after=1)
+write.csv(grass, file="C:/Users/mubarsa/jrcbox/capri/ReferenceScenarioLTS/grass.csv")
+
+livestock<-levl %>% 
+  select(-empty, -attribute,-sheet) %>% 
+  filter(grepl("BUL|HEI" ,landuse))%>% 
+  dplyr::arrange(region)  %>% 
+  group_by(region, year) %>% 
+  summarise(numheads_1000s = sum(amount_1000ha))
+write.csv(livestock, file="C:/Users/mubarsa/jrcbox/capri/ReferenceScenarioLTS/livestock.csv")
+```
+
+```{r}
+# Read all sheets the purr way, keep sheet names as a variable and store data in a list-column
+pathexcelfert <- file.path(datapath, "CAPRI_lts_RefScenoutput_parsed_fert.xlsx")
+# Read all sheets the purr way, keep sheet names as a variable and store data in a list-column
+fert <- data_frame(yr = excel_sheets(pathexcelfert)) %>%
+  # Load data from all sheets
+   mutate(data = map2(pathexcelfert, yr, readxl::read_excel, range =  "A1:F9999")) %>% 
+  unnest() %>% 
+  filter(!is.na(region))
+```
+```{r}
+fert$year<-(as.character(fert$year))
+fert$amount_kgperha<-(as.integer(fert$amount_kgperha))
+```
+# Create fert intensity files for land use classes
+```{r}
+arablef<-fert %>% 
+  select(-empty, -yr) %>% 
+  filter(landuse == "ARAB") %>% 
+  dplyr::arrange(region)  %>%
+  group_by(region, year, landuse) %>% 
+  filter(!grepl("FERT" ,fertilizer)) %>% 
+  summarise(fert_kg_ha = sum(amount_kgperha))
+write.csv(arablef, file="C:/Users/mubarsa/jrcbox/capri/ReferenceScenarioLTS/arable_fert.csv")
+
+permf<-fert %>% 
+  select(-empty, -yr) %>% 
+  filter(landuse == "PERM") %>% 
+  dplyr::arrange(region)  %>%
+  group_by(region, year, landuse) %>% 
+  filter(!grepl("FERT" ,fertilizer)) %>% 
+  summarise(fert_kg_ha = sum(amount_kgperha))
+write.csv(permf, file="C:/Users/mubarsa/jrcbox/capri/ReferenceScenarioLTS/perm_fert.csv")
+
+necrf<-fert %>% 
+  select(-empty, -yr) %>% 
+  filter(landuse == "NECR") %>% 
+  dplyr::arrange(region)  %>%
+  group_by(region, year, landuse) %>% 
+  filter(!grepl("FERT" ,fertilizer)) %>% 
+  summarise(fert_kg_ha = sum(amount_kgperha))
+write.csv(necrf, file="C:/Users/mubarsa/jrcbox/capri/ReferenceScenarioLTS/necr_fert.csv")
+
+grassf<-fert %>% 
+  select(-empty, -yr) %>% 
+  #summarise(GRASS = sum(amount_kgperha)) %>%
+  dplyr::arrange(region)  %>%
+  group_by(region, year, landuse) %>% 
+  filter(!grepl("FERT" ,fertilizer)) %>% 
+  filter(grepl("GRAI|GRAE" ,landuse)) %>%
+  summarise(fert_kg_ha = sum(amount_kgperha)) %>%
+    summarise(fert_kg_ha = sum(fert_kg_ha)) 
+write.csv(grassf, file="C:/Users/mubarsa/jrcbox/capri/ReferenceScenarioLTS/grass_fert.csv")
+#************************
+
+
+
+
+
+S2BIOMcoefs <- data_frame(countryiso = excel_sheets(pathexcel)) %>% 
+    # Load data from all sheets
+    mutate(data = map2(pathexcel, countryiso, readxl::read_excel, range =  "V4:AD7")) %>% 
+  unnest() %>% 
+  dplyr::rename(var = X__1) %>% 
+  left_join(data_frame(var = c("moisture, % ar",
+                               "bulk density, kg/m3 ar",
+                               "basic density, kg/m3 ar"),
+                       shortvar = c("moisture", "bulkdensity", "basicdensity")),
+            by = "var")
+
+ 
+S2BIOMcoefs <- S2BIOMcoefs %>% 
+  gather(product, value, -var, -countryiso,-shortvar) %>%
+  select(-var) %>%
+  spread(shortvar, value)
+
+S2BIOM <- S2BIOMktdm %>%
+  left_join(S2BIOMeurtdm, by = c("countryiso","nuts3","product")) %>%
+  left_join(S2BIOMcoefs, by = c("countryiso","product"))
+          
+```
+
+#Convert units to be compatible with FUSION/CBM
+```{r}
+S2BIOM$cubicm<- ((S2BIOM$mass*10^6)/S2BIOM$basicdensity )/(1-(S2BIOM$moisture/100.))
+S2BIOM$eurpercubicm<- (S2BIOM$cost/10^3)*(S2BIOM$basicdensity/(1-(S2BIOM$moisture/100.))) 
+```
+#Create new file with ordered min/max costs by 2 categories: "stemwood and thinnings" and "primary residues" 
+    
+```{r}
+#categorise product into sawlogs and residues
+S2BIOM$cat<-"Un"
+S2BIOM[grep("111", S2BIOM$product),]$cat<-"stemwood&thinnings"
+S2BIOM[grep("121", S2BIOM$product),]$cat<-"primaryresidues"
+```
+
+#Perform cumulative sum operation based on product
+```{r}
+# #test to be sure it is working (using raw data)
+# testondrytonsw<-S2BIOM %>% 
+#   filter(cat == "stemwood&thinnings") %>%
+#   filter(countryiso == "NL") %>% 
+#   select(-basicdensity,-bulkdensity,-moisture) %>% 
+#   arrange(countryiso,cost)  %>% 
+#   dplyr::mutate(cumulvol = cumsum(mass))
+# testondrytonpr<-S2BIOM %>% 
+#   filter(cat == "primaryresidues") %>%
+#   filter(countryiso == "NL") %>% 
+#   select(-basicdensity,-bulkdensity,-moisture) %>% 
+#   arrange(countryiso,cost)  %>% 
+#   dplyr::mutate(cumulvol = cumsum(mass))
+# test4plot<-rbind(testondrytonsw,testondrytonpr)
+# #END TEST
+
+#primary residues
+pr<-S2BIOM %>% 
+  select(-mass,-cost,-basicdensity,-bulkdensity,-moisture) %>% 
+  filter(cat == "primaryresidues") %>% 
+  dplyr::arrange(countryiso,eurpercubicm)  %>% 
+  dplyr::group_by(countryiso) %>% 
+  dplyr::mutate(cumulvol = cumsum(cubicm)) 
+
+#stemwood
+sw<-S2BIOM %>% 
+  select(-mass,-cost,-basicdensity,-bulkdensity,-moisture) %>% 
+  filter(cat == "stemwood&thinnings") %>% 
+  arrange(countryiso,eurpercubicm)  %>% 
+  dplyr::group_by(countryiso) %>% 
+  dplyr::mutate(cumulvol = cumsum(cubicm))
+#bind rows together
+S2BIOM4plot<-rbind(sw,pr)
+```
+<!-- #Test on one country to be sure data is correct: -->
+<!-- ```{r} -->
+<!-- plot<-ggplot(test4plot, -->
+<!--              aes(x=cost, y=cumulvol, colour=cat)) + geom_point() + -->
+<!--              labs(title="NL TEST", -->
+<!--              y="tons dry matter", x = "eur/tdm", colour = "Category") -->
+<!-- ggsave("TESTNL_plot.pdf") -->
+<!-- ``` -->
+
+#Faceted graph results (too crammed)
+# ```{r} 
+# pf<- ggplot(S2BIOM4plot, aes(x=eurpercubicm, y=cumulvol, colour=cat)) + geom_point() 
+# pf + facet_grid(rows = vars(countryiso), cols = vars(cat))
+# pc<- ggplot(S2BIOM4plot, aes(x=eurpercubicm, y=cumulvol, colour=cat)) 
+# pc + geom_point(aes(group = countryiso))pr<-S2BIOM %>% 
+#   select(-mass,-cost,-basicdensity,-bulkdensity,-moisture) %>% 
+#   filter(cat == "PR") %>% 
+#   arrange(countryiso,eurpercubicm)  %>% 
+#   dplyr::group_by(countryiso) %>% 
+#   dplyr::mutate(cumulvol = cumsum(cubicm)) %>% 
+# ```
+#One graph per country
+```{r} 
+countrylist<-unique(S2BIOM4plot$countryiso) 
+for (i in seq_along(countrylist)) {
+plot<-ggplot(subset(S2BIOM4plot, S2BIOM4plot$countryiso == countrylist[i]),
+             aes(y=eurpercubicm, x=cumulvol, colour=cat)) + geom_point() +
+             labs(title=countrylist[i],
+             x="cubic meters", y = "eur/cubic meter", colour = "Category") 
+ggsave(paste(countrylist[i],"EuronY_plot.pdf")) 
+}
+#get cumulative volume for RW and FW for each country and save to variable:
+RWvolbycountry<-S2BIOM4plot %>%
+    group_by(countryiso) %>%
+    filter(cat =="stemwood&thinnings")%>%
+    summarise(S2B_RWv = max(cumulvol), S2B_RWmedcost=median(eurpercubicm)) %>%
+    mutate(F_RWv='na',diffRWv='na', F_RWmedcost='na', diffRWc='na')
+
+PRvolbycountry<-S2BIOM4plot %>%
+    group_by(countryiso) %>%
+    filter(cat =="primaryresidues")%>%
+    summarise(S2B_PRv = max(cumulvol), S2B_PRmedcost=median(eurpercubicm))%>%
+    mutate(F_PRv='na', diffPRv='na', F_PRmedcost='na', diffPRc='na')
+```
+# GET FUSION OUTPUT
+```{r}
+rwpath <-paste0(datapath, "/dataFUSION/RW/")
+rwfiles<-list.files(rwpath)
+prpath <-paste0(datapath, "/dataFUSION/PR/")
+prfiles<-list.files(prpath)
+
+for (i in seq_along(rwfiles)) {
+  country<-strsplit(rwfiles[i],"_")[[1]][1]
+  print(country)
+  frw<-read.csv(paste0(rwpath,rwfiles[i])) %>% 
+    #subset(supply_row_rel > 0) %>% 
+    select(-volume) %>% 
+    mutate(cat = "roundwood", countryiso = country)
+  fpr<-read.csv(paste0(prpath,prfiles[i])) %>% 
+   # subset(supply_row_rel > 0) %>% 
+    select(-volume) %>% 
+    mutate(cat = "otherwoodcomponents", countryiso = country)
+  #stack the two to make graphs
+  FUSION4plot<-rbind(frw,fpr)
+  plot<-ggplot(FUSION4plot,aes(y=Values, x=cumulvol, colour=cat)) + geom_point() +
+             labs(title=country,
+             x="cubic meters", y = "eur/cubic meter", colour = "Category") 
+  ggsave(paste0(datapath,"/graphsFUSION/",country,"_EuronY_plot.pdf"))
+  PRfusion<-FUSION4plot %>%
+    filter(cat =="otherwoodcomponents")%>%
+    summarise(cumulvol = max(cumulvol))
+  print("max cumulative volume PR=")
+  print(PRfusion$cumulvol)
+  PRfusionc<-FUSION4plot %>%
+    filter(cat =="otherwoodcomponents")%>%
+    summarise(mediancost = median(Values))
+  print("median cost PR=")
+  print(PRfusionc$mediancost)
+  PRvolbycountry[PRvolbycountry$countryiso == country ,4]<-PRfusion
+  PRvolbycountry[PRvolbycountry$countryiso == country ,5]<- round(PRvolbycountry$S2B_PRv - PRfusion)
+  PRvolbycountry[PRvolbycountry$countryiso == country ,6]<- PRfusionc
+  PRvolbycountry[PRvolbycountry$countryiso == country ,7]<- round(PRvolbycountry$S2B_PRmedcost -  PRfusionc)
+  RWfusion<-FUSION4plot %>%
+    filter(cat =="roundwood")%>%
+    summarise(cumulvol = max(cumulvol))
+  print(RWfusion)
+  RWfusionc<-FUSION4plot %>%
+    filter(cat =="roundwood")%>%
+    summarise(mediancost = median(Values))
+  print(RWfusionc)
+  RWvolbycountry[RWvolbycountry$countryiso == country ,4]<- RWfusion
+  #RWvolbycountry[RWvolbycountry$countryiso == country ,5]<- round(RWvolbycountry$S2B_RWv - RWfusion)
+  RWvolbycountry[RWvolbycountry$countryiso == country ,6]<- RWfusionc
+  #RWvolbycountry[RWvolbycountry$countryiso == country ,7]<- round(RWvolbycountry$S2B_RWmedcost - RWfusionc)
+  print("end")
+}
+ write.csv(RWvolbycountry, file="C:/Users/mubarsa/jrcbox/Forbiomod/SourceData/EFDM/data/costSupply/compareS2B_FUS_RW.csv")
+ write.csv(PRvolbycountry, file="C:/Users/mubarsa/jrcbox/Forbiomod/SourceData/EFDM/data/costSupply/compareS2B_FUS_PR.csv")
+
+
+```
+
