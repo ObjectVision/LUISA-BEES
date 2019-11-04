@@ -62,7 +62,7 @@ container GenerateContainer
 		
 		container ButtonCan: Descr = "The Generate parameter is contained in order to allow impl/All to be opened without all the meta info procesing that comes with getting Generate in the TreeView"
 		{
-			parameter<String> GenerateDataPreparation: Expr = "DataPreparation/CAP/LOCSPECS/Generate";
+//			parameter<String> GenerateDataPreparation: Expr = "DataPreparation/CAP/LOCSPECS/Generate";
 			container StatusFlags
 				:	Expr = "for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusFlags', Periods, bool)"
 				,	StoreData = "True"

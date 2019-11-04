@@ -73,25 +73,28 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 	container DynamicComponent: Expr = "SuitabilityGenerator/CalcSuitability(domain)";
 
 	container FeasibleSolution; // NYI, Reserved for future use
-	container ScaledTransPot: Expr = "for_each_nedv(ModelType/Name, 'Int32(DynamicComponent/TransPot/'+ModelType/Name+' * CaseData/SuitScaleFactor)', domain, Int32)";
+	container ScaledTransPot := for_each_nedv(ModelType/Name, 'Int32(DynamicComponent/TransPot/'+ModelType/Name+' * CaseData/SuitScaleFactor)', domain, Int32);
+	parameter<Int32> Threshold := Int32(value(-9999, EUR_M2) * CaseData/SuitScaleFactor);
+	
+	attribute<Bool> BelowThresholdMap(domain) := ='and('+AsItemList(Replace('MakeDefined(ScaledTransPot/@LUT, Threshold - 1i) < Threshold','@LUT',ModelType/Name))+')';
 
 	attribute<uint8> check (modeltype): expr = "rlookup(CaseData/DestClaimTableName, CaseData/UniqueDestRegionRefs/Values)";
 	attribute<string> demandregions (modeltype): expr = "CaseData/UniqueDestRegionRefs/Values[check]";
 	
-	container d_alloc: Expr =
-		"discrete_alloc(ModelType/Name, domain, "
-		"   ScaledTransPot, "
-		"   MakeDefined(rlookup(CaseData/DestClaimTableName, CaseData/UniqueDestRegionRefs/Values), UInt8(0)), "
-		"   CaseData/UniqueDestRegionRefs/Values, "
-		"   CaseData/AtomicRegions, "
-		"   CaseData/AtomicRegions/UnionData, "
+	container d_alloc :=
+		discrete_alloc(ModelType/Name, domain, 
+		   ScaledTransPot, 
+		   MakeDefined(rlookup(CaseData/DestClaimTableName, CaseData/UniqueDestRegionRefs/Values), UInt8(0)), 
+		   CaseData/UniqueDestRegionRefs/Values, 
+		   CaseData/AtomicRegions, 
+		   CaseData/AtomicRegions/UnionData, 
 		
-		"   Claims/DemandMin, "
-		"   Claims/DemandMax, "
-		"   Int32(value(-9999, EUR_M2) * CaseData/SuitScaleFactor)," // Dit is de threshold!
-//		"   Int32(value(0 / 0, EUR_HA))," // Dit is de threshold! GEEN Threshold => geen dis-allowed cells
-		"   FeasibleSolution"
-		" )"
+		   Claims/DemandMin, 
+		   Claims/DemandMax, 
+		   Threshold,
+//		   Int32(value(0 / 0, EUR_HA)), // Dit is de threshold! GEEN Threshold => geen dis-allowed cells
+		   FeasibleSolution
+		 )
 	{
 		attribute<ModelType> landuse(domain);
 	}
