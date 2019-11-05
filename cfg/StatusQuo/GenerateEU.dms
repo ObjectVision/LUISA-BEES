@@ -27,18 +27,17 @@ container GenerateContainer
 		container impl 
 		{
 			// calcorder per run-region: first all years for AT1, then AT2 etc.
-			
-			container GeneratePeriodTemplate:IsTemplate = "True", isHidden = "True"
+			template GeneratePeriodTemplate
 			{
 				container TimeStep;
 				
-				container result: ExplicitSuppliers = "TimeStep/ResultingState/OutputGeneration/ClippedLandUseVT;TimeStep/ResultingState/CumulStatusFlag"
+				container result: ExplicitSuppliers = "TimeStep/ResultingState/OutputGeneration/ClippedLandUseVT;TimeStep/ResultingState/CumulStatusFlag;TimeStep/ResultingState/GeneratedFiles"
 				{
 					parameter<bool> StatusFlag: Expr = "TimeStep/ResultingState/CumulStatusFlag";
 				}
 			}
 			
-			container GenerateRunRegionTemplate:IsTemplate = "True", isHidden = "True"
+			template GenerateRunRegionTemplate
 			{
 				container RunRegion;
 				container CalculatedPeriods: Expr = 
@@ -47,9 +46,11 @@ container GenerateContainer
 							"+'RunRegion/TimeSteps/'+Periods/Name"
 						"+')'"
 					")";
-				container result : ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result', ';')"
+				container result
 				{
-					attribute<bool> StatusFlags(Periods) : Expr = "='union_data(Periods, '+AsList('CalculatedPeriods/'+Periods/Name+'/result/StatusFlag', ',')+')'";
+					attribute<bool> StatusFlags(Periods) := ='union_data(Periods, '+AsList('CalculatedPeriods/'+Periods/Name+'/result/StatusFlag', ',')+')'
+					,	ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result', ';')+';RunRegion/simulation_results/GeneratedFiles'"
+					;
 				}
 			}
 			container All: Expr = 
@@ -63,8 +64,7 @@ container GenerateContainer
 		container ButtonCan: Descr = "The Generate parameter is contained in order to allow impl/All to be opened without all the meta info procesing that comes with getting Generate in the TreeView"
 		{
 //			parameter<String> GenerateDataPreparation: Expr = "DataPreparation/CAP/LOCSPECS/Generate";
-			container StatusFlags
-				:	Expr = "for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusFlags', Periods, bool)"
+			container StatusFlags:= for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusFlags', Periods, bool)
 				,	StoreData = "True"
 				,	FreeData  = "False";
 			parameter<String> results
