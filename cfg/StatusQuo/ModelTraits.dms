@@ -74,7 +74,7 @@ container ModelTraits
 		attribute<int32>		rnd_Qi		 (domain): Expr = "roundDown(Population_Distribution)";
 		attribute<float32>		Qj			(Region): 	Expr = "Demographics/ProjectedTotals/Population/summed";
 		
-		container discretelyAllocQi: expr = "loop(discrete_people_allocator, uint16(5))";
+		container discretelyAllocQi := loop(discrete_people_allocator, uint16(15));
 		
 		container discrete_people_allocator: IsTemplate = "True"
 		{
