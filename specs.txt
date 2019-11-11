@@ -2,6 +2,14 @@ Luisetta model
 1-ha resolution
 running on GeoDMS 7.182; GDAL 1.11.2 and 2.3.1
 
+Coverage:
+Austria, BelgLux, Bulgaria, Croatia,
+Cyprus, Czech Republic, Denmark,
+Estonia, Finland, France, Germany, Greece,
+Hungary, Ireland, Italy, Latvia, Lithuania,
+Malta, Netherlands, Poland, Portugal, Romania,
+Slovakia, Slovenia, Spain, Sweden, United Kingdom
+
 LEGEND OF ACTIVE CLASSES
 urban
 industry
@@ -14,12 +22,41 @@ new energy crops
 semi-natural vegetation
 forests young
 
-classes that are de-activated in the model but may possibly (??) be re-instated:
+classes that were de-activated in the model but were re-instated:
 AbanArable
 AbanPermanentCrops 	  
 AbanPastures       	  
+
+classes that were de-activated in the model and were NOT re-instated:
 AbanUrban          	 		
 AbanIndustry
 
 other classes that never change:
 waterbodies and wetlands
+
+First (original) legend:
+urban
+industrial
+other arable
+permanent crops
+pastures
+forests mature
+transWoodland
+NECR
+SHVA
+Forests young
+
+Current legend (Sept 2019):
+urban
+industrial
+other arable
+permanent crops
+pastures
+forests mature
+transWoodland
+abandoned arable
+abandoned permanent crops
+abandoned pastures
+NECR
+SHVA
+Forests young

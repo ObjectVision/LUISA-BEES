@@ -1113,8 +1113,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 						attribute<String> AllowedExpr: expr = "AllowedExprBool";
 		
 						//attribute<bool>   HasBottomUpCond: Expr = "cTrue";
-						attribute<String> BottomUpCond: 
-							Expr = "AllowedExpr";
+						attribute<String> BottomUpCond := AllowedExpr;
 					}
 					attribute<String> AllowRuleValue: 
 						Expr = 

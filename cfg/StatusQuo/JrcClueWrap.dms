@@ -321,6 +321,7 @@ container JrcClueWrap:
 			{
 				attribute<UInt32> PaletteData(Classifications/LU/ViewType): Expr = "Classifications/LU/ViewType/Color";
 			}
+
 			container PerYear:     Expr = "for_each_nedvl(Periods/Name, 'TimeSteps/'+Periods/Name+'/ResultingState/LandUse', domain, ModelType, 'Land use '+Periods/YearStr)";
 			container GridPerYear: Expr = "for_each_nedvl(Periods/Name, 'TimeSteps/'+Periods/Name+'/ResultingState/LandUse_Grid', domain_grid, ModelType, 'Land use '+Periods/YearStr)";
 			container ClippedGridPerYearVT_Calculated: Expr = "for_each_nedv(Periods/Name, 'TimeSteps/'+Periods/Name+'/ResultingState/OutputGeneration/ClippedLandUseVT', domain_grid, Classifications/LU/ViewType)";
