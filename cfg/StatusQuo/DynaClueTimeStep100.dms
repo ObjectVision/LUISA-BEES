@@ -113,7 +113,7 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 
 		attribute<bool>      HasChanged(domain) := LandUse != PrevState/LandUse;
 	
-		attribute<YearDiffRange> Age(domain): Expr = "(HasChanged ? value(0, YearDiffRange) : PrevState/Age) + 1[YearDiffRange]";
+		attribute<YearDiffRange> Age(domain) := (HasChanged ? value(0, YearDiffRange) : PrevState/Age) + (RefTime - PrevState/RefTime)[YearDiffRange];
 		
 		attribute<float32> 			Si(domain): 				  			Expr = "HousingStock/Si", Label = "= 'Housing Supply ' + string(RefTime)";
 		attribute<Year> S_Agei	   (domain): 				  				Expr = "HousingStock/S_Agei", Label = "= 'Age of housing supply ' + string(RefTime)";
