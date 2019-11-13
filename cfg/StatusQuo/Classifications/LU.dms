@@ -59,13 +59,12 @@ container LU
 		parameter<.> NewEnergyCrops:          expr = "value(10, .)";
 		parameter<.> SHVA:					  expr = "value(11, .)";
 		parameter<.> ForestsYoung:			  expr = "value(12, .)";
-		attribute<bool> IsBuiltupArea:        expr = "ID(.) == Urban || ID(.) == Industrial";
-		attribute<bool> IsUrban:              expr = "ID(.) == Urban";
-		attribute<bool> IsIndustrial:         expr = "ID(.) == Industrial";
-		attribute<bool>	IsAgriCultural:	 	  expr = "ID(.) == OtherArable || ID(.) == PermanentCrops || ID(.) == Pastures || ID(.) == NewEnergyCrops";
-		attribute<bool> IsForest:         	  expr = "ID(.) == ForestsMature || ID(.) == ForestsYoung";
-		attribute<bool> IsAbandoned:          expr = "const(False, ., bool)";
-		attribute<bool> IsAbandonedUrban: 	  expr = "const(False, ., bool)";
+		attribute<bool> IsUrban       := ID(.) == Urban;
+		attribute<bool> IsIndustrial  := ID(.) == Industrial;
+		attribute<bool> IsBuiltupArea := or( IsUrban, IsIndustrial);
+		attribute<bool>	IsAgriCultural:= ID(.) == OtherArable || ID(.) == PermanentCrops || ID(.) == Pastures || ID(.) == NewEnergyCrops;
+		attribute<bool> IsForest      := ID(.) == ForestsMature || ID(.) == ForestsYoung;
+		attribute<bool> IsAbandoned   := ID(.) == AbanArable || ID(.) == AbanPermanentCrops || ID(.) == AbanPastures;
 	}
 	unit<UInt32> ModelMatr: Expr = "Combine(ModelType, ModelType)";
 	
@@ -133,14 +132,14 @@ container LU
 			//	R,    G,    B,    isAgriculture, Label,
 				'219','000','000','False',       'Urban',
 				'128','000','128','False',       'Industrial',
-				'001','099','000','False',       'ForestMature',
+				'001','099','000','False',       'ForestsMature',
 				'114','137','068','False',       'SemiNatural',
 				'153','130','120','False',       'AbanAgriculture',
 				'254','250','194','True',        'ArableLand',
 				'207','152','107','True',        'OtherAgriculture',
 				//'160','000','000','False',       'AbanUrban',
 				//'071','000','117','False',       'AbanIndustry',
-				'001','099','000','False',       'ForestYoung'];
+				'001','099','000','False',       'ForestsYoung'];
 		}
 		attribute<String>         Name: Expr = "Label";
 		attribute<UInt8>             R: Expr = " UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 0, Elements)])";

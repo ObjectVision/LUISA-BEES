@@ -1051,15 +1051,13 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 								
 				attribute<string> SuitabilityExpExpr   (ModelType): Expr = "'exp(min_elem(MakeDefined(SuitabilityData/'+ModelType/Name+', Float32(-1000000)), float32(80)))'";
 				attribute<string> SuitabilityLogitExpr 		(ModelType): Expr = "SuitabilityExpExpr+'/(Float32(1)+'+SuitabilityExpExpr+')'";
-				attribute<string> SuitabilityRescaleExpr	(ModelType): Expr = "!ModelType/IsAbandonedUrban[ModelType] ? "
-					"'MakeDefined(protoSuitabilityLogit/'+ ModelType/Name + ' / nth_element(protoSuitabilityLogit/'+ ModelType/Name +', domain/p99_value), float32(0))' : "
-					"'MakeDefined(protoSuitabilityLogit/'+ ModelType/Name + ', float32(0))'"; 
+				attribute<string> SuitabilityRescaleExpr	(ModelType) :=
+					'MakeDefined(protoSuitabilityLogit/'+ ModelType/Name + ' / nth_element(protoSuitabilityLogit/'+ ModelType/Name +', domain/p99_value), float32(0))';
 
 				parameter<string> SuitabilitySumExpExpr: Expr = "'add('+AsItemList(SuitabilityExpExpr)+')'";
 				attribute<string> SuitabilityMnlExpr   (ModelType): Expr = "SuitabilityExpExpr+' / TotalExpSuitability'";
 				
-				attribute<string> LocSpecExprPrefix(ModelType):
-		 		
+				attribute<string> LocSpecExprPrefix(ModelType):		 		
 		 			Expr = 
 		 				"((ParamSet/LocationSpecificPreferenceAddition <> Float32(0.0))"
 		 					"? ' * CaseData/LocSpec/'+ModelType/Name+'* ParamSet/LocationSpecificPreferenceAddition['+ggModelIdExpr+']'"
@@ -1099,118 +1097,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				//Container GrossRevenues: expr = "GrossRevenuesLink";
 				Container Neighbourhood: expr = "NeigbourhoodLink";
 				
-				unit<uint32> ModelMatr: Expr = "Allowed/ModelMatr"
-				{
-					unit<uint32> Indirects: Expr = "SubSet(TransitionCode>int16(1) && TransitionCode <=int16(100))"
-					{
-						attribute<uint32> TransCode_uint32: expr = "value(TransitionCode[Nr_OrgEntity], uint32)";
-						attribute<String> OrgValue: Expr = "'PrevState/Variables/'+rjoin(TransCode_uint32, Factors/ID, Factors/Name)";
-						attribute<String> Value:    Expr = "'int16('+OrgValue+')'";
-
-						attribute<String> AllowedExprBool: Expr = "'float32('+OrgValue+') > float32(0)'";
-						attribute<String> AllowedExprInt16:  // value = <null> => false; all non-null values in X8..X13 are above 1000.
-							Expr =  "'int16(PrevState/Age) >= ('+Value+'-int16(1000))'";
-						attribute<String> AllowedExpr: expr = "AllowedExprBool";
-		
-						//attribute<bool>   HasBottomUpCond: Expr = "cTrue";
-						attribute<String> BottomUpCond := AllowedExpr;
-					}
-					attribute<String> AllowRuleValue: 
-						Expr = 
-							"switch("
-								"case(Allowed/ModelMatr/TransitionCode==int16(   0), 'false'),"
-								"case(Allowed/ModelMatr/TransitionCode==int16(   1), 'const(true, domain)')," // disappears
-								"case(Allowed/ModelMatr/TransitionCode>=int16(1000), 'PrevState/Age >= value('+String(Allowed/ModelMatr/TransitionCode-int16(1000))+', YearDiffRange)'),"
-								"Indirects/AllowedExpr[invert(Indirects/nr_OrgEntity)]"
-							")";
-					attribute<ModelType> RuleFrom:  	Expr = "value(ID(.) / #ModelType, ModelType)";
-					attribute<ModelType> RuleDest:  	Expr = "value(ID(.) % #ModelType, ModelType)";
-					attribute<String> AllowRuleCases:  	Expr = "(AllowRuleValue != AllowRuleElse) ? 'case(PrevState/LandUse == '+ggModelIdExpr[RuleFrom]+', '+AllowRuleValue+'),' : ''";
-
-					attribute<String> BottomUpCond: 
-						Expr = 
-							"switch("
-								"case(Allowed/ModelMatr/TransitionCode==int16(   0), ''),"
-								"case(Allowed/ModelMatr/TransitionCode==int16(   1), ''),"
-								// "case(Allowed/ModelMatr/TransitionCode>=int16(1000), 'PrevState/Age >= value('+String(Allowed/ModelMatr/TransitionCode-int16(1000))+', YearDiffRange)')," // commented out because this sort of post-processing is unwanted (claims!).
-								"MakeDefined(Indirects/BottomUpCond[invert(Indirects/nr_OrgEntity)], '')"
-							")";
-					attribute<String> BottomUpCases: 
-						Expr = "BottomUpCond == '' ? '' : 'case(AllocLandUse=='+ggModelIdExpr[RuleFrom]+' && '+BottomUpCond + ', '+ggModelIdExpr[RuleDest]+'), '";
-				}
-				parameter<String> AllowRuleElse:  Expr = "'const(True, domain)'"; // CurrYear > 2010[float32] && PrevState/LandUse <> ModelType/ForestsMature ? False : True'";
-				attribute<String> AllowRules(ModelType): Expr = 
-					"'switch(' + "
-					" switch(	case(id(ModelType) = ModelType/ForestsMature, 				'case(BurntForest/NewlyBurnt || (CurrYear > 2010[float32] && PrevState/Landuse <> ModelType/ForestsMature), false),'), "
-					"			case(id(ModelType) = ModelType/ForestsYoung, 				'case(BurntForest/NewlyBurnt, false),'), "
-					"			case(id(ModelType) = ModelType/TransWoodlandShrub, 			'case(BurntForest/NewlyBurnt, true),'), '') + "
-					"asList(ModelMatr/AllowRuleCases, '', ModelMatr/RuleDest)+AllowRuleElse+')'";
-				
-				parameter<String> PostProcStep: Expr = 
-						"'PrevState/landuse == AllocLandUse ? switch('+asList(ModelMatr/BottomUpCases, '')+'AllocLandUse) : AllocLandUse'";
-		
-				//	INCOMPLETE ANALYSIS OF REQUIRED PROHIBITIVE CONVERSION ELASTICY AND BLOCKING MINIMUM
-				//	Phohibitive ConversionElasticity  C ( C=1.0 in main.1 ) should be such that 
-				//
-				//		C + min(Pthis) >= max(Pother) :to prevent vacancy when COV(this) increases
-				//	or      min(Pthis) <= max(Pother) :to prevent settlement when COV(this) decreases
-				//
-				//		where P is:
-				//			any of the calculated probabilities with range [0..1.2] (assuming nonnegative LocSpecs and related weights)
-				//		+	any conversionElasticity with range [0..1.0)
-				//		+	S, the claim-shadowprice
-				//	
-				//	furthermore, to ensure that this rule is weaker than the absolute disallowances of level MIN (-3.0 in CLUE-s):
-				//
-				//		min(P) > MIN
-				// 
-				
-		// TODO
-		 		
-
-// [
-// 	'',
-// 	'',
-// 	'CaseData/LocSpec/OtherArable* ParamSet/LocationSpecificPreferenceAddition[value(2, ModelType)]+',
-// 	'CaseData/LocSpec/PermanentCrops* ParamSet/LocationSpecificPreferenceAddition[value(3, ModelType)]+',
-// 	'CaseData/LocSpec/Pastures* ParamSet/LocationSpecificPreferenceAddition[value(4, ModelType)]+',
-// 	'',
-// 	'',
-// 	'CaseData/LocSpec/Cereals* ParamSet/LocationSpecificPreferenceAddition[value(7, ModelType)]+,'
-// 	'CaseData/LocSpec/Maize* ParamSet/LocationSpecificPreferenceAddition[value(8, ModelType)]+',
-// 	'CaseData/LocSpec/RootCrops* ParamSet/LocationSpecificPreferenceAddition[value(9, ModelType)]+',
-// 	'CaseData/LocSpec/AbandonedArable* ParamSet/LocationSpecificPreferenceAddition[value(10, ModelType)]+',
-// 	'CaseData/LocSpec/AbandonedPermanentCrops* ParamSet/LocationSpecificPreferenceAddition[value(11, ModelType)]+',
-// 	'CaseData/LocSpec/AbandonedPastures* ParamSet/LocationSpecificPreferenceAddition[value(12, ModelType)]+'
-// ];
-		 					
-		 					
-		 					
-		 					
-		 												
-				//attribute<string> NeighbourhoodWeightExpr(ModelType): Expr = "'Neighbourhood/NeWeights['+ggModelIdExpr+']'";
-				
-				
-		
-		// ====== Begin LINEAR Support
-		
-//				attribute<string> AddedSuitExpr(ModelType): // static + enrichment
-	//				Expr = 
-		//				"(ParamSet/Neighbourhood/NeWeights <> Float32(0)"
-			//				"? '(Float32(1)-'+NeighbourhoodWeightExpr+')*MakeDefined(SuitabilityData/'+ModelType/Name+',value(-1000.0, EUR_M2))+'+NeighbourhoodWeightExpr+'*DynamicNeighbourData/'+ModelType/Name"
-				//			": 'SuitabilityData/'+ModelType/Name"
-				//		")";
-				attribute<string> AddedSuitExpExpr  (ModelType): Expr = "'exp(min_elem(AddedSuitabilityData/'+ModelType/Name+', float32(80)))'";
-				attribute<string> AddedSuitLogitExpr(ModelType): Expr = "AddedSuitExpExpr+'/add('+AsItemList(AddedSuitExpExpr)+')'";
-				attribute<string> TotalLinearSuitabilityExpr(ModelType): Expr = "AddedSuitLogitExpr + '-' + TransitionCostsExpr";
-					
-		// ====== End LINEAR Support
-					
-				attribute<String> TransPotExpr   (ModelType): 
-					Expr = 
-					"'Allowed/'+ModelType/Name+' "
-						"? convert(TotalSuitability/'+ModelType/Name+' * float32(100), EUR_M2)"
-						": value(-100000.0, EUR_M2)'";
+				unit<uint32> ModelMatr := Allowed/ModelMatr;
 			}
 		}
 		container EU_Wide_TableChopper: IsTemplate = "True"

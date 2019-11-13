@@ -105,21 +105,13 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 	
 	container ResultingState
 	{	
-		//		"case(Allowed/ggModelMatr/TransitionCode> int16(1000), 'PrevState/Age == value('+String(Allowed/ggModelMatr/TransitionCode-int16(100))+', YearDiffRage)'),"
-
-		parameter<YearRange> RefTime: Expr = "CurrYear";
+		parameter<YearRange> RefTime := CurrYear;
 		
-		attribute<ModelType> AllocLandUse(domain): Expr = "d_alloc/landuse", IntegrityCheck = "cumulStatusFlag";
-		attribute<ModelType> LandUse_EUCS(domain): Expr = "=Rules/PostProcStep";
-		//attribute<bool>		becomesUrban 			(domain): Expr = "((Qi >= Rules/AbandonmentThreshold) && (PrevState/LandUse == Classifications/LU/ModelType/Urban)) || (Qi > Rules/UrbanizationThreshold) || CaseData/getOptimalk/ProbableTouristFacility";
-		//attribute<bool>		becomesAbandonedUrban	(domain): Expr = "(LandUse_EUCS == Classifications/LU/ModelType/Urban || LandUse_EUCS == Classifications/LU/ModelType/AbanUrban) && "
-		//	"Qi < Rules/AbandonmentThreshold && Qi < PrevState/Qi && !CaseData/getOptimalk/ProbableTouristFacility";	
-		//attribute<bool>		 ViolatesCap (domain): Expr = "becomesUrban && !DynamicComponent/Population/claimPopCapi/urbanAllowed";
-		attribute<ModelType> LandUse     (domain): Expr = "LandUse_EUCS", Label = "= 'Land use ' + string(RefTime)";
-		attribute<ModelType> LandUse_Grid(domain_grid): Expr = "LandUse[domain/BasisGrid]";
-		attribute<int32>	 Qi_Grid	 (domain_grid): Expr = "int32(Qi)[domain/BasisGrid]";
+		attribute<ModelType> LandUse     (domain) := d_alloc/landuse, Label = "= 'Land use ' + string(RefTime)";
+		attribute<ModelType> LandUse_Grid(domain_grid) := LandUse[domain/BasisGrid];
+		attribute<int32>     Qi_Grid	 (domain_grid) := int32(Qi)[domain/BasisGrid];
 
-		attribute<bool > HasChanged(domain): Expr = "LandUse != PrevState/LandUse";
+		attribute<bool>      HasChanged(domain) := LandUse != PrevState/LandUse;
 	
 		attribute<YearDiffRange> Age(domain): Expr = "(HasChanged ? value(0, YearDiffRange) : PrevState/Age) + 1[YearDiffRange]";
 		
