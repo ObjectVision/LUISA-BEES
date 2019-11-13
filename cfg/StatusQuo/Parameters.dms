@@ -515,19 +515,8 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				}	
 			}
 		}
-		
-		container AllowedTempl: IsTemplate = "True"
-		{
-			parameter<string> AllowFile;
-			unit<UInt8>  ModelType: Expr = "Classifications/LU/ModelType";
-			unit<UInt32> ModelMatr: Expr = "Classifications/LU/ModelMatr"
-			{
-				attribute<int16> TransitionCode: Expr = "ReadArray(AllowFile, ModelMatr, int16, 0)";
-			}
-			container xTab: Expr = "for_each_nedv(ModelType/Name, 'ModelMatr/TransitionCode[value(UInt32(ID(ModelType))*#ModelType+'+String(ID(ModelType))+', ModelMatr)]', ModelType, int16)";
-		}
-		
-		container TransitionCostsTempl: IsTemplate = "True"
+				
+		template TransitionCostsTempl
 		{
 			//parameter<string> TransitionCostsFilePath;
 			parameter<String> TransitionCostsFile; //:  StorageName = "=TransitionCostsFilePath", StorageType = "str", KeepData = "True";
@@ -541,7 +530,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 		}
 		
 		// maximumvalue of 1.5 hardcoded in this script now.
-		container TransitionCostsTempl2: IsTemplate = "True"
+		template TransitionCostsTempl2
 		{
 			parameter<string> TransitionCostsFilePath;
 			parameter<String> TransitionCostsFile:  StorageName = "=TransitionCostsFilePath", StorageType = "str", KeepData = "True";
@@ -1023,11 +1012,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			
 			unit<UInt8> ModelType: Expr = "Classifications/LU/ModelType";
 			unit<Uint32> Factors:		  	Expr = "MetaData/FactorID";
-			//unit<Uint32> StaticFactors:   	Expr = "MetaData/StaticFactors";
-			//unit<Uint32> DynamicFactors:   	Expr = "MetaData/DynamicFactors";
 
-			container Allowed: Expr = "ParamSet/Allowed";
-			
 			container Rules
 			{
 				attribute<string> ggModelIdExpr(ModelType): Expr = "String(ID(ModelType))+'[ModelType]'";
@@ -1098,7 +1083,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				//Container GrossRevenues: expr = "GrossRevenuesLink";
 				Container Neighbourhood: expr = "NeigbourhoodLink";
 				
-				unit<uint32> ModelMatr := Allowed/ModelMatr;
+				unit<uint32> ModelMatr := Classifications/Lu/ModelMatr;
 			}
 		}
 		container EU_Wide_TableChopper: IsTemplate = "True"
@@ -1329,7 +1314,6 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			parameter<String> TransitionCostsFile:  StorageName = "=ParamPath+'/TransitionCosts.txt'", StorageType = "str", KeepData = "True";
 			parameter<String> GrossRevenuesFile:  StorageName = "=ParamPath+'/GrossRevenues.txt'", StorageType = "str", KeepData = "True";			
 			parameter<String> NeighbFile: expr = "= quote(ParamPath+'/neighmat.txt')"; //, StorageType = "str", KeepData = "True";
-			container Allowed: Expr = "Templ/AllowedTempl(AllowedFile)";
 			container TransitionCosts:   Expr = "Templ/TransitionCostsTempl(TransitionCostsFile)";
 			container GrossRevenues:   Expr = "Templ/GrossRevenuesTempl(GrossRevenuesFile)";			
 			container Neighbourhood: Expr = "Templ/NeighbTempl(NeighbFile)";
