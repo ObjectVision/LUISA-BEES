@@ -19,6 +19,7 @@ container GenerateContainer
 //	unit<uint16> ActiveRun: Expr = "Subset(not(IsDefined(rlookup(Run/Name, ExceptionList/code))) && (ID(Run) >= 52[run])&& (ID(Run) <= 57[run]))"
 	{
 		attribute<String> Name: Expr = "Run/Name[nr_OrgEntity]";
+		attribute<.> Grid(Geography/Lambert100mGrid) := invert(nr_OrgEntity)[Run/Grid];
 	}
 	
 	// decoupled simulation from mozaiking
@@ -89,8 +90,8 @@ container GenerateContainer
 			container LandusePerYear: Expr = "for_each_nedv(Periods/Name, 'MakeDefined('+CombineExprPerPeriod+', 0[LandUseType])', Geography/Lambert100mGrid, LandUseType)";
 			
 			// Mozaiking the generated RunRegion maps per Period
-			parameter<String> DirName: Expr = "'%LocalDataProjDir%/Results/EU'";
-			container GeneratePeriodTemplate:IsTemplate = "True", isHidden = "True"
+			parameter<String> DirName := '%LocalDataProjDir%/Results/EU';
+			template GeneratePeriodTemplate
 			{
 				attribute<LandUseType> LandUse(Geography/Lambert100mGrid);				
 				parameter<String> PeriodYearStr;				
@@ -113,6 +114,35 @@ container GenerateContainer
 		container ButtonCan: Descr = "The Generate parameter is contained in order to allow impl/All to be opened without all the meta info procesing that comes with getting Generate in the TreeView"
 		{
 			parameter<string> Generate: Expr = "'ready'", ExplicitSuppliers = "=AsList('impl/AllPeriods/'+Periods/Name+'/result',';')";
+		}
+		container Results {
+			container Landuse := for_each_ndva(Periods/Name
+				, Geography/Lambert100mGrid, LandUseType
+				, impl/DirName+'/LandUseVT_' + Periods/YearStr + '.tif'
+			);
+		}
+		container GenerateSummary {
+			unit<uint32> CountryLUT := combine(ActiveRun, LandUseType) {
+				attribute<ActiveRun>   ActiveRun_rel   := nr_1;
+				attribute<LandUseType> LandUseType_rel := nr_2;
+			}
+			container PerCountryPerYear := for_each_nedv(Periods/Name
+				, replace('count(Results/Landuse/@YR, combine_data(CountryLUT, ActiveRun/Grid, Results/Landuse/@YR))', '@YR', Periods/Name)
+				, CountryLUT, UInt32
+			);
+			unit<uint32> YearCountryLUT := combine(Periods, CountryLUT) {
+				attribute<Periods    > Periods_rel     := nr_1;
+				attribute<ActiveRun  > ActiveRun_rel   := CountryLUT/ActiveRun_rel[nr_2];
+				attribute<LandUseType> LandUseType_rel := CountryLUT/LandUseType_rel[nr_2];
+			}
+			unit<uint32> ExportTable := YearCountryLUT, StorageName = "=impl/DirName+'/CountryLanduseTable.dbf'"
+			{
+				attribute</Parameters/YearRange> Year    := Periods/CurrYear  [Periods_rel];
+				attribute<string>    Country := ActiveRun/Name[ActiveRun_rel];
+				attribute<string>    LandUse := LandUseType/Name[LandUseType_rel];
+				attribute<UInt32>    HA      := ='union_data(., '+AsItemList('PerCountryPerYear/'+Periods/Name)+')';
+			}
+			
 		}
 	}		
 	container MozaikPopulation
