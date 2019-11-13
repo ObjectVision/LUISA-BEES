@@ -32,6 +32,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			attribute<String>  YearStr: Expr = "String(ProjectedYear)";
 			attribute<String>  IdStr: Expr = "'UInt16('+String(ID(.))+')'";
 			attribute<String>  Name:  Expr = "'P'+Replace(YearStr,'.','_')";
+			attribute<string>  Label := YearStr, DialogType = "LabelText";
 			
 			attribute<Float32> ClaimFraction: Expr = "Float32(CurrYear - StartYear)/Float32(EndYear - StartYear)"; // "Float32(PeriodLength)*Float32(CurrYear - StartYear)/Float32(EndYear - StartYear)";
 			attribute<String>  ClaimFractionStr: Expr = "'value('+String(ClaimFraction)+',Float32)'";
