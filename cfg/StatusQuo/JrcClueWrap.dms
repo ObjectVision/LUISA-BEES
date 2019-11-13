@@ -240,6 +240,7 @@ container JrcClueWrap:
 		attribute<bool>		 CorineBurnt (domain): 		Expr = "Classifications/LU/Corine/Burnt[CaseData/PrepareVariables/CorineGrid[domain/grid_rel]]";
 		parameter<float32>   ComingPeriodLength:		Expr = "Periods/PeriodLength[uint16(0)]";
 		parameter<YearRange> CurrYear:					Expr = "Periods/CurrYear[uint16(0)]";
+		parameter<YearDiffRange> RefTime := CurrYear;
 		parameter<bool> cumulStatusFlag: Expr = "true";
 		attribute<YearDiffRange> Age    (domain): Expr = "switch("
 			"case(CorineBurnt, value(3, YearDiffRange)), "
