@@ -2,25 +2,7 @@ container GenerateContainer
 {
 	unit<UInt8>  LandUseType: Expr = "Classifications/LU/ViewType";
 	unit<UInt16> Periods: Expr= "Parameters/PeriodSet/result";
-	unit<UInt16> Run: Expr= "Parameters/Meta/Run";
-	
-	unit<UInt32> ExceptionList: NrOfRows = 5 // @USERINPUT, must be equal to the number of codes.
-	{
-		attribute<String> code: [        // @USERINPUT, give a list of RunRegion codes that should be excluded from Calculation and/or Mozaiking.
-			"DISABLED DEA",  // issue 109
-			"DISABLED FR6",  // issue 110
-			"DISABLED ITC",  // issue 111
-			"DISABLED PT1",  // issue 108
-			"DISABLED DE2"   // new issue in GeoDms 6.027: cumulStatusFlag of 2011 is false
-		];
-	}
-	
-	unit<uint16> ActiveRun: Expr = "Subset(not(IsDefined(rlookup(Run/Name, ExceptionList/code))) )"
-//	unit<uint16> ActiveRun: Expr = "Subset(not(IsDefined(rlookup(Run/Name, ExceptionList/code))) && (ID(Run) >= 52[run])&& (ID(Run) <= 57[run]))"
-	{
-		attribute<String> Name: Expr = "Run/Name[nr_OrgEntity]";
-		attribute<.> Grid(Geography/Lambert100mGrid) := invert(nr_OrgEntity)[Run/Grid];
-	}
+	unit<UInt16> ActiveRun := Parameters/Meta/Run;
 	
 	// decoupled simulation from mozaiking
 	container CalcRunRegions
@@ -78,16 +60,13 @@ container GenerateContainer
 	{
 		container impl 
 		{
-			parameter<string> CombineExpr: IsHidden = "True", Expr = 
-				"'raster_merge(invert(ActiveRun/nr_OrgEntity)[Geography/Regions/Runs/Grid], LandUseType, '+"
-					"AsItemList("
-						"'Runs/'+ActiveRun/Name +'/XXX'"
-					")+"
-				"')'";		
-			attribute<String> CombineExprPerPeriod(Periods): Expr = 
-				"replace(CombineExpr, 'XXX', 'simulation_results/LandUse/ClippedGridPerYearVT_ReadOnly/'+Periods/Name)",  isHidden = "True";
+			parameter<string> CombineExpr := 
+				'raster_merge(ActiveRun/Grid, LandUseType, '+
+					AsItemList('Runs/'+ActiveRun/Name +'/simulation_results/LandUse/ClippedGridPerYearVT_ReadOnly/@YR')+
+				')';
+			attribute<String> CombineExprPerPeriod(Periods) := replace(CombineExpr, '@YR', Periods/Name);
 				
-			container LandusePerYear: Expr = "for_each_nedv(Periods/Name, 'MakeDefined('+CombineExprPerPeriod+', 0[LandUseType])', Geography/Lambert100mGrid, LandUseType)";
+			container LandusePerYear := for_each_nedv(Periods/Name, 'MakeDefined('+CombineExprPerPeriod+', 0[LandUseType])', Geography/Lambert100mGrid, LandUseType);
 			
 			// Mozaiking the generated RunRegion maps per Period
 			parameter<String> DirName := '%LocalDataProjDir%/Results/EU';
