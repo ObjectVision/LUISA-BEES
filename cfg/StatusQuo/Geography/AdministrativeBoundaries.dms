@@ -17,7 +17,8 @@ container AdministrativeBoundaries
 				'NUTS2_merged_LUISA',		'NUTS/LUISA',			'n2_merged_jul16',	'merge',		'merge',		'',
 				'NUTS2_LUISA',				'NUTS/LUISA',			'n2_jul16',			'NUTS_CODE',	'NUTS_LABEL',	'',
 				'NUTS3_LUISA',				'NUTS/LUISA',			'n3_mar17',			'NUTS_CODE',	'NUTS_LABEL',	'',
-				'LAU2',						'LAU',					'LAU2_dec16',		'ICC_LAU_CO',	'LAU_LABEL',	'LAU_spain_patch',
+//				'LAU2',						'LAU',					'LAU2_dec16',		'ICC_LAU_CO',	'LAU_LABEL',	'LAU_spain_patch',
+				'LAU2',						'LAU',					'LAU_2018',		    'GISCO_ID',	   'LAU_LABEL',	'LAU_spain_patch',
 				'LAU_spain_patch',			'LAU', 					'LAU_spain_patch',	'LAU_CODE',		'LAU_CODE',		'',
 				'NUTS3_EuroStat',			'NUTS/EuroStat',		'Nuts3',			'NUTS_CODE',	'NUTS_LABEL',	''];
 		}
