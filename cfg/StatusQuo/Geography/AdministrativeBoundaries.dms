@@ -46,28 +46,24 @@ container AdministrativeBoundaries
 		"'point_in_polygon(centroid_or_mid(sets/'+ BoundarySets/uniName +'/UniqueZones/Geometry), Regions/Runs/Geometry)[Regions/Runs]', BoundaryDomains, BoundarySets/uniName, Regions/Runs)"
 	{
 		attribute<Regions/Runs> base_zones			(Regions/base_zones):				expr = "point_in_polygon(Regions/base_zones/centroid,	Regions/Runs/Geometry)[Regions/Runs]";
-		attribute<Regions/Runs> ForestDemandRegions (LUISA_zones/ForestDemandRegions):  expr = "point_in_polygon(centroid_or_mid(LUISA_zones/ForestDemandRegions/Polygons),	Regions/Runs/Geometry)[Regions/Runs]";
+		attribute<Regions/Runs> ForestDemandRegions (LUISA_zones/ForestDemandRegions):  expr = "point_in_polygon(centroid_or_mid(LUISA_zones/ForestDemandRegions/Geometry),	Regions/Runs/Geometry)[Regions/Runs]";
 		attribute<Regions/Runs> Capri				(Regions/Capri):					expr = "point_in_polygon(centroid_or_mid(Regions/Capri/Geometry),			Regions/Runs/Geometry)[Regions/Runs]";
 		attribute<Regions/Runs> CapriAggr			(Regions/CapriAggr):				expr = "point_in_polygon(centroid_or_mid(Regions/CapriAggr/Geometry),		Regions/Runs/Geometry)[Regions/Runs]";
-		attribute<Regions/Runs> RunAreas 			(LUISA_zones/RunAreas): 			expr = "point_in_polygon(centroid_or_mid(LUISA_zones/RunAreas/Polygons),	Regions/Runs/Geometry)[Regions/Runs]";
-		attribute<Regions/Runs> Nuts0 				(LUISA_zones/Nuts0): 				expr = "point_in_polygon(centroid_or_mid(LUISA_zones/Nuts0/Polygons),		Regions/Runs/Geometry)";
-		attribute<Regions/Runs> outsideRun 			(LUISA_zones/outsideRun): 			expr = "point_in_polygon(centroid_or_mid(LUISA_zones/outsideRun/Polygons),	Regions/Runs/Geometry)";
+		attribute<Regions/Runs> RunAreas 			(LUISA_zones/RunAreas): 			expr = "point_in_polygon(centroid_or_mid(LUISA_zones/RunAreas/Geometry),	Regions/Runs/Geometry)[Regions/Runs]";
+		attribute<Regions/Runs> Nuts0 				(LUISA_zones/Nuts0): 				expr = "point_in_polygon(centroid_or_mid(LUISA_zones/Nuts0/Geometry),		Regions/Runs/Geometry)";
+		attribute<Regions/Runs> outsideRun 			(LUISA_zones/outsideRun): 			expr = "point_in_polygon(centroid_or_mid(LUISA_zones/outsideRun/Geometry),	Regions/Runs/Geometry)";
 	}
 	
-	container RegionGrids: expr = "for_each_nedvn(BoundarySets/uniName, 'poly2grid(BoundaryDomains/'+ BoundarySets/uniName +'/Geometry, Lambert100mGrid)', Lambert100mGrid, BoundaryDomains, BoundarySets/uniName)"
+	container RegionGrids := for_each_nedvn(BoundarySets/uniName, 'poly2grid(BoundaryDomains/'+ BoundarySets/uniName +'/Geometry, Lambert100mGrid)', Lambert100mGrid, BoundaryDomains, BoundarySets/uniName)
 	{
 		attribute<uint32> base_raster (Lambert100mGrid): StorageName = "%EUCS_100mDir%/zones/LAU2_raster.tif", StorageType = "gdal.grid", StorageReadOnly = "True";
-		
-		
-	
 	}
 	
-	container LUISA_zones: Using = "src;"
+	container LUISA_zones
 	{
-		unit<uint32> Nuts1: expr = "NUTS1_LUISA/inFile"
+		unit<uint32> Nuts1 := src/NUTS1_LUISA/inFile
 		{
 			attribute<CountryTable> CT_id: 		expr = "rlookup(Itl_Code, CountryTable/N0Code)";
-			attribute<LambertEA> 	Polygons (polygon): expr = "Geometry";
 			attribute<string> 		Itl_Code:	expr = "substr(replace(ZoneId, 'EL', 'GR'), 0, 2)";
 			attribute<string>		LUISA_Code: expr = "CountryTable/LUISACode[CT_id]";
 			attribute<string> 		Label:		expr = "CountryTable/ItlName[CT_id]";
@@ -75,9 +71,9 @@ container AdministrativeBoundaries
 			attribute<bool>			Exclude:	expr = "ZoneId = 'PT2' || ZoneId = 'PT3' || ZoneId = 'ES7' || ZoneId = 'FRA' || ZoneId = 'FR9'"; // exclude atlantic islands of PT and ES
 			attribute<bool>			Sel:		expr = "CountryTable/LUISAsel[CT_id] && !Exclude";
 		}
-		unit<uint32> RunN1s: expr = "subset(Nuts1/Sel)", DialogData = "Polygons", DialogType = "map"
+		unit<uint32> RunN1s := subset(Nuts1/Sel)
 		{
-			attribute<LambertEA> 	Polygons (polygon): expr = "Nuts1/Geometry[Nr_OrgEntity]";
+			attribute<LambertEA> 	Geometry (polygon): expr = "Nuts1/Geometry[Nr_OrgEntity]";
 			attribute<string> 		Code:				expr = "Nuts1/LUISA_Code[Nr_OrgEntity]";
 			attribute<string> 		Label:				expr = "Nuts1/Label[Nr_OrgEntity]";
 			attribute<string> 		Name:				expr = "Nuts1/LUISAName[Nr_OrgEntity]";
@@ -86,41 +82,33 @@ container AdministrativeBoundaries
 			attribute<string> 		ForestDemandName:	expr = "Code = 'BELUX' ? Name : Label";
 			attribute<ForestDemandRegions> ForestDemandId: expr = "rlookup(ForestDemandName, ForestDemandRegions/Values)";
 		}
-		unit<uint32> outsideRun: expr = "subset(!Nuts1/Sel)", DialogData = "Polygons", DialogType = "map"
+		unit<uint32> outsideRun := subset(!Nuts1/Sel)
 		{
-			attribute<LambertEA> 	Polygons (polygon): expr = "Nuts1/Geometry[Nr_OrgEntity]";
-			attribute<string> 		Code:				expr = "Nuts1/LUISA_Code[Nr_OrgEntity]";
-			attribute<string> 		Label:				expr = "Nuts1/Label[Nr_OrgEntity]";
-			attribute<string> 		Name:				expr = "Nuts1/LUISAName[Nr_OrgEntity]";
+			attribute<LambertEA> 	Geometry (polygon) := Nuts1/Geometry[Nr_OrgEntity];
+			attribute<string> 		Code := Nuts1/LUISA_Code[Nr_OrgEntity];
+			attribute<string> 		Label:= Nuts1/Label[Nr_OrgEntity];
+			attribute<string> 		Name := Nuts1/LUISAName[Nr_OrgEntity];
 		}
-		unit<uint32> RunAreas:
-			DialogData = "Polygons",
-			DialogType = "map",
-			expr 	   = "Unique(RunN1s/Name)"
+		unit<uint32> RunAreas := Unique(RunN1s/Name)
 		{
-			attribute<LambertEA> Polygons (poly): 	expr = "partitioned_union_polygon(value(RunN1s/Polygons, ipoint), RunN1s/RunAreaId)[LambertEA]";
-			attribute<LambertEA> Geometry (poly): 	expr = "Polygons";
-			attribute<string> 	 Name:				expr = "Values";
-			attribute<string>	 ZoneId:			expr = "ICC";
-			attribute<string>	 Nuts_code:			expr = "ICC";
+			attribute<LambertEA> Geometry (poly) := partitioned_union_polygon(RunN1s/Geometry[ipoint], RunN1s/RunAreaId)[LambertEA];
+			attribute<string> 	 Name            := Values;
+			attribute<string> 	 ICC             := first(RunN1s/Code, RunN1s/RunAreaId);
+			attribute<string>	 ZoneId          := ICC;
+			attribute<string>	 Nuts_code       := ICC;
 			attribute<String>    N0CD:           	expr = "ICC";
-			attribute<string> 	 ICC:				expr = "first(RunN1s/Code, RunN1s/RunAreaId)";
 		}
-		unit<uint32> ForestDemandRegions:
-			DialogData = "Polygons",
-			DialogType = "map",
-			expr 	   = "Unique(RunN1s/ForestDemandName)"
+		unit<uint32> ForestDemandRegions := Unique(RunN1s/ForestDemandName)
 		{
-			attribute<LambertEA> Polygons (poly): 	expr = "partitioned_union_polygon(value(RunN1s/Polygons, ipoint), RunN1s/ForestDemandId)[LambertEA]";
-			attribute<LambertEA> Geometry (poly): 	expr = "Polygons";
+			attribute<LambertEA> Geometry (poly) := partitioned_union_polygon(RunN1s/Geometry[ipoint], RunN1s/ForestDemandId)[LambertEA];
 			attribute<string> 	 Name:				expr = "Values";
 			attribute<string>	 ZoneId:			expr = "ICC";
 			attribute<string>	 Nuts_code:			expr = "ICC";
 			attribute<String>    N0CD:           	expr = "ICC";
 			attribute<string> 	 ICC:				expr = "first(RunN1s/ForestDemandCode, RunN1s/ForestDemandId)";
 		}
-		
 	}
+	
 	parameter<uint32> NrN0Zones: expr = "56";
 	parameter<uint32> NrN0Attributes: expr = "5";
 	

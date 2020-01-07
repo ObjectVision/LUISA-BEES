@@ -1,4 +1,4 @@
-container JrcClueWrap:
+template JrcClueWrap:
 	Descr =
 		"This CalculationSchema allocates according to the description in the article:\n"
 		"Hilferink, M.Th.A. & P. Rietveld, The Land Use Scanner;\n"
@@ -6,7 +6,6 @@ container JrcClueWrap:
 		"Journal of Geographic Systems, p. 155-177, 1999.\n"
 		"The symbols used in the description are explained in this article and\n"
 		"the description of the calculation rules refers to the formula numbers there.",
-	IsTemplate = "True",
 	ViewAction = "Map View.Thematic:results/landuse/Dominant_gg9"
 {
 	container RunParameters;

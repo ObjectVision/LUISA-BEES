@@ -129,7 +129,7 @@ container Geography: Using = "Units", IsHidden = "True"
 		// which is overridable by the registry with can be edited by the Tools->Options->ConfigSettings in the GUI.
 		unit<UInt16> Runs: Expr= "=Expand(., '%RunRegions%')"; 
 		
-		unit<uint16> JrcRegion: Expr = "range(uint16, uint16(0), uint16(#AdministrativeBoundaries/LUISA_zones/RunAreas))", DialogType = "Map", DialogData = "Geometry"
+		unit<uint16> JrcRegion := range(uint16, uint16(0), uint16(#AdministrativeBoundaries/LUISA_zones/RunAreas))
 		{
 			attribute<AdministrativeBoundaries/LUISA_zones/RunAreas> Ra_id: expr = "id(.)[AdministrativeBoundaries/LUISA_zones/RunAreas]";
 			attribute<String> Label:             Expr = "AdministrativeBoundaries/LUISA_zones/RunAreas/Name[Ra_id]"; 
@@ -145,7 +145,7 @@ container Geography: Using = "Units", IsHidden = "True"
 			
 			attribute<.> Grid(Lambert100mGrid):  Expr = "poly2grid(Geometry, Lambert100mGrid)";
 
-			attribute<LambertEA> Geometry(poly): Expr = "AdministrativeBoundaries/LUISA_zones/RunAreas/Polygons[Ra_id]";
+			attribute<LambertEA> Geometry(poly): Expr = "AdministrativeBoundaries/LUISA_zones/RunAreas/Geometry[Ra_id]";
 			
 			attribute<LambertEA> lb: 			 Expr = "lower_bound(Geometry)";
 			attribute<LambertEA> ub:			 Expr = "upper_bound(Geometry)";	

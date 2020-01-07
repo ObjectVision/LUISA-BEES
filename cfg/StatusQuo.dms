@@ -1,5 +1,6 @@
 container Luisetta
-:	IntegrityCheck = "GeoDmsVersion() >= 7.022"  // 7.022 needed for improved poly2grid function
+:	IntegrityCheck = "GeoDmsVersion() >= 7.206"  // 7.206 needed for automatic DialogType and DialogData in case of a Geometry attribute
+//:	IntegrityCheck = "GeoDmsVersion() >= 7.022"  // 7.022 needed for improved poly2grid function
 //:	IntegrityCheck = "GeoDmsVersion() >= 7.015"  // 7.015 needed for adaptations to the code-breaking new reprojections
 //:	IntegrityCheck = "GeoDmsVersion() >= 7.005"  // 7.005 needed for derivation of the platform specific %OdbcExcelDriver% placeHolder
 //:	IntegrityCheck = "GeoDmsVersion() >= 6.0309" // 6.031 required for array-based FullPathName
@@ -9,12 +10,10 @@ container Luisetta
 //:	IntegrityCheck = "GeoDmsVersion() >= 6.014"  // required for writing tiffs (as in LisFlood indicator production)
 //:	IntegrityCheck = "GeoDmsVersion() >= 6.012"  // required for reading/writing numeric arrays from/to str storage managers (for binary files).
 //:	IntegrityCheck = "GeoDmsVersion() >= 6.011"
-
-,	FreeData = "True"
 {
 	container ConfigSettings : IsHidden = "True"
 	{		
-		container Overridable: Descr = "From 6.069 on only this container will be overridable with Tools->Options->ConfigSettings that sets user/machine specific overrides in the registry"
+		container Overridable: Descr = "only this container is overridable with Tools->Options->ConfigSettings that sets user/machine specific overrides in the registry"
 		{
 			parameter<String> RunRegions: [ 'JrcRegion' ]; // @USERINPUT: Nuts1 or JrcRegion
 			parameter<String> SourceRootDir   := '%SourceDataDir%/Forbio';

@@ -96,7 +96,7 @@ container JrcFactorDataTempl: IsTemplate = "True", IsHidden = "true"  //, Expr =
 		" (TiffData/ErodibilityClass/SuitValue [TiffData/Erodibility]) + "
 		" Float32(TiffData/ContaminatedLands/IsContaminated)";
 	}
-	attribute<Geography/Lambert100mGrid> Lambert100mGridRel(domain_grid): Expr = "ID(domain_grid)[Geography/Lambert100mGrid]";
+	attribute<Geography/Lambert100mGrid> Lambert100mGridRel(domain_grid) := ID(domain_grid)[Geography/Lambert100mGrid];
 	
 // Added container for Integration locspec files 	
 	Container ReferenceLocSpecs

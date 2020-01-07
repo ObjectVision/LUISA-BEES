@@ -51,7 +51,7 @@ container Accessibility: using = "Units"
 			,	StorageReadOnly = "True", DialogData = "Geometry", DialogType = "map"
 		{
 			attribute<Geography/LambertEA> Geometry;
-			attribute<Geography/Regions/Nuts2> Nuts2id: expr = "Geography/Regionshapes/Nuts2/Nuts2Id[point_in_polygon(Geometry, Geography/Regionshapes/Nuts2/Polygons[Geography/LambertEA])]";
+			attribute<Geography/Regions/Nuts2> Nuts2id: expr = "Geography/Regionshapes/Nuts2/Nuts2Id[point_in_polygon(Geometry, Geography/Regionshapes/Nuts2/Geometry[Geography/LambertEA])]";
 			attribute<Geography/Lambert100mGrid> grid_id: expr = "Geometry[Geography/Lambert100mGrid]"; // reprojection is part of recasting.
 			attribute<float32> Attraction := const(1[float32], .);
 			attribute<bool> Foreign := const(false, .);
