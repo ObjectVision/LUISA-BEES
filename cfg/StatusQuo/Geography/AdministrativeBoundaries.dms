@@ -18,7 +18,7 @@ container AdministrativeBoundaries
 				'NUTS2_LUISA',				'NUTS/LUISA',			'n2_jul16',			'NUTS_CODE',	'NUTS_LABEL',	'',
 				'NUTS3_LUISA',				'NUTS/LUISA',			'n3_mar17',			'NUTS_CODE',	'NUTS_LABEL',	'',
 //				'LAU2',						'LAU',					'LAU2_dec16',		'ICC_LAU_CO',	'LAU_LABEL',	'LAU_spain_patch',
-				'LAU2',						'LAU',					'LAU_2018',		    'GISCO_ID',	   'LAU_LABEL',	'LAU_spain_patch',
+				'LAU2',						'LAU',					'LAU_2018',		    'replace(GISCO_ID, ''_'','''')',	   'LAU_LABEL',	'LAU_spain_patch',
 				'LAU_spain_patch',			'LAU', 					'LAU_spain_patch',	'LAU_CODE',		'LAU_CODE',		'',
 				'NUTS3_EuroStat',			'NUTS/EuroStat',		'Nuts3',			'NUTS_CODE',	'NUTS_LABEL',	''];
 		}
@@ -204,14 +204,13 @@ container AdministrativeBoundaries
 		parameter<string> IDfield;
 		parameter<string> Labelfield;
 		
-		parameter<string> IDfield2: expr = "strlen(IDfield) = 0 ? 'autoID' : IDfield";
-		
-		unit<uint32> inFile: StorageName = "= '%LuisettaDataDir%/zones/' + path + '.shp'", StorageType = "gdal.vect", StorageReadOnly = "True", DialogData = "Geometry", DialogType  ="map"
+		unit<uint32> inFile: StorageName = "= '%LuisettaDataDir%/zones/' + path + '.shp'", StorageType = "gdal.vect", StorageReadOnly = "True"
 		{
 			attribute<LambertEA> Geometry (polygon);
-			attribute<string> 	 autoID:	expr = "'z_' + string(id(.))";
-			attribute<string> 	 ZoneID:	expr = "= IDfield2";	
-			attribute<string> 	 Label:	expr = "= strlen(Labelfield) = 0 ? 'ZoneId' : Labelfield";
+			attribute<Float64>   Area  := Area(Geometry, Float64);
+			attribute<string> 	 autoID:= 'z_' + string(id(.));
+			attribute<string> 	 ZoneID:=  = strlen(IDfield)    = 0 ? 'autoID' : IDfield;	
+			attribute<string> 	 Label :=  = strlen(Labelfield) = 0 ? 'ZoneId' : Labelfield;
 		}
 	}
 	template doAggregateSets
