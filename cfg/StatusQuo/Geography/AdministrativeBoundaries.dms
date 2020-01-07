@@ -18,7 +18,7 @@ container AdministrativeBoundaries
 				'NUTS2_LUISA',				'NUTS/LUISA',			'n2_jul16',			'NUTS_CODE',	'NUTS_LABEL',	'',
 				'NUTS3_LUISA',				'NUTS/LUISA',			'n3_mar17',			'NUTS_CODE',	'NUTS_LABEL',	'',
 //				'LAU2',						'LAU',					'LAU2_dec16',		'ICC_LAU_CO',	'LAU_LABEL',	'LAU_spain_patch',
-				'LAU2',						'LAU',					'LAU_2018',		    'replace(GISCO_ID, ''_'','''')',	   'LAU_LABEL',	'LAU_spain_patch',
+				'LAU2',						'LAU',					'LAU_2018_meters',	'replace(GISCO_ID, ''_'','''')',	   'LAU_LABEL',	'LAU_spain_patch',
 				'LAU_spain_patch',			'LAU', 					'LAU_spain_patch',	'LAU_CODE',		'LAU_CODE',		'',
 				'NUTS3_EuroStat',			'NUTS/EuroStat',		'Nuts3',			'NUTS_CODE',	'NUTS_LABEL',	''];
 		}
@@ -51,13 +51,13 @@ container AdministrativeBoundaries
 		attribute<Regions/Runs> CapriAggr			(Regions/CapriAggr):				expr = "point_in_polygon(centroid_or_mid(Regions/CapriAggr/Geometry),		Regions/Runs/Geometry)[Regions/Runs]";
 		attribute<Regions/Runs> RunAreas 			(LUISA_zones/RunAreas): 			expr = "point_in_polygon(centroid_or_mid(LUISA_zones/RunAreas/Geometry),	Regions/Runs/Geometry)[Regions/Runs]";
 		attribute<Regions/Runs> Nuts0 				(LUISA_zones/Nuts0): 				expr = "point_in_polygon(centroid_or_mid(LUISA_zones/Nuts0/Geometry),		Regions/Runs/Geometry)";
-		attribute<Regions/Runs> outsideRun 			(LUISA_zones/outsideRun): 			expr = "point_in_polygon(centroid_or_mid(LUISA_zones/outsideRun/Geometry),	Regions/Runs/Geometry)";
 	}
 	
 	container RegionGrids := for_each_nedvn(BoundarySets/uniName, 'poly2grid(BoundaryDomains/'+ BoundarySets/uniName +'/Geometry, Lambert100mGrid)', Lambert100mGrid, BoundaryDomains, BoundarySets/uniName)
 	{
 		attribute<uint32> base_raster (Lambert100mGrid): StorageName = "%EUCS_100mDir%/zones/LAU2_raster.tif", StorageType = "gdal.grid", StorageReadOnly = "True";
 	}
+	
 	
 	container LUISA_zones
 	{
