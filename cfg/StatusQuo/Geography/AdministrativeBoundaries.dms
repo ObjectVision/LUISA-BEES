@@ -32,8 +32,8 @@ container AdministrativeBoundaries
 		
 	}
 		
-	container src: expr = "for_each_ne(BoundarySets/uniName, 'doLoadFiles('+ quote(BoundarySets/Path) +','+ quote(BoundarySets/IDfield) +','+ quote(BoundarySets/Labelfield) +')')";
-	container sets:expr = "for_each_ne(BoundarySets/uniName, 'doAggregateSets(src/'+ BoundarySets/uniName +', '+ quote(BoundarySets/AddLayer)+ ')')";
+	container src := for_each_ne(BoundarySets/uniName, 'doLoadFiles('+ quote(BoundarySets/Path) +','+ quote(BoundarySets/IDfield) +','+ quote(BoundarySets/Labelfield) +')');
+	container sets:= for_each_ne(BoundarySets/uniName, 'doAggregateSets(src/'+ BoundarySets/uniName +', '+ quote(BoundarySets/AddLayer)+ ')');
 	
 	container BoundaryDomains: expr = "for_each_ind('nex', BoundarySets/uniName, 'sets/'+ BoundarySets/uniName +'/UniqueZones',uint32)"
 	{
@@ -197,7 +197,7 @@ container AdministrativeBoundaries
 	
 	
 	
-	container doLoadFiles: IsTemplate = "True"
+	template doLoadFiles
 	{
 		parameter<string> path;
 		parameter<string> IDfield;
@@ -213,7 +213,7 @@ container AdministrativeBoundaries
 			attribute<string> 	 Label:	expr = "= strlen(Labelfield) = 0 ? 'ZoneId' : Labelfield";
 		}
 	}
-	container doAggregateSets: IsTemplate = "True"
+	template doAggregateSets
 	{
 		container inSet;
 		parameter<string> addLink: expr = "''";
