@@ -10,8 +10,8 @@ container MetaData: KeepData = "True", IsHidden = "True"
 	}
 	unit<uint8> DemandCharacteristics: NrOfRows = 5
 	{
-		attribute<string> 	Name: 			['population', 					'urban', 					'industrial', 				'agrimarket', 			'forest' 			];
-		attribute<string> 	OrgRegion: 		['NUTS2_LUISA', 				'NUTS2_LUISA',	 			'NUTS2_LUISA',	 			'Capri',				'ForestDemandRegions'];
+		attribute<string> 	Name:      ['population', 'urban',      'industrial', 'agrimarket','forest'             ];
+		attribute<string> 	OrgRegion: ['NUTS2_LUISA','NUTS2_LUISA','NUTS2_LUISA','Capri',     'ForestDemandRegions'];
 		attribute<string> 	ModelRegion:	expr = "id(.) = 0[uint8] || id(.) = 1[uint8] ? 'NUTS2_merged_LUISA' : OrgRegion";
 		attribute<bool>   	EU:				[true, 				true, 					false, 				false, 			false];
 		
