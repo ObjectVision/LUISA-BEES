@@ -37,12 +37,11 @@ container getCapriData: Using = "Geography/AdministrativeBoundaries/BoundaryDoma
 			,	DialogType = "Map"
 			,	DialogData = "Geometry"
 		{
-			attribute<LambertEA>centroid: 				Expr = "centroid_or_mid(Geometry)";
 			attribute<Nuts2All> Nr_OrgEntity:			Expr = "Nuts2_sel/Nr_OrgEntity[id(.)[Nuts2_sel]]";
 			attribute<String>   ICC_org:     			Expr = "Nuts2All/ICC[nr_OrgEntity]"; // De volgorde hiervan komt niet overeen met de volgorde in de Nuts2 entiteit, dit attribuut dus verder NIET gebruiken.
 			attribute<Nuts2All> nr_Nuts2All: 			Expr = "nr_OrgEntity";
 			attribute<String>   code:       			Expr = "Nuts2All/name[nr_Nuts2All]";
-			attribute<JrcRegion>JrcRegion_rel: 			Expr = "point_in_polygon(centroid, JrcRegion/Geometry)";
+			attribute<JrcRegion>JrcRegion_rel: 			Expr = "point_in_polygon(centroid_or_mid(Geometry), JrcRegion/Geometry)";
 			attribute<String> 	Name:          			Expr = "ICC+'/'+replace(Nuts2All/Label[nr_Nuts2All], '-', '_')";
 			attribute<String> 	DemandDirName: 			Expr = "ICC+'/'+code";
 			attribute<String> 	ICC:           			Expr = "Nuts2All/ICC[nr_Nuts2All]";

@@ -1,13 +1,9 @@
 Container RegionalPopulation
 {
-
 	unit<uint32> projectionyears: expr = "GenUrbanDemands/projectionyears";
 	
 	Container Demands
-	{	
-		unit<uint32> Nuts2:			expr = "Geography/Regions/Nuts2_LUISA_old";
-		unit<uint32> Nuts2_Merged: 	expr = "Geography/Regions/Nuts2_Merged_LUISA_old" {attribute<Geography/Regions/JrcRegion> JrcRegion_rel: expr = "first(Nuts2/JrcRegion_rel, Nuts2/Nuts2_Merged_rel)";}
-		
+	{			
 		unit<uint32> PopYear: Expr = "projectionYears";
 	
 		container MinUrban: expr = "for_each_nedv(GenUrbanDemands/projectionYears/sYear, 'sum(GenUrbanDemands/Nuts2Data/min_urban_growth/'+ projectionYears/sYear +' + GenTourismDemands/Min_touristic_lu/' + projectionYears/sYear +', Nuts2/Nuts2_Merged_rel)', Nuts2_Merged, float32)";
@@ -25,7 +21,7 @@ Container RegionalPopulation
 	
 	Container GenTourismDemands
 	{
-		attribute<Geography/Regions/Nuts0_LUISA> Country_rel (Geography/Regions/Nuts2_LUISA):	expr = "point_in_polygon(Geography/Regions/Nuts2_LUISA/centroid, Geography/Regions/Nuts0_LUISA/Geometry)";
+		attribute<Geography/Regions/Nuts0_LUISA> Country_rel (Geography/Regions/Nuts2_LUISA):	expr = "point_in_polygon(centroid_or_mid(Geography/Regions/Nuts2_LUISA/Geometry), Geography/Regions/Nuts0_LUISA/Geometry)";
 		attribute<float32> beds_2006(Geography/Regions/Nuts2_LUISA):						expr = "rjoin(Geography/Regions/Nuts2_LUISA/ZoneId, Beds_historic/BodyDomain/Nuts2Code, Beds_historic/BodyDomain/Data/y2006)";
 		attribute<float32> beds_2010(Geography/Regions/Nuts2_LUISA):						expr = "rjoin(Geography/Regions/Nuts2_LUISA/ZoneId, Beds_historic/BodyDomain/Nuts2Code, Beds_historic/BodyDomain/Data/y2010)";
 		attribute<float32> beds_2012(Geography/Regions/Nuts2_LUISA):						expr = "rjoin(Geography/Regions/Nuts2_LUISA/ZoneId, Beds_historic/BodyDomain/Nuts2Code, Beds_historic/BodyDomain/Data/y2012)";

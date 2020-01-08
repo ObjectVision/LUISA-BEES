@@ -169,6 +169,7 @@ container Geography: Using = "Units", IsHidden = "True"
 			attribute<LambertEA> Geometry (poly): expr = "partitioned_union_polygon(value(Geography/getCapriData/Nuts2/Geometry, ipoint), /Geography/getCapriData/Nuts2/Capri_rel)[LambertEA]";
 			attribute<String> Code: Expr = "Values";
 			attribute<string> ZoneId: expr = "Code";
+			attribute<string> RunAreaID := replace_value(left(ZoneId, 2), 'BL', 'BELUX', 'EL', 'GR', 'IR', 'IE');
 			attribute<string> Name: Expr = "rjoin(Values, getCapriData/CapriLookup/CapriCode, getCapriData/CapriLookup/CapriName)";
 			attribute<string> Label: Expr = "Code+': '+Name", DialogType = "LabelText";
 	
@@ -222,10 +223,6 @@ container Geography: Using = "Units", IsHidden = "True"
 				attribute<Lambert100mStripedGrid> UB100:    Expr = "Point(min_elem(PointCol(UB100Org), PointCol(UpperBound(Lambert100mStripedGrid))),min_elem(PointRow(UB100Org), PointRow(UpperBound(Lambert100mStripedGrid))), Lambert100mStripedGrid)", KeepData = "True";
 			}
 			attribute<TileSetNew> AggrRel(Lambert100mStripedGrid): Expr = "value((ID(Lambert100mStripedGrid) - LowerBound(Lambert100mStripedGrid)) / JrcTileExtent, TileSetNew)";
-//REMOVE	attribute<Bool> HasLandOrg(TileSetNew): Expr = "any(IsDefined(Nuts2GridOrg), AggrRel)", StorageName = "%ProjDir%/data/SelectedTiles.bmp"
-//			{
-//				attribute<UInt32> PaletteData(Bool): Expr = "Classifications/Boolean/Palette";
-//			}
 
 			#include <HasLand.dms>
 

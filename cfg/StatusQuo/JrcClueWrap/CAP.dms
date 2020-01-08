@@ -1,9 +1,9 @@
 container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 {
 	Template getCAPLocSpecs {	
-		unit<uint32> Zones: Expr = "RunRegions/UnitSets32/RunAreas";
-		container DataContainer: expr = "CaseData/PrepareVariables/LoadSpatialData";
-		container VariableContainer: expr = "CaseData/PrepareVariables/Variables";
+		unit<uint16> Zones         := RunRegions/UnitSets/RunAreas;
+		container DataContainer    := CaseData/PrepareVariables/LoadSpatialData;
+		container VariableContainer:= CaseData/PrepareVariables/Variables;
 		
 		unit<uint32> lfaRef: expr = "DataContainer/lfa/inFile" {
 		//
@@ -55,8 +55,6 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 		
 		container ExTemplate
 		{
-			
-			
 			attribute<RunRegions/UnitSets/RunAreas> RegionGrid	(domain_grid):  expr = "RunRegions/RasterSets/RunAreas";
 
 	//		attribute<uint16>  JrcRegionId  (RegionDomain): Expr= "id(RunRegions/UnitSets/RunAreas)";

@@ -1,71 +1,35 @@
 container RunRegions: Using = "Geography/AdministrativeBoundaries;"
 {
-	
-	attribute<UnitSets/base_zones> base_raster (domain_grid): expr = "poly2grid(UnitSets/base_zones/Geometry, domain_grid)";
-	
-	container RasterSets: expr = "for_each_nedvn(BoundarySets/uniName, 'base_rels/'+ BoundarySets/uniName +'[base_raster]', domain_grid, UnitSets, BoundarySets/uniName)", FreeData = "False"
+	container RegionalSets := for_each_ne(BoundarySets/uniName, 'getRegionSet(JrcRegionId, Geography/Regions/'+ BoundarySets/uniName +')')
 	{
-		attribute<UnitSets/RunAreas> 			RunAreas 			(domain_grid): 	expr = "base_rels/RunAreas[base_raster]";
-		attribute<UnitSets/ForestDemandRegions> ForestDemandRegions (domain_grid): 	expr = "base_rels/ForestDemandRegions[base_raster]";
-		attribute<UnitSets/Capri> 				Capri 				(domain_grid): 	expr = "base_rels/Capri[base_raster]";
+		container RunAreas           := getRegionSet(JrcRegionId, Geography/Regions/RunAreas);
+		container Capri              := getRegionSet(JrcRegionId, Geography/Regions/Capri);
+		container ForestDemandRegions:= getRegionSet(JrcRegionId, Geography/Regions/ForestDemandRegions);
 	}
-	
-	container UnitSets: expr = "for_each_ind('nex', BoundarySets/uniName, 'RegionalSets/'+ BoundarySets/uniName +'/Set16',uint16)", FreeData = "False"
+	container UnitSets := for_each_ind('nex', BoundarySets/uniName, 'RegionalSets/'+ BoundarySets/uniName +'/Set16',uint16)
 	{
-		unit<uint16> base_zones: 			expr = "RegionalSets/base_zones/Set16" 
-		{
-			attribute<LambertEA> centroid: expr = "centroid_or_mid(Geometry)"; 
-			attribute<float32> area: expr = "float32(area(base_zones/Geometry, float64)) / float32(1000 * 1000)";
-			
-			attribute<LambertEA> lu_weighted_centroid (.): expr = "sum(relevant_pixel, base_raster) / sum(point(float64(!IsNull(CaseData/PrepareVariables/LandUseGrid)), float64(!IsNull(CaseData/PrepareVariables/LandUseGrid)), LambertEA), base_raster)", KeepData = "True";
-			attribute<LambertEA> relevant_pixel (domain_grid): expr = "!IsNull(CaseData/PrepareVariables/LandUseGrid) ? id(domain_grid)[LambertEA] : point(float64(0),float64(0),LambertEA)";
-		}
-		unit<uint16> RunAreas:		 		expr = "RegionalSets/RunAreas/Set16";
-		unit<uint16> ForestDemandRegions:	expr = "RegionalSets/ForestDemandRegions/Set16";
-		unit<uint16> Capri:					expr = "RegionalSets/Capri/Set16";
+		unit<uint16> RunAreas           := RegionalSets/RunAreas/Set16;
+		unit<uint16> ForestDemandRegions:= RegionalSets/ForestDemandRegions/Set16;
+		unit<uint16> Capri              := RegionalSets/Capri/Set16;
 		
 	}
-	container UnitSets32: expr = "for_each_ind('nex', BoundarySets/uniName, 'RegionalSets/'+ BoundarySets/uniName +'/Set',uint32)", FreeData = "False"
+	container RasterSets := for_each_nedvn(BoundarySets/uniName, 'poly2grid(UnitSets/'+ BoundarySets/uniName +'/geometry, domain_grid)', domain_grid, UnitSets, BoundarySets/uniName)
 	{
-		unit<uint32> base_zones := RegionalSets/base_zones/Set
-		{
-			attribute<LambertEA> centroid := centroid_or_mid(Geometry);
-			attribute<float32>   area     := float32(area(base_zones/Geometry, float64)) / float32(1000 * 1000);
-		}
-		unit<uint32> RunAreas := RegionalSets/RunAreas/Set;
+		attribute<UnitSets/RunAreas> 			RunAreas 			(domain_grid) := poly2grid(UnitSets/RunAreas/geometry, domain_grid);
+		attribute<UnitSets/ForestDemandRegions> ForestDemandRegions (domain_grid) := poly2grid(UnitSets/ForestDemandRegions/geometry, domain_grid);
+		attribute<UnitSets/Capri> 				Capri 				(domain_grid) := poly2grid(UnitSets/Capri/geometry, domain_grid);
 	}
 	
-	container base_rels := for_each_nedvn(BoundarySets/uniName, 
-		'MakeDefined(point_in_polygon(UnitSets/base_zones/centroid, UnitSets/'+ BoundarySets/uniName +'/Geometry), '+
-			'point_in_polygon(UnitSets/base_zones/lu_weighted_centroid, UnitSets/'+ BoundarySets/uniName +'/Geometry)'
-		')'
-	,	UnitSets/base_zones, UnitSets, BoundarySets/uniName)
-	{
-		attribute<UnitSets/RunAreas> 			RunAreas 			(UnitSets/base_zones): expr = "MakeDefined(point_in_polygon(UnitSets/base_zones/centroid, UnitSets/RunAreas/Geometry), point_in_polygon(UnitSets/base_zones/lu_weighted_centroid, UnitSets/RunAreas/Geometry))";
-		attribute<UnitSets/ForestDemandRegions> ForestDemandRegions (UnitSets/base_zones): expr = "MakeDefined(point_in_polygon(UnitSets/base_zones/centroid, UnitSets/ForestDemandRegions/Geometry), point_in_polygon(UnitSets/base_zones/lu_weighted_centroid, UnitSets/ForestDemandRegions/Geometry))";
-		attribute<UnitSets/Capri> 				Capri 				(UnitSets/base_zones): expr = "MakeDefined(point_in_polygon(UnitSets/base_zones/centroid, UnitSets/Capri/Geometry), point_in_polygon(UnitSets/base_zones/lu_weighted_centroid, UnitSets/Capri/Geometry))";
-	}
-	
-	container RegionalSets: expr = "for_each_ne(BoundarySets/uniName, 'getRegionSet('+string(JrcRegionId)+'[Geography/Regions/Runs], '+ quote(BoundarySets/uniName) +')')"
-	{
-		container base_zones: 			expr = "getRegionSet(JrcRegionId, 'base_zones')";
-		container RunAreas:		  		expr = "getRegionSet(JrcRegionId, 'RunAreas')";
-		container Capri:				expr = "getRegionSet(JrcRegionId, 'Capri')";
-		container ForestDemandRegions: 	expr = "getRegionSet(JrcRegionId, 'ForestDemandRegions')";
-	}
 	template getRegionSet
 	{
-		parameter<Geography/Regions/Runs>				RunRegion;
-		parameter<string> 								inZoneSetName;
+		parameter<Geography/Regions/Runs> RunRegion;
+		unit<uint32> OrgZones;
 		
-		unit<uint32> OrgZones: expr = "= 'Geography/Regions/' + inZoneSetName";
-		
-		unit<uint16> Set16 := = 'subset_uint16(relational/'+ inZoneSetName +' = '+ string(RunRegion) +'[Geography/Regions/Runs])'
+		unit<uint16> Set16 := subset_uint16(OrgZones/RunAreaID == Geography/Regions/Runs/ZoneId[RunRegion])
 		{
-			attribute<string> 		ZoneId           := OrgZones/ZoneId[Nr_OrgEntity];
+			attribute<string> 		ZoneId           := OrgZones/ZoneId  [Nr_OrgEntity];
 			attribute<LambertEA> 	Geometry(polygon):= OrgZones/Geometry[Nr_OrgEntity];
-			attribute<string>		Label            := ZoneId;
-			attribute<LambertEA>	Buffered(polygon):= polygon_inflated(Geometry[ipoint], 10.0)[LambertEA];
+			attribute<string>		Label            := OrgZones/Label   [Nr_OrgEntity], DialogType = "LabelText";
 		}
 	}
 }

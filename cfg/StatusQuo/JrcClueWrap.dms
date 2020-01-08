@@ -28,8 +28,6 @@ template JrcClueWrap:
 
 	// ===================== start of domain relations
 
-//	attribute<Geography/Albers1kmGrid> AlbersGridRel(domain_grid): 		Expr = "CaseData/JrcFactorData/AlbersGridRel";
-//	attribute<Geography/Albers1kmGrid> AlbersRel(domain): 				Expr = "AlbersGridRel[domain/grid_rel]"; 
 	attribute<Geography/Lambert100mGrid> Lambert100m_rel (domain_grid): Expr = "id(domain_grid)[Geography/Lambert100mGrid]";
 	
 	unit<uint8> ModelType: Expr = "Classifications/LU/ModelType";
@@ -131,18 +129,6 @@ template JrcClueWrap:
 			
 		}
 		
-		/*unit<uint32> PrepareRegionalFactors: expr = "range(uint32, 0, #AllRegionRefs * #MetaData/RegionalDynamicFactorsList)"
-		{
-			attribute<MetaData/RegionalDynamicFactorsList> 		nr_1: 		expr = "(id(.) / uint32(#AllRegionRefs))[MetaData/RegionalDynamicFactorsList]";
-			attribute<AllRegionRefs>							nr_2: 		expr = "mod(id(.), uint32(#AllRegionRefs))[AllRegionRefs]";
-			attribute<string>									zonename: 	expr = "AllRegionRefs/Values[nr_2]";
-			attribute<string>									varname:	expr = "MetaData/RegionalDynamicFactorsList/Name[nr_1]";
-			attribute<string>									name:		expr = "varname + '_by_' + zonename";
-			attribute<string>									RegExpr: 	expr = "MetaData/RegionalDynamicFactorsList/ToAggregate[nr_1] ? "
-				"MetaData/RegionalDynamicFactorsList/AggregationFunction[nr_1] + '(' + MetaData/RegionalDynamicFactorsList/RegExpr[nr_1] + '[domain/BasisGrid], RunRegions/RasterSets/'+ zonename + ')' :"
-				"MetaData/RegionalDynamicFactorsList/RegExpr[nr_1]";
-		}*/
-		
 		// ============ Regions
 
 		// ============ claims
@@ -172,7 +158,7 @@ template JrcClueWrap:
 				attribute<RegionsOrg> Values: Expr = "rlookup(id(.), UInt32(id(RegionsOrg)))";
 			}
 		}		
-		unit<UInt16> RegionNumbersTempl: Istemplate = "True";
+		unit<UInt16> RegionNumbersTempl: IsTemplate = "True";
 		
 		container RegionNumbersSpec: 	Expr = "for_each_ne(AllRegionRefs/Values, 'RegionNumbersSpecTempl(RunRegions/UnitSets/'+AllRegionRefs/Values+', '+quote(AllRegionRefs/Values)+')')";
 		container RegionNumbers: 		Expr = "for_each_net(AllRegionRefs/Values, 'RegionNumbersSpec/'+AllRegionRefs/Values+'/LocalRegions16', RegionNumbersTempl)";
@@ -180,13 +166,12 @@ template JrcClueWrap:
 		
 		// ============ Renumbered Regions
 		container RegionData: Expr = "for_each_nedvn(AllRegionRefs/Values, 'invert(RegionNumbers/'+AllRegionRefs/Values+'/Values)[RegionGrids/'+AllRegionRefs/Values+']', domain, RegionNumbers, AllRegionRefs/Values)";
-		container OrgLandUseCount: Expr = "reg_count(StartingState/LandUse[domain/BasisGrid], ModelType/Name, RunRegions/RasterSets, DestClaimTableName)"; //MakeDefined(AllRegionRefs, 'NUTS2_LUISA_old'))"; //[domain/grid_rel]
+		container OrgLandUseCount: Expr = "reg_count(StartingState/LandUse[domain/BasisGrid], ModelType/Name, RunRegions/RasterSets, DestClaimTableName)"; 
 		
 		container ClaimTableSelections: Expr = "for_each_ne(UniqueRegionRefs/Values, 'ClaimTableSelectionTemplate(ClaimTables/'+UniqueRegionRefs/Values+', Parameters/PeriodSet/StartYear)')";
 		
 		container adapt_claim: expr = "for_each_nednv(ModelType/Name, "
 					"'MakeDefined('+"
-//							"IsDefined(invert(CaseData/AtomicRegions/'+ClaimTableName+')) ?"
 							"'rjoin('+"
 								"'RunRegions/UnitSets/'+ClaimTableName+'/ZoneId, '+"
 								"'CaseData/ClaimTables/'+ClaimTableName+'/Data/RegionUp[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity], '+"
@@ -227,7 +212,7 @@ template JrcClueWrap:
 		unit<int32> EUR_Ha_int32: Expr = "int32(EUR_HA)";
 		
 		#include<getOptimalk_NUTS2.dms>
-		container CAP: expr = "CAPTemplate/getCAPLocSpecs(RunRegions/UnitSets32/RunAreas, CaseData/PrepareVariables/LoadSpatialData, CaseData/PrepareVariables/Variables)";
+		container CAP := CAPTemplate/getCAPLocSpecs(RunRegions/UnitSets/RunAreas, CaseData/PrepareVariables/LoadSpatialData, CaseData/PrepareVariables/Variables);
 		#include<CAP.dms>
 			
 	}
