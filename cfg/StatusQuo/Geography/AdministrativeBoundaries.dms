@@ -64,6 +64,10 @@ container AdministrativeBoundaries
 //REMOVE		attribute<Regions/Runs> CapriAggr          (Regions/CapriAggr)              := point_in_polygon(centroid_or_mid(Regions/CapriAggr/Geometry),		Regions/Runs/Geometry)[Regions/Runs];
 		attribute<Regions/Runs> RunAreas           (LUISA_zones/RunAreas)           := point_in_polygon(centroid_or_mid(LUISA_zones/RunAreas/Geometry),	Regions/Runs/Geometry)[Regions/Runs];
 //REMOVE		attribute<Regions/Runs> Nuts0              (LUISA_zones/Nuts0)              := point_in_polygon(centroid_or_mid(LUISA_zones/Nuts0/Geometry),		Regions/Runs/Geometry);
+//		attribute<Regions/Runs> LAU2_2 (Regions/LAU2)  := IsDefined(strpos(Regions/Runs/ZoneId, left(BoundaryDomains/LAU2/ZoneId, 2)));
+		attribute<Regions/Runs> LAU2_2 (Regions/LAU2)  := rlookup(left(BoundaryDomains/LAU2/ZoneId, 2), Regions/Runs/ZoneId);
+		attribute<bool> geo_issue(Regions/LAU2) := IsDefined(LAU2_2) && !IsDefined(LAU2);
+		attribute<bool> adm_issue(Regions/LAU2) := IsDefined(LAU2)   && !IsDefined(LAU2_2);
 	}
 	
 	container RegionGrids := for_each_nedvn(BoundarySets/uniName
