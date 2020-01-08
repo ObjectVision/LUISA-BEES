@@ -45,46 +45,20 @@ container AdministrativeBoundaries
 		}
 		unit<uint32> ForestDemandRegions := LUISA_zones/ForestDemandRegions;
 		
-		unit<uint32> NUTS0_LUISA        := src/NUTS0_LUISA/inFile
-		{
-			attribute<string> RunAreaId := replace_value(left(ZoneID, 2), 'BE', 'BELUX', 'LU', 'BELUX');
-		}
-		unit<uint32> NUTS1_LUISA        := src/NUTS1_LUISA/inFile
-		{
-			attribute<string> RunAreaId := replace_value(left(ZoneID, 2), 'BE', 'BELUX', 'LU', 'BELUX');
-		}
-		unit<uint32> NUTS2_merged_LUISA := src/NUTS2_merged_LUISA/inFile
-		{
-			attribute<string> RunAreaId := replace_value(left(ZoneID, 2), 'BE', 'BELUX', 'LU', 'BELUX');
-		}
-		unit<uint32> NUTS2_LUISA        := src/NUTS2_LUISA/inFile
-		{
-			attribute<string> RunAreaId := replace_value(left(ZoneID, 2), 'BE', 'BELUX', 'LU', 'BELUX');
-		}
-		unit<uint32> NUTS3_LUISA        := src/NUTS3_LUISA/inFile
-		{
-			attribute<string> RunAreaId := replace_value(left(ZoneID, 2), 'BE', 'BELUX', 'LU', 'BELUX');
-		}
+		unit<uint32> NUTS0_LUISA        := src/NUTS0_LUISA/inFile;
+		unit<uint32> NUTS1_LUISA        := src/NUTS1_LUISA/inFile;
+		unit<uint32> NUTS2_merged_LUISA := src/NUTS2_merged_LUISA/inFile;
+		unit<uint32> NUTS2_LUISA        := src/NUTS2_LUISA/inFile;
+		unit<uint32> NUTS3_LUISA        := src/NUTS3_LUISA/inFile;
+		
 		unit<uint32> LAU2               := aggregations/LAU2/UniqueZones
 		{
 			attribute<string> ZoneID    := replace(aggregations/LAU2/UniqueZones/ZoneID, '_', '');
 			attribute<string> RunAreaId := replace_value(left(ZoneID, 2), 'EL', 'GR', 'BE', 'BELUX', 'LU', 'BELUX', 'CH', 'CZ');
 		}
-		unit<uint32> NUTS3_EuroStat     := src/NUTS3_EuroStat/inFile
-		{
-			attribute<string> RunAreaId := replace_value(left(ZoneID, 2), 'BE', 'BELUX', 'LU', 'BELUX');
-		}
+		unit<uint32> NUTS3_EuroStat     := src/NUTS3_EuroStat/inFile;
 	}
-	
-	container RegionGrids := for_each_nedvn(BoundarySets/uniName
-	,	'poly2grid(BoundaryDomains/'+ BoundarySets/uniName +'/Geometry, Lambert100mGrid)'
-	,	Lambert100mGrid, BoundaryDomains, BoundarySets/uniName
-	)
-	{
-		attribute<uint32> base_raster (Lambert100mGrid): StorageName = "%EUCS_100mDir%/zones/LAU2_raster.tif", StorageType = "gdal.grid", StorageReadOnly = "True";
-	}
-	
-	
+
 	container LUISA_zones
 	{
 		unit<uint32> Nuts1 := src/NUTS1_LUISA/inFile
@@ -222,6 +196,7 @@ container AdministrativeBoundaries
 			attribute<string> 	 autoID:= 'z_' + string(id(.));
 			attribute<string> 	 ZoneID:=  = strlen(IDfield)    = 0 ? 'autoID' : IDfield;	
 			attribute<string> 	 Label :=  = strlen(Labelfield) = 0 ? 'ZoneId' : Labelfield;
+			attribute<string>    RunAreaId := replace_value(left(ZoneID, 2), 'BE', 'BELUX', 'LU', 'BELUX');
 		}
 	}
 	template doAggregateSets

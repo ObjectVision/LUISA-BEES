@@ -190,15 +190,8 @@ container Geography: Using = "Units", IsHidden = "True"
 	}
 	unit<UInt8> IndicatorRegions: NrOfRows = 5 { attribute<String> Name: [ 'Nuts0', 'Nuts1', 'Nuts2', 'Nuts2_Merged', 'Nuts3' ]; }
 	
-	container RegionGrids: expr = "AdministrativeBoundaries/RegionGrids";
-	
 	container RegionGrids_100m
 	{
-// REMOVE	
-//		attribute<Regions/Nuts2All>  Nuts2GridOrg(Lambert100mStripedGrid):
-//			StorageReadOnly = "True",
-//			StorageName = "%EUCS_100mDir%/nuts2_100m/Nuts2All.tif";
-		
 		container Tiles
 		{
 			parameter<UInt16> TileSizeY: [ 1024 ];
