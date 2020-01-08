@@ -123,7 +123,7 @@ container Geography: Using = "Units", IsHidden = "True"
 	container Regions: expr = "AdministrativeBoundaries/BoundaryDomains", KeepData = "True"
 	{
 		
-		unit<uint32> base_zones: expr = "AdministrativeBoundaries/sets/LAU2/UniqueZones";
+		unit<uint32> base_zones := AdministrativeBoundaries/BoundaryDomains/LAU2;
 		
 		// Runs is now read from /ConfigSettings/Overridable/RunRegions, 
 		// which is overridable by the registry with can be edited by the Tools->Options->ConfigSettings in the GUI.

@@ -1,12 +1,12 @@
 container AdministrativeBoundaries
 {
 	
-	parameter<uint32> NrBoundarySets: 	expr = "8";
-	parameter<uint32> NrAttributes:		expr = "6";
+	parameter<uint32> NrBoundarySets := 7;
+	parameter<uint32> NrAttributes   := 6;
 	
-	unit<uint32> BoundarySets: expr = "range(uint32, 0, NrBoundarySets)"
+	unit<uint32> BoundarySets := range(uint32, 0, NrBoundarySets)
 	{
-		unit<uint32> inElements: expr = "range(uint32, 0, NrBoundarySets * NrAttributes)"
+		unit<uint32> inElements := range(uint32, 0, NrBoundarySets * NrAttributes)
 		{
 			attribute<string> elements: [
 				// name						//shape location	//shape name		//ZoneId field	//label field	//add layers
@@ -19,7 +19,6 @@ container AdministrativeBoundaries
 				'NUTS3_LUISA',				'NUTS/LUISA',			'n3_mar17',			'NUTS_CODE',	'NUTS_LABEL',	'',
 //				'LAU2',						'LAU',					'LAU2_dec16',		'ICC_LAU_CO',	'LAU_LABEL',	'LAU_spain_patch',
 				'LAU2',						'LAU',					'LAU_2018_meters',	'replace(GISCO_ID, ''_'','''')',	   'LAU_LABEL',	'LAU_spain_patch',
-				'LAU_spain_patch',			'LAU', 					'LAU_spain_patch',	'LAU_CODE',		'LAU_CODE',		'',
 				'NUTS3_EuroStat',			'NUTS/EuroStat',		'Nuts3',			'NUTS_CODE',	'NUTS_LABEL',	''];
 		}
 		attribute<string> Name: 		expr = "inElements/elements[((id(.)*NrAttributes)+0)[inElements]]";
@@ -33,27 +32,44 @@ container AdministrativeBoundaries
 		
 	}
 		
-	container src := for_each_ne(BoundarySets/uniName, 'doLoadFiles('+ quote(BoundarySets/Path) +','+ quote(BoundarySets/IDfield) +','+ quote(BoundarySets/Labelfield) +')');
-	container sets:= for_each_ne(BoundarySets/uniName, 'doAggregateSets(src/'+ BoundarySets/uniName +', '+ quote(BoundarySets/AddLayer)+ ')');
-	
-	container BoundaryDomains: expr = "for_each_ind('nex', BoundarySets/uniName, 'sets/'+ BoundarySets/uniName +'/UniqueZones',uint32)"
+	container src := for_each_ne(BoundarySets/uniName, 'doLoadFiles('+ quote(BoundarySets/Path) +','+ quote(BoundarySets/IDfield) +','+ quote(BoundarySets/Labelfield) +')')
 	{
-		unit<uint32> RunAreas: expr = "LUISA_zones/RunAreas";
-		unit<uint32> ForestDemandRegions: expr = "LUISA_zones/ForestDemandRegions";
+		container LAU_spain_patch := doLoadFiles ('LAU/LAU_spain_patch','LAU_CODE','LAU_CODE');
 	}
 	
-	container relational: expr = "for_each_nednv(BoundarySets/uniName, "
-		"'point_in_polygon(centroid_or_mid(sets/'+ BoundarySets/uniName +'/UniqueZones/Geometry), Regions/Runs/Geometry)[Regions/Runs]', BoundaryDomains, BoundarySets/uniName, Regions/Runs)"
+	container aggregations:= for_each_ne(StrLen(BoundarySets/AddLayer) > 0 ? BoundarySets/uniName : '' 
+		,	'doAggregateSets(src/'+ BoundarySets/uniName +'/inFile, src/'+ BoundarySets/AddLayer + '/inFile)'
+	);
+	
+	container BoundaryDomains := for_each_ind('neix', BoundarySets/uniName
+		,	StrLen(BoundarySets/AddLayer) > 0 
+			? 'aggregations/'+ BoundarySets/uniName +'/UniqueZones'
+			:	'src/'+ BoundarySets/uniName + '/inFile'
+		,	''
+		,uint32
+	)
 	{
-		attribute<Regions/Runs> base_zones			(Regions/base_zones):				expr = "point_in_polygon(Regions/base_zones/centroid,	Regions/Runs/Geometry)[Regions/Runs]";
-		attribute<Regions/Runs> ForestDemandRegions (LUISA_zones/ForestDemandRegions):  expr = "point_in_polygon(centroid_or_mid(LUISA_zones/ForestDemandRegions/Geometry),	Regions/Runs/Geometry)[Regions/Runs]";
-		attribute<Regions/Runs> Capri				(Regions/Capri):					expr = "point_in_polygon(centroid_or_mid(Regions/Capri/Geometry),			Regions/Runs/Geometry)[Regions/Runs]";
-		attribute<Regions/Runs> CapriAggr			(Regions/CapriAggr):				expr = "point_in_polygon(centroid_or_mid(Regions/CapriAggr/Geometry),		Regions/Runs/Geometry)[Regions/Runs]";
-		attribute<Regions/Runs> RunAreas 			(LUISA_zones/RunAreas): 			expr = "point_in_polygon(centroid_or_mid(LUISA_zones/RunAreas/Geometry),	Regions/Runs/Geometry)[Regions/Runs]";
-		attribute<Regions/Runs> Nuts0 				(LUISA_zones/Nuts0): 				expr = "point_in_polygon(centroid_or_mid(LUISA_zones/Nuts0/Geometry),		Regions/Runs/Geometry)";
+		unit<uint32> RunAreas := LUISA_zones/RunAreas;
+		unit<uint32> ForestDemandRegions := LUISA_zones/ForestDemandRegions;
 	}
 	
-	container RegionGrids := for_each_nedvn(BoundarySets/uniName, 'poly2grid(BoundaryDomains/'+ BoundarySets/uniName +'/Geometry, Lambert100mGrid)', Lambert100mGrid, BoundaryDomains, BoundarySets/uniName)
+	container relational := for_each_nednv(BoundarySets/uniName
+	,	'point_in_polygon(centroid_or_mid(BoundaryDomains/'+ BoundarySets/uniName +'/Geometry), Regions/Runs/Geometry)[Regions/Runs]'
+	,	BoundaryDomains, BoundarySets/uniName, Regions/Runs
+	)
+	{
+		attribute<Regions/Runs> base_zones         (Regions/base_zones)             := point_in_polygon(Regions/base_zones/centroid,	Regions/Runs/Geometry)[Regions/Runs];
+		attribute<Regions/Runs> ForestDemandRegions(LUISA_zones/ForestDemandRegions):= point_in_polygon(centroid_or_mid(LUISA_zones/ForestDemandRegions/Geometry),	Regions/Runs/Geometry)[Regions/Runs];
+		attribute<Regions/Runs> Capri              (Regions/Capri)                  := point_in_polygon(centroid_or_mid(Regions/Capri/Geometry),			       Regions/Runs/Geometry)[Regions/Runs];
+//REMOVE		attribute<Regions/Runs> CapriAggr          (Regions/CapriAggr)              := point_in_polygon(centroid_or_mid(Regions/CapriAggr/Geometry),		Regions/Runs/Geometry)[Regions/Runs];
+		attribute<Regions/Runs> RunAreas           (LUISA_zones/RunAreas)           := point_in_polygon(centroid_or_mid(LUISA_zones/RunAreas/Geometry),	Regions/Runs/Geometry)[Regions/Runs];
+//REMOVE		attribute<Regions/Runs> Nuts0              (LUISA_zones/Nuts0)              := point_in_polygon(centroid_or_mid(LUISA_zones/Nuts0/Geometry),		Regions/Runs/Geometry);
+	}
+	
+	container RegionGrids := for_each_nedvn(BoundarySets/uniName
+	,	'poly2grid(BoundaryDomains/'+ BoundarySets/uniName +'/Geometry, Lambert100mGrid)'
+	,	Lambert100mGrid, BoundaryDomains, BoundarySets/uniName
+	)
 	{
 		attribute<uint32> base_raster (Lambert100mGrid): StorageName = "%EUCS_100mDir%/zones/LAU2_raster.tif", StorageType = "gdal.grid", StorageReadOnly = "True";
 	}
@@ -203,6 +219,31 @@ container AdministrativeBoundaries
 	}
 	template doAggregateSets
 	{
+		unit<uint32> regions1;
+		unit<uint32> regions2;
+		
+		unit<uint32> mergeUnit := union_unit(regions1, regions2)
+		{
+			attribute<LambertEA> Geometry (polygon) := union_data(., regions1/Geometry, regions2/Geometry);
+			attribute<string> 	 ZoneId             := union_data(., regions1/ZoneId,   regions2/ZoneId);
+			attribute<string>  	 Label              := union_data(., regions1/Label,    regions2/Label);
+			
+			attribute<UniqueZones> uz_rel := rlookup(ZoneId, UniqueZones/Values);
+		}
+		
+		
+		unit<uint32> UniqueZones := unique(mergeUnit/ZoneID)
+		{
+			attribute<LambertEA> 	Geometry (polygon) := partitioned_union_polygon(value(mergeUnit/Geometry, ipoint), mergeUnit/uz_rel)[LambertEA];
+			attribute<string> 		ZoneID := Values;
+			attribute<string> 		Code   := Values;
+			attribute<string> 		Label  := AsList(mergeUnit/Label, ',', mergeUnit/uz_rel);
+			attribute<LambertEA>    centroid: expr = "centroid_or_mid(Geometry)"; // REMOVE !!
+			attribute<float32>		km2 := float32(area(Geometry, float64)) / float32(1000*1000);
+		}
+	}	
+	template unionZones
+	{
 		container inSet;
 		parameter<string> addLink: expr = "''";
 		
@@ -228,6 +269,4 @@ container AdministrativeBoundaries
 			attribute<float32>		km2: 				expr = "float32(area(Geometry, float64)) / float32(1000*1000)";
 		}
 	}	
-	
-	
 }

@@ -333,8 +333,8 @@ template JrcClueWrap:
 					"'=ExistingFile(''C:/@'',TimeSteps/'+Periods/Name+'/ResultingState/OutputGeneration/ClippedLandUseVT_FileName) != ''C:/@'' ? ''ClippedGridPerYearVT_ReadAlways/'+Periods/Name+''': ''const(0[Classifications/LU/ViewType],domain_grid)''',"
 					"domain_grid, Classifications/LU/ViewType"
 					")";
-			container ClippedQiPerYearVT_ReadOnly: Expr = "for_each_ndva(Periods/Name, domain_grid, int32, '=TimeSteps/'+Periods/Name+'/ResultingState/OutputGeneration/Qi_FileName')";
-			container DifQiPerYearVT_from_ReadOnly: Expr = "for_each_nedv(Periods/Name, '!IsNull(RunRegions/RasterSets/RunAreas) ? float32(ClippedQiPerYearVT_ReadOnly/' + Periods/Name + ') - CaseData/JrcFactorData/Population/Qi_2011 : float32(0)',  domain_grid, float32)";
+			container ClippedQiPerYearVT_ReadOnly := for_each_ndva(Periods/Name, domain_grid, int32, '=TimeSteps/'+Periods/Name+'/ResultingState/OutputGeneration/Qi_FileName');
+//			container DifQiPerYearVT_from_ReadOnly:= for_each_nedv(Periods/Name, '!IsNull(RunRegions/RasterSets/RunAreas) ? float32(ClippedQiPerYearVT_ReadOnly/' + Periods/Name + ') - CaseData/JrcFactorData/Population/Qi_2011 : float32(0)',  domain_grid, float32);
 			
 		}
 		parameter<string>  GeneratedFiles: Expr = "endState/GeneratedFiles", ExplicitSuppliers = "endState/GeneratedFiles;simulation_results/landuse/GridData";
