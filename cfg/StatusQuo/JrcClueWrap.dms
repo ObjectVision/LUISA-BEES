@@ -180,12 +180,15 @@ template JrcClueWrap:
 						"', float32(0))'"
 						", RegionNumbers, ClaimTableName, float32)", FreeData = "False";
 		
-		unit<uint16> AtomicRegions: Expr = "overlay(UniqueDestRegionRefs/Values, domain, RegionData)" //, DialogData = "UnionData", DialogType = "map"
+		unit<uint16> AtomicRegions := overlay(UniqueDestRegionRefs/Values, domain, RegionData)
+		,	DialogType = "map", DialogData = "per_domain_grid"
 		{
 			attribute<AtomicRegions> UnionData(domain);
-			attribute<uint32> 		 Recs: expr = "Pcount(UnionData)";
-			attribute<AtomicRegions> ID: Expr = "ID(AtomicRegions)";
-			attribute<bool>			 error (domain): expr = "IsNull(UnionData)";
+			attribute<AtomicRegions> per_domain_grid(domain_grid) := UnionData[domain/BasisGrid];
+			
+			attribute<uint32> 		 Recs := Pcount(UnionData);
+			attribute<AtomicRegions> ID := ID(AtomicRegions);
+			attribute<bool>			 error(domain) := IsNull(UnionData);
 		}
 		
 		// redundant with modeltraits. May need to be shifted to global templateset.

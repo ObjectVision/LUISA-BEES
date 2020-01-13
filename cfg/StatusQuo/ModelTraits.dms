@@ -798,9 +798,16 @@ container ModelTraits
 			parameter<String>  DirName;
 
 			// end of Case Parameters
-			attribute<bool> LuStartDiff(domain):  Expr = "StartingLandUse <> CurrentLandUse";
-			attribute<Classifications/LU/ModelType> changed_from(domain): Expr = "LuStartDiff ? StartingLandUse : value(255, Classifications/LU/ModelType )";
-			attribute<Classifications/LU/ModelType> changed_to  (domain): Expr = "LuStartDiff ? CurrentLandUse  : value(255, Classifications/LU/ModelType )";
+			container ComparedWithStart {
+				attribute<bool> LuDiff(domain) := StartingLandUse <> CurrentLandUse;
+				attribute<Classifications/LU/ModelType> changed_from(domain) := LuDiff ? StartingLandUse : value(255, Classifications/LU/ModelType );
+				attribute<Classifications/LU/ModelType> changed_to  (domain) := LuDiff ? CurrentLandUse  : value(255, Classifications/LU/ModelType );
+			}
+			container ComparedWithPrevious {
+				attribute<bool> LuDiff(domain) := PreviousLandUse <> CurrentLandUse;
+				attribute<Classifications/LU/ModelType> changed_from(domain) := LuDiff ? PreviousLandUse : value(255, Classifications/LU/ModelType );
+				attribute<Classifications/LU/ModelType> changed_to  (domain) := LuDiff ? CurrentLandUse  : value(255, Classifications/LU/ModelType );
+			}
 			
 			unit<WPoint> xTabData: Expr = "Range(WPoint, Point(UInt16(0),UInt16(0)), Point(UInt16(#Classifications/LU/ModelType), UInt16(#Classifications/LU/ModelType)))", IsHidden = "True"
 			{
