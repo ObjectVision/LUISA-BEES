@@ -1101,7 +1101,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				attribute<UInt16> 	Year: 					Expr = "uppercase(substr(Name,0,1)) = 'Y' ? UInt16(substr(Name, strlen(Name)-4, 4)) : Uint16(0 / 0)";
 				attribute<PeriodSet/result> ModelYearRel: 	Expr = "rlookup(float32(Year), PeriodSet/result/ProjectedYear)";
 			}
-			unit<UInt32> BodyDomain: Expr = "Range(UInt32, 0, strcount(File, '\n')-1)"
+			unit<UInt32> BodyDomain := Range(UInt32, 0, strcount(File, '\n')-1)
 			{
 				attribute<string> Line: Expr = "ReadLines(File, BodyDomain, HeaderLine/ReadPos)";
 				attribute<Bool> LinesAreNuts2CodeAndIntegers(BodyDomain): expr = "regex_match(Line, '[A-Z][A-Z]([A-Z]|[0-9])?+([A-Z]|[0-9])?+(,([0-9]++))*+')";
@@ -1556,7 +1556,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 		
 		container Global: FreeData = "False", StoreData = "True"
 		{
-			container Pop2012: 			expr = "Templ/EU_Wide_TableChopper('Pop2012', Geography/Regions/Nuts3_Eurostat)";
+			container Pop2012: 			expr = "Templ/EU_Wide_TableChopper('Pop2012', Geography/Regions/Nuts3_LUISA)";
 			container PopProjections: 	expr = "Templ/EU_Wide_TableChopper('popproj', Geography/Regions/Nuts2_LUISA)";
 			container MinUrban: 		expr = "Templ/EU_Wide_TableChopper('StatusQuo/min_urban', Geography/Regions/Nuts2_LUISA)";
 			container MaxUrban: 		expr = "Templ/EU_Wide_TableChopper('StatusQuo/max_urban', Geography/Regions/Nuts2_LUISA)";

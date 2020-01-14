@@ -9,13 +9,13 @@ container AdministrativeBoundaries
 		unit<uint32> inElements := range(uint32, 0, NrBoundarySets * NrAttributes)
 		{
 			attribute<string> elements: [
-				// name						//shape location	//shape name		//ZoneId field	//label field					
-				'NUTS0_LUISA',				'NUTS/LUISA',		'n0_jul16',			'First_N2_3',	'First_N2_3', 	
-				'NUTS1_LUISA',				'NUTS/LUISA',		'n1_jul16',			'NUTS_CODE',	'NUTS_LABEL',	
-				'NUTS2_merged_LUISA',		'NUTS/LUISA',		'n2_merged_jul16',	'merge',		'merge',		
-				'NUTS2_LUISA',				'NUTS/LUISA',		'n2_jul16',			'NUTS_CODE',	'NUTS_LABEL',	
-				'NUTS3_LUISA',				'NUTS/LUISA',		'n3_mar17',			'NUTS_CODE',	'NUTS_LABEL',	
-				'NUTS3_EuroStat',			'NUTS/EuroStat',	'Nuts3',			'NUTS_CODE',	'NUTS_LABEL'];
+				// name						//shape location	//shape name		//Idfield     //label field					
+				'NUTS0_LUISA',				'NUTS/LUISA',		'n0_jul16',			'First_N2_3', 'First_N2_3', 	
+				'NUTS1_LUISA',				'NUTS/LUISA',		'n1_jul16',			'NUTS_CODE',  'NUTS_CODE',	
+				'NUTS2_merged_LUISA',		'NUTS/LUISA',		'n2_merged_jul16',	'merge',      'merge',		
+				'NUTS2_LUISA',				'NUTS/LUISA',		'n2_jul16',			'NUTS_CODE',  'NUTS_CODE',	
+				'NUTS3_LUISA',				'NUTS/LUISA',		'n3_mar17',			'NUTS_CODE',  'NUTS_CODE',	
+				'NUTS3_EuroStat',			'NUTS/EuroStat',	'Nuts3',			'NUTS_CODE2', 'NUTS_CODE2'];
 		}
 		attribute<string> Name: 		expr = "inElements/elements[((id(.)*NrAttributes)+0)[inElements]]";
 		attribute<string> Dir: 			expr = "inElements/elements[((id(.)*NrAttributes)+1)[inElements]]";

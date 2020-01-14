@@ -102,32 +102,33 @@ container ModelTraits
 		attribute<float32>		Distribution_dif  		(domain): Expr = "Population_Distribution - PrevState/Qi";
 		
 		
-		attribute<int32>		rnd_Qi		 (domain): Expr = "roundDown(Population_Distribution)";
-		attribute<float32>		Qj			(Region): 	Expr = "Demographics/ProjectedTotals/Population/summed";
+		attribute<int32>		rnd_Qi(domain): Expr = "roundDown(Population_Distribution)";
+		attribute<float32>		Qj    (Region): 	Expr = "Demographics/ProjectedTotals/Population/summed";
 		
 		container discretelyAllocQi := loop(discrete_people_allocator, uint16(15));
 		
-		container discrete_people_allocator: IsTemplate = "True"
+		template discrete_people_allocator
 		{
 			parameter<uint16> NrIter;
 			
 			container currValue
 			{
-				attribute<float32>  Qi 				(domain): expr = "float32(rnd_Qi)";
-				attribute<float32> 	Qj_hat			(Region): expr = "sum(Qi, RegionRel)";
-				attribute<float32>  dif_Qj			(Region): expr = "Qj - Qj_hat";
-				parameter<uint32> 	regionalCountErrors: 	expr = "sum(uint32(Abs(Qj_hat - Qj) > float32(5)))";
-				parameter<uint32> 	negativePeopleErrors:	expr = "sum(uint32(Qi < float32(0)))";
-				parameter<uint32>	numErrs:				expr = "regionalCountErrors + negativePeopleErrors";
+				attribute<float32>  Qi 				(domain) := float32(rnd_Qi);
+				attribute<float32> 	Qj_hat             (Region) := sum(Qi, RegionRel);
+				attribute<float32>  dif_Qj             (Region) := Qj - Qj_hat;
+				
+				attribute<bool  > 	regionalCountError (Region) := Abs(Qj_hat - Qj) > 10f;
+				attribute<uint32> 	negativePeopleError(Region) := sum(UInt32(Qi < 0f), RegionRel);
+				attribute<bool>	error              (Region) := regionalCountError || (negativePeopleError > 0);
 			}
 			container nextValue
 			{
-				attribute<float32>	Qi (domain): 			expr = "CurrValue/numErrs = 0 ? CurrValue/Qi: float32(Process/Qi)";
-				attribute<float32> 	Qj_hat			(Region): expr = "sum(Qi, RegionRel)";
-				attribute<float32>  dif_Qj			(Region): expr = "Qj - Qj_hat";
-				parameter<uint32> 	regionalCountErrors := sum(uint32(Abs(Qj_hat - Qj) > 10f));
-				parameter<uint32> 	negativePeopleErrors:	expr = "sum(uint32(Qi < float32(0)))";
-				parameter<uint32>	numErrs := regionalCountErrors + negativePeopleErrors;
+				attribute<float32>	Qi (domain) := not(any(CurrValue/error)) ? CurrValue/Qi: float32(Process/Qi);
+				attribute<float32> 	Qj_hat             (Region) := sum(Qi, RegionRel);
+				attribute<float32>  dif_Qj             (Region) := Qj - Qj_hat;
+				attribute<bool  > 	regionalCountError (Region) := Abs(Qj_hat - Qj) > 10f;
+				attribute<uint32> 	negativePeopleError(Region) := sum(UInt32(Qi < 0f), RegionRel);
+				attribute<bool>	error              (Region) := regionalCountError || (negativePeopleError > 0);
 			}
 			container Process
 			{
@@ -143,7 +144,7 @@ container ModelTraits
 			}
 		}
 		parameter<float32> projectedQ: 		 			  Expr = "sum(count(Qi, Regionrel) > 0 ? Qj: 0[NrResidents])";
-		parameter<bool>	   allocation_OK:				  Expr = "discretelyAllocQi/lastIter/nextValue/numErrs == 0";
+		attribute<bool>	   allocation_OK(Region):= not(discretelyAllocQi/lastIter/nextValue/error);
 		attribute<float32> Qi					(domain): Expr = "discretelyAllocQi/LastIter/nextValue/Qi[float32]", IntegrityCheck = "allocation_OK";
 		attribute<float32> dQi					(domain): Expr = "Qi - PrevState/Qi";
 		attribute<float32> mod_Qj				(Region): Expr = "sum(Qi, Regionrel)";

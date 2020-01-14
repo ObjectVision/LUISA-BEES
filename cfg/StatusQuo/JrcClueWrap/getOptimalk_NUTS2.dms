@@ -1,7 +1,7 @@
 container getOptimalk
 {
-	unit<uint16> PopModelZones: 						expr = "RunRegions/UnitSets/NUTS3_EuroStat";
-	attribute<PopModelZones> PopModelRaster (domain): 	expr = "RunRegions/RasterSets/NUTS3_EuroStat[domain/grid_rel]";
+	unit<uint16> PopModelZones: 						expr = "RunRegions/UnitSets/NUTS3_LUISA";
+	attribute<PopModelZones> PopModelRaster (domain): 	expr = "RunRegions/RasterSets/NUTS3_LUISA[domain/grid_rel]";
 	
 	parameter<float32> ComingPeriodLength: expr = "float32(2012 - 2011)";
 	unit<uint8> ModelType: expr = "Classifications/LU/ModelType";
