@@ -43,7 +43,9 @@ container LU
 		attribute<MetaData/DemandCharacteristics> DemandCharacteristicsRel: expr = "rlookup(DemandCharacteristics, MetaData/DemandCharacteristics/Name)";
 
 		
-		// value enumeration
+		container V := for_each_nedv(Name, string(ID(.))+'[..]', void, .);
+		
+		// value enumeration, Obsolete
 		parameter<.> Urban:                   expr = "value( 0, .)";
 		parameter<.> Industrial:              expr = "value( 1, .)";
 		parameter<.> OtherArable:             expr = "value( 2, .)";

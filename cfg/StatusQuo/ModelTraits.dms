@@ -145,7 +145,7 @@ container ModelTraits
 		}
 		parameter<float32> projectedQ: 		 			  Expr = "sum(count(Qi, Regionrel) > 0 ? Qj: 0[NrResidents])";
 		attribute<bool>	   allocation_OK(Region):= not(discretelyAllocQi/lastIter/nextValue/error);
-		attribute<float32> Qi					(domain): Expr = "discretelyAllocQi/LastIter/nextValue/Qi[float32]", IntegrityCheck = "allocation_OK";
+		attribute<float32> Qi					(domain): Expr = "discretelyAllocQi/LastIter/nextValue/Qi[float32]"; // HACK: , IntegrityCheck = "allocation_OK";
 		attribute<float32> dQi					(domain): Expr = "Qi - PrevState/Qi";
 		attribute<float32> mod_Qj				(Region): Expr = "sum(Qi, Regionrel)";
 	}
