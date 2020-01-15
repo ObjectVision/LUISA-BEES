@@ -18,7 +18,6 @@ container Luisetta
 			parameter<String> RunRegions: [ 'JrcRegion' ]; // @USERINPUT: Nuts1 or JrcRegion
 			parameter<String> SourceRootDir   := '%SourceDataDir%/Forbio';
 			parameter<String> LuisettaDataDir := '%SourceRootDir%/Luisetta';
-			parameter<String> EUCS_100mDir    := '%SourceRootDir%/EUCS_100m';
 			parameter<String> DGRegioDir      := '%SourceRootDir%/DGRegio';
 		}
 	}

@@ -14,7 +14,7 @@ container AdministrativeBoundaries
 				'NUTS1_LUISA',				'NUTS/LUISA',		'n1_jul16',			'NUTS_CODE',  'NUTS_CODE',	
 				'NUTS2_merged_LUISA',		'NUTS/LUISA',		'n2_merged_jul16',	'merge',      'merge',		
 				'NUTS2_LUISA',				'NUTS/LUISA',		'n2_jul16',			'NUTS_CODE',  'NUTS_CODE',	
-				'NUTS3_LUISA',				'NUTS/LUISA',		'n3_mar17',			'NUTS_CODE',  'NUTS_CODE',	
+				'NUTS3_LUISA',				'NUTS/LUISA',		'NUTS_RG_01M_2013_3035_LEVL_3',			'NUTS_ID',    'NUTS_ID',	//NUTS3_2013 downloaded from estat jan 14 2020
 				'NUTS3_EuroStat',			'NUTS/EuroStat',	'Nuts3',			'NUTS_CODE2', 'NUTS_CODE2'];
 		}
 		attribute<string> Name: 		expr = "inElements/elements[((id(.)*NrAttributes)+0)[inElements]]";

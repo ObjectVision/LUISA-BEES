@@ -17,7 +17,7 @@ container Accessibility: using = "Units"
 	container SourceData {
 		unit<uint32> cityPoint
 			:	StorageType = "gdal.vect"
-			,	StorageName = "%EUCS_100mDir%/accessData/citycentres_URAU2011.shp"
+			,	StorageName = "%LuisettaDataDir%/accessData/citycentres_URAU2011.shp"
 			,	StorageReadOnly = "True"
 		{
 			attribute<Geography/LambertEA> Geometry;
@@ -29,7 +29,7 @@ container Accessibility: using = "Units"
 			
 		unit<uint32> townPoint
 			:	StorageType = "gdal.vect"
-			,	StorageName = "%EUCS_100mDir%/accessData/towns_final_points.shp"
+			,	StorageName = "%LuisettaDataDir%/accessData/towns_final_points.shp"
 			,	StorageReadOnly = "True"
 		{
 			attribute<Geography/LambertEA> Geometry;
@@ -39,15 +39,15 @@ container Accessibility: using = "Units"
 		
 		unit<uint32> collect_masspoints: expr = "= 'union_unit('+ AsItemList('Runs/'+ Parameters/Meta/Run/Name +'/CaseData/NetworkAnalysis/SaveZones') +')'"
 		{
-			attribute<string>	 Code:	expr = "= 'union_data(.,'+ AsItemList('Runs/'+ Parameters/Meta/Run/Name +'/CaseData/NetworkAnalysis/SaveZones/Code') +')'", StorageName = "%EUCS_100mDir%/accessData/composite_LAU_masspoints.dbf";
-			attribute<uint16>	 ObjId: expr = "= 'union_data(.,'+ AsItemList('Runs/'+ Parameters/Meta/Run/Name +'/CaseData/NetworkAnalysis/SaveZones/ObjId') +')'", StorageName = "%EUCS_100mDir%/accessData/composite_LAU_masspoints.dbf";
-			attribute<Geography/LambertEA> point: expr = "= 'union_data(.,'+ AsItemList('Runs/'+ Parameters/Meta/Run/Name +'/CaseData/NetworkAnalysis/SaveZones/point') +')'", StorageName = "%EUCS_100mDir%/accessData/composite_LAU_masspoints.shp";
+			attribute<string>	 Code:	expr = "= 'union_data(.,'+ AsItemList('Runs/'+ Parameters/Meta/Run/Name +'/CaseData/NetworkAnalysis/SaveZones/Code') +')'", StorageName = "%LuisettaDataDir%/accessData/composite_LAU_masspoints.dbf";
+			attribute<uint16>	 ObjId: expr = "= 'union_data(.,'+ AsItemList('Runs/'+ Parameters/Meta/Run/Name +'/CaseData/NetworkAnalysis/SaveZones/ObjId') +')'", StorageName = "%LuisettaDataDir%/accessData/composite_LAU_masspoints.dbf";
+			attribute<Geography/LambertEA> point: expr = "= 'union_data(.,'+ AsItemList('Runs/'+ Parameters/Meta/Run/Name +'/CaseData/NetworkAnalysis/SaveZones/point') +')'", StorageName = "%LuisettaDataDir%/accessData/composite_LAU_masspoints.shp";
 		}
 			
 		
 		unit<uint32> destinationPoints
 //			:	StorageType = "gdal.vect" // TEMPORARY WORKAROUND FOR LIMITED TILE SUPPORT OF dijkstra_m
-			:	StorageName = "%EUCS_100mDir%/accessData/origins_final_LAEA.shp"
+			:	StorageName = "%LuisettaDataDir%/accessData/origins_final_LAEA.shp"
 			,	StorageReadOnly = "True", DialogData = "Geometry", DialogType = "map"
 		{
 			attribute<Geography/LambertEA> Geometry;
@@ -59,7 +59,7 @@ container Accessibility: using = "Units"
 	
 		unit<uint32> Roads
 			:	StorageType = "gdal.vect"
-			,	StorageName = "%EUCS_100mDir%/accessData/RN.shp"
+			,	StorageName = "%LuisettaDataDir%/accessData/RN.shp"
 			,	StorageReadOnly = "True"
 		{
 			// some attributes that read from the .shp layer
@@ -87,7 +87,7 @@ container Accessibility: using = "Units"
 			}
 		}
 		unit<wpoint> TeleAtlasRoadsRaster: 
-			StorageName 	 = "%EUCS_100mDir%/accessData/roads_eu_lev2to6_binary.tif",
+			StorageName 	 = "%LuisettaDataDir%/accessData/roads_eu_lev2to6_binary.tif",
 			DialogData 		 = "Geography/LambertEA",
 			StorageReadOnly = "True"
 		{
@@ -95,7 +95,7 @@ container Accessibility: using = "Units"
 			attribute<bool> ReadData(Geography/Lambert100mGrid);
 		}
 		unit<wpoint> BG_RO_OSMRoadsraster: 
-			StorageName 	 = "%EUCS_100mDir%/accessData/OSM_BG_RO2.tif",
+			StorageName 	 = "%LuisettaDataDir%/accessData/OSM_BG_RO2.tif",
 			DialogData 		 = "Geography/LambertEA",
 			StorageReadOnly = "True"
 		{
@@ -103,7 +103,7 @@ container Accessibility: using = "Units"
 			attribute<uint8> ReadData(Geography/Lambert100mGrid);
 		}
 		unit<wpoint> GR_OSMRoadsraster:
-			StorageName 	 = "%EUCS_100mDir%/accessData/osm_gr.tif",
+			StorageName 	 = "%LuisettaDataDir%/accessData/osm_gr.tif",
 			DialogData 		 = "Geography/LambertEA",
 			StorageReadOnly = "True"
 		{
@@ -115,7 +115,7 @@ container Accessibility: using = "Units"
 		
 		attribute<int16> 	 DistToTeleAtlasRoads(Geography/Lambert100mGrid): 
 			expr = 		 	"int16((float32(50) - proximity(float32(patchedRoadRaster), float32(Parameters/FuncKernels/LinearDecay5km/Attr))) * float32(100))",
-			StorageName = 	"%EUCS_100mDir%/accessData/m5000dist_to_lvl2to6roads.tif";
+			StorageName = 	"%LuisettaDataDir%/accessData/m5000dist_to_lvl2to6roads.tif";
 		
 		Container getNeighbours150: expr = "neighbourrange(int16(150))";
 		
