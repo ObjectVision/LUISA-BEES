@@ -301,6 +301,17 @@ template JrcClueWrap:
 			
 			attribute<string> AllocStatusPerPeriod(Periods): Expr = "='union_data(Periods, '+asItemList('TimeSteps/'+Periods/Name+'/d_alloc/status')+')'";
 			parameter<string> AllocStatus: Expr = "asItemList(AllocStatusPerPeriod)";
+			unit<uint32> AllocResults := ='union_unit('+AsItemList('TimeSteps/'+Periods/Name+'/ResultingState/AllocResults')+')'
+			{
+				attribute<string> PeriodName := ='union_data(., '+AsItemList('const('+Quote(Periods/Name)+', TimeSteps/'+Periods/Name+'/ResultingState/AllocResults)')+')';
+				attribute<ModelType> ModelType_Rel := ='union_data(., '+AsItemList('TimeSteps/'+Periods/Name+'/ResultingState/AllocResults/ModelType_rel')+')';
+				attribute<string> RegionTableName  := ='union_data(., '+AsItemList('TimeSteps/'+Periods/Name+'/ResultingState/AllocResults/RegionTableName')+')';
+				attribute<string> RegionLabel:= ='union_data(., '+AsItemList('TimeSteps/'+Periods/Name+'/ResultingState/AllocResults/RegionLabel')+')';
+				attribute<UInt32> DemandMin := ='union_data(., '+AsItemList('TimeSteps/'+Periods/Name+'/ResultingState/AllocResults/DemandMin')+')';
+				attribute<UInt32> DemandMax := ='union_data(., '+AsItemList('TimeSteps/'+Periods/Name+'/ResultingState/AllocResults/DemandMax')+')';
+				attribute<UInt32> Allocated := ='union_data(., '+AsItemList('TimeSteps/'+Periods/Name+'/ResultingState/AllocResults/Allocated')+')';
+				attribute<bool >  Status    := ='union_data(., '+AsItemList('TimeSteps/'+Periods/Name+'/ResultingState/AllocResults/Status')+')';
+			}
 		}
 		container landuse: Descr = "The resulting landuse is the combination of (iterator/allocated_landuse) and (exogeousLanduse)"
 		{
