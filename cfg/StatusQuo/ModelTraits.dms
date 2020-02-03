@@ -740,7 +740,8 @@ container ModelTraits
 						attribute<string> transition_name := transition/name[transition_rel];
 						attribute<string> factor_lookup_expr := 'rjoin(PartyCode, /Parameters/GHG_Factors/transitions/'+transition_name+'/Party, float32(/Parameters/GHG_Factors/transitions/'+transition_name+'/EF))';
 						// tonnes CO2 per ha.
-						attribute<float32> EF := ='union_data(., '+AsItemList(MakeDefined(factor_lookup_expr, '0f / 0f'))+')' ;
+						attribute<float32> posEF := ='union_data(., '+AsItemList(MakeDefined(factor_lookup_expr, '0f / 0f'))+')' ;
+						attribute<float32> EF := ='-(posEF)' ;
 					}
 					
 					container year
@@ -750,7 +751,7 @@ container ModelTraits
 						attribute<LUC> PreviousIT(domain) := SpatialFilter ? LUC/per_ModelType[PreviousLanduse] : value(0 / 0, LUC);
 						attribute<LUC_2> from_to(domain) := combine_data(LUC_2, PreviousIT, CurrentIT);
 						attribute<transition> transition_rel(domain) := LUC_2/transition_rel[from_to];
-						attribute<float32> EF(domain) := LUC_2/Ef[from_to];
+						attribute<float32> EF(domain) := LUC_2/EF[from_to];
 					}
 					container RegionData: 
 						Expr = "for_each_nedv(transition/name"
