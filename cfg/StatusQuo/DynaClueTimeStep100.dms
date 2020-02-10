@@ -171,6 +171,12 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 					"case(ForestPotential/Coniferous  > ForestPotential/BroadLeaved, Classifications/LU/ForestType/Coniferous ),"      // Coniferous  dominates or is equal to Mixed
 				"Classifications/LU/ForestType/Mixed" // BroadLeaved must then be equal to Coniferous so Mixed is the default value
 				")";
+				
+		unit<WPoint> ForestTransitionStateMatrix := range(wpoint, point(0w, 0w), point(uint16(#LU/ForestTransitionState), uint16(#LU/ForestTransitionState)))
+		{
+			attribute<.> per_domain(domain) := point(uint16(ModelType/FTS_rel[landuse]), uint16(ModelType/FTS_rel[PrevState/landuse]));
+			attribute<uint32> count := pcount(per_domain);
+		}
 
 		parameter<bool> cumulStatusFlag: Expr = "and(PrevState/cumulStatusFlag, d_alloc/statusFlag)";
 		

@@ -2,29 +2,29 @@ container LU
 {	
 	unit<UInt8> ModelType: NrOfRows = 13 // @USERINPUT: keep in sync with the actual nr of model classes
 	{
-		parameter<uint32> nrAttr: Expr = "9";
+		parameter<uint32> nrAttr: Expr = "10";
 		unit<UInt32> Elements: Expr = "Range(uint32, 0, nrAttr*#ModelType)"
 		{
 			attribute<String> Text: [ // @USERINPUT
-			//   VT, IT,    R,    G,    B, Label,                     	DemandcharacteristicsRel, 	MinClaimColumn, 	MaxClaimColumn
-				'1' ,'0','219','000','000','Urban',                   	'urban', 			'ZeroClaim',     	'ZeroClaim',
-				'2' ,'1','128','000','128','Industrial',              	'industrial',		'IndustryMin',   	'IndustryMax',
-				'3' ,'5','254','250','194','OtherArable',             	'agrimarket',		'OtherArableMin', 	'OtherArableMax',
-				'4' ,'6','207','152','107','PermanentCrops',          	'agrimarket',		'PermCropMin',   	'PermCropMax',
-				'5' ,'6','163','222','133','Pastures',                	'agrimarket',		'PastureMin',    	'PastureMax',
-				'6' ,'2','001','099','000','ForestsMature',             'forest',			'ForestsMatMin',    'ForestsMatMax', 
-				'7' ,'3','114','137','068','TransWoodlandShrub',    	null, 	 			null, 				null, 	
-			//	'8' ,'5','227','201','053','Cereals',                 	'agrimarket',		'CerealsMin',    	'CerealsMax',
-			//	'9' ,'5','254','254','000','Maize',                   	'agrimarket',		'MaizeMin',      	'MaizeMax',
-			//	'10' ,'5','236','110','050','RootCrops',               	'agrimarket',		'RootCropsMin',  	'RootCropsMax',
-				'8','4','216','213','164','AbanArable',         		null, 				null, 				null, // 'Capri',    'AbandonedArable',         null,
-				'9','4','153','130','120','AbanPermanentCrops', 		null, 				null,				null, // 'Capri',    'AbandonedPermanentCrops', null,
-				'10','4','137','170','125','AbanPastures',       		null, 				null, 				null, // 'Capri',    'AbandonedPastures',       null,
-			//	'11','0','160','000','000','AbanUrban',          		null,				null, 				null, // amount is determined by decreased demand for Urban with low transition costs to Abandonment.
-			//	'12','1','071','000','117','AbanIndustry',        		null, 				null, 				null,  // amount is determined by decreased demand for Industry with low transition costs to Abandonment.
-				'11','6','000','200','000','NewEnergyCrops' ,         	'agrimarket',		'NewEnergyMin',     'NewEnergyMax',
-				'12','3','166','242','000','SHVA',    					null, 				null, 				null,
-				'13','2','036','130','056','ForestsYoung',            	'forest',			'ForestsYoMin',    	'ForestsYoMax'
+			//   VT, IT,    R,    G,    B, Label,                     	DemandcharacteristicsRel, 	MinClaimColumn, 	MaxClaimColumn ForestTransitionState
+				'1' ,'0','219','000','000','Urban',                   	'urban', 			'ZeroClaim',     	'ZeroClaim',      null,
+				'2' ,'1','128','000','128','Industrial',              	'industrial',		'IndustryMin',   	'IndustryMax',    null, 
+				'3' ,'5','254','250','194','OtherArable',             	'agrimarket',		'OtherArableMin', 	'OtherArableMax', '0',
+				'4' ,'6','207','152','107','PermanentCrops',          	'agrimarket',		'PermCropMin',   	'PermCropMax',    '0',
+				'5' ,'6','163','222','133','Pastures',                	'agrimarket',		'PastureMin',    	'PastureMax',     '0',
+				'6' ,'2','001','099','000','ForestsMature',             'forest',			'ForestsMatMin',    'ForestsMatMax',  '4',
+				'7' ,'3','114','137','068','TransWoodlandShrub',    	null, 	 			null, 				null, 	          '2', 
+			//	'8' ,'5','227','201','053','Cereals',                 	'agrimarket',		'CerealsMin',    	'CerealsMax',     '0',
+			//	'9' ,'5','254','254','000','Maize',                   	'agrimarket',		'MaizeMin',      	'MaizeMax',       '0',
+			//	'10' ,'5','236','110','050','RootCrops',               	'agrimarket',		'RootCropsMin',  	'RootCropsMax',   '0',
+				'8','4','216','213','164','AbanArable',         		null, 				null, 				null, '1',
+				'9','4','153','130','120','AbanPermanentCrops', 		null, 				null,				null, '1',
+				'10','4','137','170','125','AbanPastures',       		null, 				null, 				null, '1',
+			//	'11','0','160','000','000','AbanUrban',          		null,				null, 				null, '1', // amount is determined by decreased demand for Urban with low transition costs to Abandonment.
+			//	'12','1','071','000','117','AbanIndustry',        		null, 				null, 				null, '1', // amount is determined by decreased demand for Industry with low transition costs to Abandonment.
+				'11','6','000','200','000','NewEnergyCrops' ,         	'agrimarket',		'NewEnergyMin',     'NewEnergyMax',   null,
+				'12','3','166','242','000','SHVA',    					null, 				null, 				null,             null, 
+				'13','2','036','130','056','ForestsYoung',            	'forest',			'ForestsYoMin',    	'ForestsYoMax',   '3'
 			];
 		}
 		attribute<String>           Name: Expr = "Label";
@@ -35,6 +35,7 @@ container LU
 		attribute<UInt8>               B: Expr =" UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 4, Elements)])";
 		attribute<String>          Label: Expr ="       Elements/Text[value(UInt32(ID(.))* nrAttr + 5, Elements)]" , DialogType = "LabelText";
 		attribute<uint32>          Color: Expr ="rgb(R,G,B)", DialogType = "BrushColor";
+		attribute<ForestTransitionState>  FTS_rel :=  value(Elements/Text[value(UInt32(ID(.))* nrAttr + 9, Elements)], ForestTransitionState);
 		
 		attribute<String> DemandCharacteristics:  	Expr ="Elements/Text[value(UInt32(ID(.))* nrAttr + 6, Elements)]";
 		attribute<String> MinClaimColumn: Expr ="Elements/Text[value(UInt32(ID(.))* nrAttr + 7, Elements)]";
@@ -67,6 +68,10 @@ container LU
 		attribute<bool>	IsAgriCultural:= ID(.) == OtherArable || ID(.) == PermanentCrops || ID(.) == Pastures || ID(.) == NewEnergyCrops;
 		attribute<bool> IsForest      := ID(.) == ForestsMature || ID(.) == ForestsYoung;
 		attribute<bool> IsAbandoned   := ID(.) == AbanArable || ID(.) == AbanPermanentCrops || ID(.) == AbanPastures;
+	}
+	unit<uint8> ForestTransitionState := range(uint8, 1b, 5b) {
+		attribute<string> Label: DialogType = "LabelText",
+		[ 'Abandoned', 'TWLS', 'Young', 'Mature'];
 	}
 	unit<UInt32> ModelMatr: Expr = "Combine(ModelType, ModelType)";
 	
