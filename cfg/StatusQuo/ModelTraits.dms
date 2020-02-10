@@ -741,15 +741,15 @@ container ModelTraits
 						attribute<LUC> PreviousIT(domain) := SpatialFilter ? LUC/per_ModelType[PreviousLanduse] : value(0 / 0, LUC);
 						attribute<LUC_2> from_to(domain) := combine_data(LUC_2, PreviousIT, CurrentIT);
 						attribute<transition> transition_rel(domain) := LUC_2/transition_rel[from_to];
-						attribute<tonne> Co2_Emission(domain) := LUC_2/CO2_EmissionFactor[from_to] * 1[luHa];
+						attribute<tonne> CO2_Emission(domain) := LUC_2/CO2_EmissionFactor[from_to] * 1[luHa];
 					}
-					container RegionData: 
-						Expr = "for_each_nedv(transition/name"
-						       ", 'sum(value(year/transition_rel == value(' + String(id(transition)) +',transition), luHa) "
-						       "   , RegionGrid)'"
-						       ",  Regions"
-						       ",  luHa"
-						       ")";
+					container RegionData := for_each_nedv(transition/name
+						       , 'sum(value(year/transition_rel == value(' + String(id(transition)) +',transition), float32) * year/CO2_Emission, RegionGrid)'
+						       ,  Regions, tonne
+						       )
+					{
+						attribute<tonne> Total(Regions) := ='add('+AsItemList(transition/name)+')';
+					}
 							   
 					container written_RegionData: 
 						Expr = 
