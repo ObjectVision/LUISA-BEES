@@ -341,7 +341,7 @@ template JrcClueWrap:
 		unit<WPoint> ForestTransitionStatePerYear := range(wpoint, point(0w, 0w), point(uint16(#LU/ForestTransitionState), uint16(#Periods)))
 		{
 			attribute<uint32> count := ='union_data(., '+AsItemList(replace('pcount(ModelType/FTS_rel[TimeSteps/@P/ResultingState/landuse])','@P',Periods/Name))+' )';
-			attribute<uint32> relcount := count - pcount(ModelType/FTS_rel[TimeSteps/P2015/ResultingState/landuse])[pointcol(ID(.))[LU/ForestTransitionState]];
+			attribute<int32> relcount := int32(count) - int32(pcount(ModelType/FTS_rel[TimeSteps/P2015/ResultingState/landuse])[pointcol(ID(.))[LU/ForestTransitionState]]);
 		}
 	}
 }

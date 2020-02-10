@@ -69,9 +69,9 @@ container LU
 		attribute<bool> IsForest      := ID(.) == ForestsMature || ID(.) == ForestsYoung;
 		attribute<bool> IsAbandoned   := ID(.) == AbanArable || ID(.) == AbanPermanentCrops || ID(.) == AbanPastures;
 	}
-	unit<uint8> ForestTransitionState := range(uint8, 1b, 5b) {
+	unit<uint8> ForestTransitionState := range(uint8, 0b, 5b) {
 		attribute<string> Label: DialogType = "LabelText",
-		[ 'Abandoned', 'TWLS', 'Young', 'Mature'];
+		[ 'Agri', 'Abandoned', 'TWLS', 'Young', 'Mature'];
 	}
 	unit<UInt32> ModelMatr: Expr = "Combine(ModelType, ModelType)";
 	
