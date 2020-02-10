@@ -26,10 +26,10 @@ container RunRegions: Using = "Geography/AdministrativeBoundaries;"
 		unit<uint32> OrgZones;
 		
 //		unit<uint16> Set16 := subset_uint16(OrgZones/RunAreaID == Geography/Regions/Runs/ZoneId[RunRegion]) // USE THIS when GeoDmsVersion() >= 7.208
-		unit<uint16> Set   := subset(OrgZones/RunAreaID == Geography/Regions/Runs/ZoneId[RunRegion]);
+		unit<uint32> Set   := subset(OrgZones/RunAreaID == Geography/Regions/Runs/ZoneId[RunRegion]);
 		unit<uint16> Set16 := range(uint16, 0w, uint16(#Set))
 		{
-			attribute<OrgZones>     nr_OrgEntity     := union_unit(., Set/nr_OrgEntity);
+			attribute<OrgZones>     nr_OrgEntity     := union_data(., Set/nr_OrgEntity);
 			attribute<string> 		ZoneId           := OrgZones/ZoneId  [Nr_OrgEntity];
 			attribute<LambertEA> 	Geometry(polygon):= OrgZones/Geometry[Nr_OrgEntity];
 			attribute<string>		Label            := OrgZones/Label   [Nr_OrgEntity], DialogType = "LabelText";
