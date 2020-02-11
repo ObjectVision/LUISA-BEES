@@ -9,7 +9,7 @@ container LU
 			//   VT, IT,    R,    G,    B, Label,                     	DemandcharacteristicsRel, 	MinClaimColumn, 	MaxClaimColumn ForestTransitionState
 				'1' ,'0','219','000','000','Urban',                   	'urban', 			'ZeroClaim',     	'ZeroClaim',      null,
 				'2' ,'1','128','000','128','Industrial',              	'industrial',		'IndustryMin',   	'IndustryMax',    null, 
-				'3' ,'5','254','250','194','Arable',        	     	'agrimarket',		'ArableMin', 		'ArableMax', 	  '0',
+				'3' ,'5','254','250','194','Arable',        	     	'agrimarket',		'OtherArableMin', 	'OtherArableMax', '0',
 				'4' ,'6','207','152','107','PermanentCrops',          	'agrimarket',		'PermCropMin',   	'PermCropMax',    '0',
 				'5' ,'6','163','222','133','Pastures',                	'agrimarket',		'PastureMin',    	'PastureMax',     '0',
 				'6' ,'2','001','099','000','ForestsMature',             'forest',			'ForestsMatMin',    'ForestsMatMax',  '4',
