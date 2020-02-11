@@ -756,7 +756,7 @@ container ModelTraits
 							"for_each_nedv(transition/name"
 							", 'RegionData/'+transition/name"
 						    ",  Regions"
-						    ",  luHa"
+						    ",  tonne"
 						    ")",
 						StorageName = "=DirName + '_GHG.dbf'";
 				}
