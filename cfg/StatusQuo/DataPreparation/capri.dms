@@ -288,15 +288,19 @@ container Capri: using = "Units"
 			attribute<ha_f64> RootCropsMax:   expr = "max_Factor * RootCrops";
 			attribute<ha_f64> NewEnergyMin:   expr = "min_Factor * NewEnergy * Float64(CurrYear >= 2020.0)";
 			attribute<ha_f64> NewEnergyMax:   expr = "max_Factor * NewEnergy * Float64(CurrYear >= 2020.0)";
+			attribute<ha_f64> NewEnergyMax:   expr = "max_Factor * NewEnergy * Float64(CurrYear >= 2020.0)";
+			
+			attribute<ha_f64> ArableMin := OtherArableMin + CerealsMin + MaizeMin + RootCropsMin;
+			attribute<ha_f64> ArableMax := OtherArableMax + CerealsMax + MaizeMax + RootCropsMax;
 		}
 	}
 	
-	container ExportTempl: IsTemplate = "true"
+	template ExportTempl
 	{
 		parameter<string> ICC;
 		unit<uint32> result;
 		
-		parameter<string> Header: Expr = "'Region,Year,OtherArableMin,OtherArableMax,PermCropMin,PermCropMax,PastureMin,PastureMax,CerealsMin,CerealsMax,MaizeMin,MaizeMax,RootCropsMin,RootCropsMax,NewEnergyMin,NewEnergyMax'";
+		parameter<string> Header: Expr = "'Region,Year,ArableMin,ArableMax,PermCropMin,PermCropMax,PastureMin,PastureMax,CerealsMin,CerealsMax,MaizeMin,MaizeMax,RootCropsMin,RootCropsMax,NewEnergyMin,NewEnergyMax'";
 		attribute<string> BodyLines(result): Expr = 
 			"result/Region+','+"
 			"String(int32(result/CurrYear))+','+"

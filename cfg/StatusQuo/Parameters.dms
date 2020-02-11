@@ -1281,7 +1281,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			container ParamSet:  Expr = "AllocSet/ParamSet";
 			
 			unit<UInt8> ModelType: Expr = "AllocSet/ModelType";
-			unit<UInt8> Factors:     Expr = "AllocSet/Factors";
+			unit<UInt32> Factors := AllocSet/Factors;
 			//container Neighbourhood: Expr = "Rules/Neighbourhood"; // not necessary 17 jun 2013 because neighmatrices are now country-specific CJC
 			
 			unit<UInt16> Periods:   Expr = "PeriodSet/result";
@@ -1430,7 +1430,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			
 			attribute<.> per_ModelType(Classifications/LU/ModelType): [
 				3, 3,  // Urban, Industrial
-				2, 2,  // OtherArable, PermanentCrops
+				2, 2,  // Arable, PermanentCrops
 				1,     // Pastures
 				0, 0,  // ForestsMature, TransWoodlandShrub
 				2,     // NewEnergyCrops
@@ -1486,7 +1486,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			attribute<string> colName: [ 'fert_kg_ha', 'fert_kg_ha', 'fert_kg_ha', 'fert_kg_ha', 'numheads_1000s'];
 			attribute<.> per_ModelType(Classifications/LU/ModelType): [
 				null, null,  // Urban, Industrial
-				0, 3,  // OtherArable, PermanentCrops
+				0, 3,  // Arable, PermanentCrops
 				1,     // Pastures
 				null, null,  // ForestsMature, TransWoodlandShrub
 				2,     // NewEnergyCrops

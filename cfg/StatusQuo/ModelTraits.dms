@@ -42,12 +42,12 @@ container ModelTraits
 				
 				attribute<bool> Urban             (domain):= const(true, domain);
 				attribute<bool> Industrial        (domain):= const(true, domain);
-				attribute<bool> OtherArable       (domain):= not(IsBuiltupArea);
+				attribute<bool> Arable     		  (domain):= not(IsBuiltupArea);
 				attribute<bool> PermanentCrops    (domain):= not(IsBuiltupArea);
 				attribute<bool> Pastures          (domain):= not(IsBuiltupArea);
 				attribute<bool> ForestsMature     (domain):= not(BurntForest/NewlyBurnt)&& (PrevState/LandUse == ModelType/ForestsMature || (PrevState/LandUse == ModelType/ForestsYoung && PrevState/Age >= 20[YearDiffRange]));				
 				attribute<bool> TransWoodlandShrub(domain):= (BurntForest/NewlyBurnt || IsAbandoned && PrevState/Age >= 5[YearDiffRange] || (PrevState/LandUse == ModelType/TransWoodlandShrub && PrevState/Age < 10[YearDiffRange]));
-				attribute<bool> AbanArable        (domain):= PrevState/LandUse == ModelType/OtherArable    || PrevState/LandUse == ModelType/AbanArable;
+				attribute<bool> AbanArable        (domain):= PrevState/LandUse == ModelType/Arable         || PrevState/LandUse == ModelType/AbanArable;
 				attribute<bool> AbanPermanentCrops(domain):= PrevState/LandUse == ModelType/PermanentCrops || PrevState/LandUse == ModelType/AbanPermanentCrops;
 				attribute<bool> AbanPastures      (domain):= PrevState/LandUse == ModelType/Pastures       || PrevState/LandUse == ModelType/AbanPastures;
 				attribute<bool> NewEnergyCrops    (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/ForestsYoung);

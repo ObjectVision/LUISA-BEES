@@ -9,7 +9,7 @@ container LU
 			//   VT, IT,    R,    G,    B, Label,                     	DemandcharacteristicsRel, 	MinClaimColumn, 	MaxClaimColumn ForestTransitionState
 				'1' ,'0','219','000','000','Urban',                   	'urban', 			'ZeroClaim',     	'ZeroClaim',      null,
 				'2' ,'1','128','000','128','Industrial',              	'industrial',		'IndustryMin',   	'IndustryMax',    null, 
-				'3' ,'5','254','250','194','OtherArable',             	'agrimarket',		'OtherArableMin', 	'OtherArableMax', '0',
+				'3' ,'5','254','250','194','Arable',        	     	'agrimarket',		'ArableMin', 		'ArableMax', 	  '0',
 				'4' ,'6','207','152','107','PermanentCrops',          	'agrimarket',		'PermCropMin',   	'PermCropMax',    '0',
 				'5' ,'6','163','222','133','Pastures',                	'agrimarket',		'PastureMin',    	'PastureMax',     '0',
 				'6' ,'2','001','099','000','ForestsMature',             'forest',			'ForestsMatMin',    'ForestsMatMax',  '4',
@@ -49,7 +49,7 @@ container LU
 		// value enumeration, Obsolete
 		parameter<.> Urban:                   expr = "value( 0, .)";
 		parameter<.> Industrial:              expr = "value( 1, .)";
-		parameter<.> OtherArable:             expr = "value( 2, .)";
+		parameter<.> Arable: 	              expr = "value( 2, .)";
 		parameter<.> PermanentCrops:          expr = "value( 3, .)";
 		parameter<.> Pastures:                expr = "value( 4, .)";
 		parameter<.> ForestsMature:           expr = "value( 5, .)";
@@ -65,7 +65,7 @@ container LU
 		attribute<bool> IsUrban       := ID(.) == Urban;
 		attribute<bool> IsIndustrial  := ID(.) == Industrial;
 		attribute<bool> IsBuiltupArea := or( IsUrban, IsIndustrial);
-		attribute<bool>	IsAgriCultural:= ID(.) == OtherArable || ID(.) == PermanentCrops || ID(.) == Pastures || ID(.) == NewEnergyCrops;
+		attribute<bool>	IsAgriCultural:= ID(.) == Arable || ID(.) == PermanentCrops || ID(.) == Pastures || ID(.) == NewEnergyCrops;
 		attribute<bool> IsForest      := ID(.) == ForestsMature || ID(.) == ForestsYoung;
 		attribute<bool> IsAbandoned   := ID(.) == AbanArable || ID(.) == AbanPermanentCrops || ID(.) == AbanPastures;
 	}
@@ -87,7 +87,7 @@ container LU
 				'255','255','255','false','0.4', 'None',
 				'219','000','000','false','0.4', 'Urban',
 				'128','000','128','false','0.4', 'Industrial',
-				'254','250','194','false','0.4', 'OtherArable',
+				'254','250','194','false','0.4', 'Arable',
 				'207','152','107','false','0.4', 'PermanentCrops',
 				'163','222','133','false','0.4', 'Pastures',
 				'001','099','000','true' ,'1.0', 'ForestsMature',

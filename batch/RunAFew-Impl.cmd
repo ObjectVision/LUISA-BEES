@@ -1,6 +1,6 @@
-set geodmsversion=GeoDms7207
+set geodmsversion=GeoDms7206
 set pf=%Program Files%
-set luisetta=E:\dev\Luisetta
+set luisetta=C:\prj\jrc\Luisetta
 set ProgramPath=C:\Program Files\ObjectVision\%geodmsversion%\GeoDmsRun.exe
 
 rem "%ProgramPath%" /LbatchtraceAT.log "E:\dev\Luisetta\cfg\StatusQuo.dms" /runs/Austria/endstate/GeneratedFiles /runs/Austria/simulation_results/landuse/GridData

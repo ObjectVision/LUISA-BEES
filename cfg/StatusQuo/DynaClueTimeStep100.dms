@@ -153,13 +153,11 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 			attribute<Float32> Weight: Expr = "Float32( ScaleSum( Dist <= 10.0 && Dist > 0.0 ? 1.0 / (3.0 + Dist) : 0.0, 1.0 ) )";
 		}
 		
-		container ForestPotential: 
-			Expr = 
-				"for_each_nedv("
-					"Classifications/LU/ForestType/Name, "
-					"'potential(Float32(PrevState/ForestType == UInt8('+String(ID(Classifications/LU/ForestType))+')), ForestNeigbourhood/Weight)', "
-					"domain_grid, Float32"
-				")";
+		container ForestPotential := for_each_nedv(
+					Classifications/LU/ForestType/Name, 
+					'potential(Float32(PrevState/ForestType == UInt8('+String(ID(Classifications/LU/ForestType))+')), ForestNeigbourhood/Weight)', 
+					domain_grid, Float32
+				);
 		
 		attribute<Classifications/LU/ForestType> ForestType(domain_grid) := 
 				switch(

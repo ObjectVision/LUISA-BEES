@@ -98,7 +98,7 @@ container JrcFactorDataTempl: IsTemplate = "True", IsHidden = "true"  //, Expr =
 		attribute<int8> Urban                   (domain_grid): expr = "const(0, domain_grid, int8)";
 		attribute<int8> Industrial              (domain_grid): expr = "Biodiversity/LOCSPECS/LocSpecsInd";
 
-		attribute<int8> OtherArable             (domain_grid): expr = "CAP/LOCSPECS/LocSpecsAra";
+		attribute<int8> Arable       	        (domain_grid): expr = "CAP/LOCSPECS/LocSpecsAra";
 		attribute<int8> PermanentCrops          (domain_grid): expr = "CAP/LOCSPECS/LocSpecsPC";
 		attribute<int8> Pastures                (domain_grid): expr = "CAP/LOCSPECS/LocSpecsPast";
 		
