@@ -248,8 +248,8 @@ container LU
 	}
 	unit<uint8> ForestType: Expr = "Range(uint8, UInt8(0), UInt8(4))"
 	{
-		attribute<Corine> Corine_rel: [ null, 23, 24, 25 ];
-		attribute<.>      Back_rel(Corine): Expr = "invert(Corine_rel)"; // resulted in illegal abstract before GeoDms 6.061, see issue 212
+		attribute<Corine> Corine_rel: [ null, 25, 26, 27 ];
+		attribute<.>      Back_rel(Corine) := invert(Corine_rel);
 
 		attribute<String> Label: ['', 'Broad-leaved forest', 'Coniferous forest', 'Mixed forest'];
 		attribute<String> Name:  ['', 'BroadLeaved', 'Coniferous', 'Mixed' ];

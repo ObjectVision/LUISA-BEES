@@ -6,17 +6,11 @@ container JrcFactorDataTempl: IsTemplate = "True", IsHidden = "true"  //, Expr =
 		
 	container TiffData: IsHidden = "True"
 	{
-		unit<WPoint> CorineGrid
-			:	DialogData = "Geography/LambertEA"
-			,	Source = "JRC:LandCover"
-			,	StorageName = "=BaseYearCorineDataFileName"
-			,	StorageType = "gdal.grid"
-			,	StorageReadOnly = "True"
+		container CorineGrid // already read in CaseData
 		{
-			attribute<Classifications/LU/Corine>    GridData;
-			attribute<Classifications/LU/Corine>    CorineLandUse	(domain_grid);
-			attribute<Classifications/LU/ModelType> ModelLandUse 	(domain_grid): Expr = "Classifications/LU/Corine/MT [CorineLandUse]";
-			attribute<Classifications/LU/ViewType>  ViewLandUse  	(domain_grid): Expr = "Classifications/LU/Corine/VT2[CorineLandUse]";
+			attribute<Classifications/LU/Corine>    CorineLandUse	(domain_grid) := PrepareVariables/CorineGrid;
+			attribute<Classifications/LU/ModelType> ModelLandUse 	(domain_grid) := Classifications/LU/Corine/MT [CorineLandUse];
+			attribute<Classifications/LU/ViewType>  ViewLandUse  	(domain_grid) := Classifications/LU/Corine/VT2[CorineLandUse];
 		}
 		Unit<WPoint> Eu27_e: StorageName = "%LuisettaDataDir%/Elevation/eu27_e_ha.tif", StorageReadOnly = "True", DialogData = "Geography/LambertEA"
 		{
