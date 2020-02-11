@@ -748,6 +748,7 @@ container ModelTraits
 						       ,  Regions, tonne
 						       )
 					{
+						attribute<string> Label(Regions) := Regions/Label;
 						attribute<tonne> Total(Regions) := ='add('+AsItemList(transition/name)+')';
 					}
 							   
@@ -758,7 +759,11 @@ container ModelTraits
 						    ",  Regions"
 						    ",  tonne"
 						    ")",
-						StorageName = "=DirName + '_GHG.dbf'";
+						StorageName = "=DirName + '_GHG.dbf'"
+					{
+						attribute<string> Label(Regions) := RegionData/Label;
+						attribute<tonne> Total(Regions) := RegionData/Total;
+					}
 				}
 				container ESS {
 					unit<uint8> LUC := /Parameters/CapMod/LUC;
