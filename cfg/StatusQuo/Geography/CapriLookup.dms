@@ -70,7 +70,7 @@ container getCapriData: Using = "Geography/AdministrativeBoundaries/BoundaryDoma
 			
 			attribute<Capri> Capri_rel: Expr = "CapriLookup/Capri_rel[rlookup(code, CapriLookup/Nuts2Code)]";
 	}
-	unit<UInt32> CapriLookup: NrOfRows = 267
+	unit<UInt32> CapriLookup: NrOfRows = 268
 	{
 	
 	parameter<uint32> nrAttr: Expr = "4";
@@ -184,7 +184,7 @@ container getCapriData: Using = "Geography/AdministrativeBoundaries/BoundaryDoma
 			,'ES62','ES','ES62','Murcia'
 			,'ES63','ES','ES63','-'
 			,'ES64','ES','ES64','-'
-//			,'ES70','ES','ES70','Canarias'
+			,'ES70','ES','ES70','Canarias'
 			,'FI13','FI','FI13','Itae-Suomi'
 			,'FI18','FI','FI18','Etelae-Suomi'
 			,'FI19','FI','FI19','Laensi-Suomi'
