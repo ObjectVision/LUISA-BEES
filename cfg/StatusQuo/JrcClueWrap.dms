@@ -232,8 +232,8 @@ template JrcClueWrap:
 		attribute<YearDiffRange> Age    (domain): Expr = "switch("
 			"case(CorineBurnt, value(3, YearDiffRange)), "
 			"case(BurntForest, Parameters/PeriodSet/StartYear - float32(CaseData/JrcFactorData/BurntAreas/BurntInYear[domain/grid_rel]) - float32(1)), "
-			//"value(CaseData/JrcFactorData/age0[domain/grid_rel], YearDiffRange))";
-			"value(CaseData/PrepareVariables/Variables/age0, YearDiffRange))";
+//			"value(CaseData/PrepareVariables/Variables/age0, YearDiffRange))";
+			"value(0, YearDiffRange))";
 			
 		attribute<float32> Qi(domain): Expr = "float32(CaseData/getOptimalk/PopulationDistribution/Qi)";
 	    attribute<float32> PopDensity_km2 (domain): Expr = "MakeDefined(potential(Qi[domain/BasisGrid], Parameters/FuncKernels/Area1km2/AbsWeight)[domain/grid_rel] , 0[float32])";
