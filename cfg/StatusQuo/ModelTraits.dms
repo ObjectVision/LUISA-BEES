@@ -808,8 +808,8 @@ container ModelTraits
 			
 			unit<WPoint> xTabData: Expr = "Range(WPoint, Point(UInt16(0),UInt16(0)), Point(UInt16(#Classifications/LU/ModelType), UInt16(#Classifications/LU/ModelType)))", IsHidden = "True"
 			{
-				// attribute<UInt32> Count: Expr = "PCount(Point(UInt16(StartingLandUse), UInt16(CurrentLandUse), xTabData))";
-				attribute<UInt32> Count: Expr = "PCount(Point(UInt16(PrevState/LandUse), UInt16(CurrentLandUse), xTabData))";
+				attribute<UInt32> Count: Expr = "PCount(Point(UInt16(StartingLandUse), UInt16(CurrentLandUse), xTabData))";
+				//attribute<UInt32> Count: Expr = "PCount(Point(UInt16(PrevState/LandUse), UInt16(CurrentLandUse), xTabData))";
 			}
 			container xTab: Expr =  
 				"for_each_nedv("

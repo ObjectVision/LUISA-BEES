@@ -39,7 +39,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			attribute<String>  PrevRef: Expr = "MakeDefined(Name[ID(.)-UInt16(1)]+'/ResultingState', 'StartingState')";
 			unit<UInt16> Decennium: Expr = "../Decennium";
 			unit<UInt16> Lustrum: Expr = "../Lustrum";
-			parameter<String> BaseYearCorineDataFileName: Expr = "'%LuisettaDataDir%/landuse/CLC2018_CLC2012_V2018_20.tif'"; // was, in chronological order, "'%LuisettaDataDir%/landuse/elc100_00_laea_lzw.tif'"; "'%LuisettaDataDir%/landuse/clc06.tif'"
+			parameter<String> BaseYearCorineDataFileName: Expr = "'%LuisettaDataDir%/landuse/CLC12_Land_Cover_Adj_Pixel.tif'"; // was, in chronological order, "'%LuisettaDataDir%/landuse/elc100_00_laea_lzw.tif'"; "'%LuisettaDataDir%/landuse/clc06.tif'"
 		}
 		unit<UInt16> Decennium: NrOfRows = 5
 		{
@@ -1299,7 +1299,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			parameter<String> ParamPath:   Expr = "'%projdir%/ParamSets/'+ ParamName";
 			parameter<String> LocSpecPath: Expr = "'%LuisettaDataDir%/LocSpec/' + ParamName";
 			unit<UInt8>       ModelType: Expr = "Classifications/LU/ModelType";
-			parameter<String> OrgLandUseExpr: Expr= "'CorineGrid/Jrc9Data'";
+//			parameter<String> OrgLandUseExpr: Expr= "'CorineGrid/Jrc9Data'";
 			
 			attribute<Float32> LocationSpecificPreferenceAddition(ModelType): // @USERINPUT
 			[
@@ -1310,12 +1310,12 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			];
 			parameter<String> LocSpecContainerName: Expr = "'ReferenceLocSpecs'";
 			
-			parameter<String> AllowedFile:StorageName = "=ParamPath+'/allow.txt'",    StorageType = "str", KeepData = "True";
+//			parameter<String> AllowedFile:StorageName = "=ParamPath+'/allow.txt'",    StorageType = "str", KeepData = "True";
 			parameter<String> TransitionCostsFile:  StorageName = "=ParamPath+'/TransitionCosts.txt'", StorageType = "str", KeepData = "True";
-			parameter<String> GrossRevenuesFile:  StorageName = "=ParamPath+'/GrossRevenues.txt'", StorageType = "str", KeepData = "True";			
+//			parameter<String> GrossRevenuesFile:  StorageName = "=ParamPath+'/GrossRevenues.txt'", StorageType = "str", KeepData = "True";			
 			parameter<String> NeighbFile: expr = "= quote(ParamPath+'/neighmat.txt')"; //, StorageType = "str", KeepData = "True";
 			container TransitionCosts:   Expr = "Templ/TransitionCostsTempl(TransitionCostsFile)";
-			container GrossRevenues:   Expr = "Templ/GrossRevenuesTempl(GrossRevenuesFile)";			
+//			container GrossRevenues:   Expr = "Templ/GrossRevenuesTempl(GrossRevenuesFile)";			
 			container Neighbourhood: Expr = "Templ/NeighbTempl(NeighbFile)";
 			
 			parameter<bool>	PopulationSpillovers: expr = "False";
