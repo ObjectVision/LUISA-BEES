@@ -16,7 +16,7 @@ container Luisetta
 		container Overridable: Descr = "only this container is overridable with Tools->Options->ConfigSettings that sets user/machine specific overrides in the registry"
 		{
 			parameter<String> RunRegions: [ 'JrcRegion' ]; // @USERINPUT: Nuts1 or JrcRegion
-			parameter<String> SourceRootDir   := '%SourceDataDir%/Forbio';
+			parameter<String> SourceRootDir   := '%SourceDataDir%/Forbiomod';
 			parameter<String> LuisettaDataDir := '%SourceRootDir%/Luisetta';
 			parameter<String> DGRegioDir      := '%SourceRootDir%/DGRegio';
 		}
