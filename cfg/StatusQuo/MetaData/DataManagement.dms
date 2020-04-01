@@ -1,6 +1,6 @@
 container DataManagement
 {
-	unit<uint32> SpatialDataToLoad: NrOfRows = 43 {
+	unit<uint32> SpatialDataToLoad: NrOfRows = 44 {
 		parameter<uint32> nrAttr: Expr = "3", isHidden = "True";
 		unit<UInt32> Elements: Expr = "Range(uint32, 0, (nrAttr*#SpatialDataToLoad))", isHidden = "True"
 		{
@@ -8,9 +8,9 @@ container DataManagement
 			// Name, 				Type, 		Path
 			[
 //				 'LandUse_2012', 		'uint16tiff', 	'landuse/LUISA_Basemap_v1_3'
-//				'LandUse_2012', 		'uint16tiff', 	'landuse/CLC2018_CLC2012_V2018_20' //used up until commit 882343d
-				'LandUse_2012', 		'uint16tiff', 	'landuse/CLC12_Land_Cover_Adj_Pixel' //used from commit 882343d onwards				
-//				'LandUse_2018', 		'uint16tiff', 	'landuse/CLC2018_CLC2018_V2018_20' //used in branch "testingLAUs"
+//				 'LandUse_2012', 		'uint16tiff', 	'landuse/CLC2018_CLC2012_V2018_20' //used up until commit 882343d
+				 'LandUse_2012', 		'uint16tiff', 	'landuse/CLC12_Land_Cover_Adj_Pixel' //used from commit 882343d onwards				
+				,'LandUse_2018', 		'uint16tiff', 	'landuse/CLC2018_CLC2018_V2018_20' //used in branch "testingLAUs" and Used as backup for missing area's (such as ES70)
 				,'Age0',				'uint8tiff',	'landuse/age0'
 				,'Population_2012',		'float32tiff',	'Population/ENACT_respop_grid2011v5/RPOP_yr_night_100m'
 				,'PotentialAccess',		'float32tiff',	'AccessData/accessGrid'

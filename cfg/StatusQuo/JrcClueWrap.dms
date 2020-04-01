@@ -45,9 +45,11 @@ template JrcClueWrap:
 	
 		// ============ factor data
 		container PrepareVariables {
-					attribute<Classifications/LU/Corine> CorineGrid (domain_grid): expr = "rlookup(LoadSpatialData/LandUse_2012/inFile/ReadData, Classifications/Lu/Corine/CLC12_Code)";
-					attribute<Classifications/LU/ModelType> LandUseGrid (domain_grid): expr = "Classifications/LU/Corine/MT[CorineGrid]";
-					attribute<Classifications/LU/ModelType> landuse (domain): expr = "LandUseGrid[domain/grid_rel]";
+				attribute<Classifications/LU/Corine> CorineGrid_2012(domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2012/inFile/ReadData];
+				attribute<Classifications/LU/Corine> CorineGrid_2018(domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2018/inFile/ReadData];
+				attribute<Classifications/LU/Corine> CorineGrid     (domain_grid) := MakeDefined(CorineGrid_2012, CorineGrid_2018);
+				attribute<Classifications/LU/ModelType> LandUseGrid (domain_grid): expr = "Classifications/LU/Corine/MT[CorineGrid]";
+				attribute<Classifications/LU/ModelType> landuse (domain): expr = "LandUseGrid[domain/grid_rel]";
 			container LoadSpatialData: 	expr = "for_each_ne(MetaData/DataManagement/SpatialDataToLoad/Name, 'Templates/loadDataFile_'+MetaData/DataManagement/SpatialDataToLoad/Type+'('+Quote(MetaData/DataManagement/SpatialDataToLoad/Path)+', domain_grid)')";
 			container Variables:		expr = "for_each_nedv(Factors/Name, Factors/StartExpr, domain, float32)";
 		}
