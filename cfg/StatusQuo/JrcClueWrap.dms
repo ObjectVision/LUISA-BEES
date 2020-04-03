@@ -82,10 +82,10 @@ template JrcClueWrap:
 		unit<Uint8> UniqueDestRegionRefs: Expr = "DemandSet/UniqueDestRegionRefs";
 		unit<Uint8> AllRegionRefs:        Expr = "DemandSet/AllRegionRefs";
 	
-		unit<uint16> DestPopClaimRegion: 	Expr = "= 'RunRegions/UnitSets/'+ DestRegionRefs[ModelType/Urban]";
-		unit<uint16> OrgPopClaimRegion: 	Expr = "= 'RunRegions/UnitSets/'+ RegionRefs[ModelType/Urban]";
-		attribute<OrgPopClaimRegion>  OrgPopRasterLink	(domain_grid):		Expr = "= 'RunRegions/RasterSets/'+ RegionRefs[ModelType/Urban]";
-		attribute<DestPopClaimRegion> DestPopRasterLink (domain_grid):		Expr = "= 'RunRegions/RasterSets/'+ DestRegionRefs[ModelType/Urban]";
+		unit<uint16> DestPopClaimRegion: 	Expr = "= 'RunRegions/UnitSets/'+ DestRegionRefs[ModelType/V/Urban]";
+		unit<uint16> OrgPopClaimRegion: 	Expr = "= 'RunRegions/UnitSets/'+ RegionRefs[ModelType/V/Urban]";
+		attribute<OrgPopClaimRegion>  OrgPopRasterLink	(domain_grid):		Expr = "= 'RunRegions/RasterSets/'+ RegionRefs[ModelType/V/Urban]";
+		attribute<DestPopClaimRegion> DestPopRasterLink (domain_grid):		Expr = "= 'RunRegions/RasterSets/'+ DestRegionRefs[ModelType/V/Urban]";
 		
 		container DemandZoneConversions: using = "MetaData/DemandCharacteristics"
 		{
@@ -223,9 +223,9 @@ template JrcClueWrap:
 	}
 	container StartingState
 	{
-		attribute<ModelType> LandUse_Grid(domain_grid): Expr = "CaseData/PrepareVariables/LandUseGrid";
-		attribute<ModelType> LandUse     (domain):      Expr = "!BurntForest ? LandUse_Grid[domain/grid_rel] : ModelType/TransWoodlandShrub";
-		attribute<bool>		 BurntForest (domain): 		Expr = "(LandUse_Grid[domain/grid_rel] = ModelType/ForestsMature || LandUse_Grid[domain/grid_rel] = ModelType/ForestsYoung) && float32(CaseData/JrcFactorData/BurntAreas/BurntInYear[domain/grid_rel]) < Parameters/PeriodSet/StartYear";
+		attribute<ModelType> LandUse_Grid(domain_grid) := CaseData/PrepareVariables/LandUseGrid;
+		attribute<ModelType> LandUse     (domain)      := !BurntForest ? LandUse_Grid[domain/grid_rel] : ModelType/V/TransWoodlandShrub;
+		attribute<bool>		 BurntForest (domain): 		Expr = "(LandUse_Grid[domain/grid_rel] == ModelType/V/ForestsMature || LandUse_Grid[domain/grid_rel] = ModelType/V/ForestsYoung) && float32(CaseData/JrcFactorData/BurntAreas/BurntInYear[domain/grid_rel]) < Parameters/PeriodSet/StartYear";
 		attribute<bool>		 CorineBurnt (domain): 		Expr = "Classifications/LU/Corine/Burnt[CaseData/PrepareVariables/CorineGrid[domain/grid_rel]]";
 		parameter<float32>   ComingPeriodLength:		Expr = "Periods/PeriodLength[uint16(0)]";
 		parameter<YearRange> CurrYear:					Expr = "Periods/CurrYear[uint16(0)]";

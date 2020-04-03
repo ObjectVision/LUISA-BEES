@@ -25,13 +25,19 @@ Container PopulationParameters
 			
 			attribute<string> FactorName: ['country','PotentialAccess', 'urb_dr', 'nurb_dr','ln_ta','slope','urban','industrial','agricultural','forestsmat', 'forestsyo', '_cons', 'rho'];
 			attribute<string> FactorCalc: [
-			'country', 
-			'value(PrevState/Variables/PotentialAccess, float32)',
-			'(log(value(PrevState/Variables/DistRoads, float32)+float32(0.01)) * float32(PrevState/LandUse = 0[ModelType]))', '(log(value(PrevState/Variables/DistRoads, float32)+float32(0.01)) * float32(PrevState/LandUse <> 0[ModelType]))', 
-			'log(value(PrevState/Variables/TownAccess, float32) + float32(0.01))',
-			'value(PrevState/Variables/Slope100_cont, float32)','(float32(PrevState/LandUse == ModelType/Urban))','float32(PrevState/LandUse == ModelType/Industrial)','float32(ModelType/IsAgricultural[PrevState/LandUse])',
-			'float32(PrevState/LandUse == ModelType/ForestsMature)','float32(PrevState/LandUse == ModelType/ForestsYoung)',
-			'const(1, domain, float32)','PrevState/PotQi'];
+				'country', 
+				'value(PrevState/Variables/PotentialAccess, float32)',
+				'(log(value(PrevState/Variables/DistRoads, float32)+float32(0.01)) * float32(PrevState/LandUse = 0[ModelType]))', 
+				'(log(value(PrevState/Variables/DistRoads, float32)+float32(0.01)) * float32(PrevState/LandUse <> 0[ModelType]))', 
+				'log(value(PrevState/Variables/TownAccess, float32) + float32(0.01))',
+				'value(PrevState/Variables/Slope100_cont, float32)',
+				'(float32(PrevState/LandUse == ModelType/V/Urban))',
+				'float32(PrevState/LandUse == ModelType/V/Industrial)',
+				'float32(ModelType/IsAgricultural[PrevState/LandUse])',
+				'float32(PrevState/LandUse == ModelType/V/ForestsMature)',
+				'float32(PrevState/LandUse == ModelType/V/ForestsYoung)',
+				'const(1, domain, float32)','PrevState/PotQi'
+			];
 			attribute<string> valuetype: expr = "suitweight ? 'float32': 'string'";
 			attribute<string> label: expr = "FACTORNAME";
 			attribute<bool>	  LandUseRelated:		expr = "id(.) > 6 && id(.) < 11";

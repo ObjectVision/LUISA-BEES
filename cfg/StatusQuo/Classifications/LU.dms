@@ -1,6 +1,6 @@
 container LU
 {	
-	unit<UInt8> ModelType: NrOfRows = 13 // @USERINPUT: keep in sync with the actual nr of model classes
+	unit<UInt8> ModelType: NrOfRows = 15 // @USERINPUT: keep in sync with the actual nr of model classes
 	{
 		parameter<uint32> nrAttr: Expr = "10";
 		unit<UInt32> Elements: Expr = "Range(uint32, 0, nrAttr*#ModelType)"
@@ -20,8 +20,8 @@ container LU
 				'8','4','216','213','164','AbanArable',         		null, 				null, 				null, '1',
 				'9','4','153','130','120','AbanPermanentCrops', 		null, 				null,				null, '1',
 				'10','4','137','170','125','AbanPastures',       		null, 				null, 				null, '1',
-			//	'11','0','160','000','000','AbanUrban',          		null,				null, 				null, '1', // amount is determined by decreased demand for Urban with low transition costs to Abandonment.
-			//	'12','1','071','000','117','AbanIndustry',        		null, 				null, 				null, '1', // amount is determined by decreased demand for Industry with low transition costs to Abandonment.
+				'11','0','160','000','000','AbanUrban',          		null,				null, 				null, '1', // amount is determined by decreased demand for Urban with low transition costs to Abandonment.
+				'12','1','071','000','117','AbanIndustry',        		null, 				null, 				null, '1', // amount is determined by decreased demand for Industry with low transition costs to Abandonment.
 				'11','6','000','200','000','NewEnergyCrops' ,         	'agrimarket',		'NewEnergyMin',     'NewEnergyMax',   null,
 				'12','3','166','242','000','SHVA',    					null, 				null, 				null,             null, 
 				'13','2','036','130','056','ForestsYoung',            	'forest',			'ForestsYoMin',    	'ForestsYoMax',   '3'
@@ -47,6 +47,7 @@ container LU
 		container V := for_each_nedv(Name, string(ID(.))+'[..]', void, .);
 		
 		// value enumeration, Obsolete
+/* REMOVE		
 		parameter<.> Urban:                   expr = "value( 0, .)";
 		parameter<.> Industrial:              expr = "value( 1, .)";
 		parameter<.> Arable: 	              expr = "value( 2, .)";
@@ -57,17 +58,18 @@ container LU
 		parameter<.> AbanArable:         	  expr = "value(7, .)";
 		parameter<.> AbanPermanentCrops: 	  expr = "value(8, .)";
 		parameter<.> AbanPastures:       	  expr = "value(9, .)";
-		//parameter<.> AbanUrban:           	  expr = "value(10, .)";		
-		//parameter<.> AbanIndustry:            expr = "value(11, .)";
-		parameter<.> NewEnergyCrops:          expr = "value(10, .)";
-		parameter<.> SHVA:					  expr = "value(11, .)";
-		parameter<.> ForestsYoung:			  expr = "value(12, .)";
-		attribute<bool> IsUrban       := ID(.) == Urban;
-		attribute<bool> IsIndustrial  := ID(.) == Industrial;
+		parameter<.> AbanUrban:           	  expr = "value(10, .)";		
+		parameter<.> AbanIndustry:            expr = "value(11, .)";
+		parameter<.> NewEnergyCrops:          expr = "value(12, .)";
+		parameter<.> SHVA:					  expr = "value(13, .)";
+		parameter<.> ForestsYoung:			  expr = "value(14, .)";
+*/		
+		attribute<bool> IsUrban       := ID(.) == V/Urban || ID(.) == V/AbanUrban;
+		attribute<bool> IsIndustrial  := ID(.) == V/Industrial || ID(.) == V/AbanIndustry;
 		attribute<bool> IsBuiltupArea := or( IsUrban, IsIndustrial);
-		attribute<bool>	IsAgriCultural:= ID(.) == Arable || ID(.) == PermanentCrops || ID(.) == Pastures || ID(.) == NewEnergyCrops;
-		attribute<bool> IsForest      := ID(.) == ForestsMature || ID(.) == ForestsYoung;
-		attribute<bool> IsAbandoned   := ID(.) == AbanArable || ID(.) == AbanPermanentCrops || ID(.) == AbanPastures;
+		attribute<bool>	IsAgriCultural:= ID(.) == V/Arable || ID(.) == V/PermanentCrops || ID(.) == V/Pastures || ID(.) == V/NewEnergyCrops;
+		attribute<bool> IsForest      := ID(.) == V/ForestsMature || ID(.) == V/ForestsYoung;
+		attribute<bool> IsAbandoned   := ID(.) == V/AbanArable || ID(.) == V/AbanPermanentCrops || ID(.) == V/AbanPastures || ID(.) == V/AbanUrban  || ID(.) == V/AbanIndustry;
 	}
 	unit<uint8> ForestTransitionState := range(uint8, 0b, 5b) {
 		attribute<string> Label: DialogType = "LabelText",

@@ -950,10 +950,6 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			parameter<string> 	EvalSuitExpr: 	expr = "#Factors > 0 ? add(AsList('(float32('+ string(ExoFactors/params) +') * ' + ExoFactors/FactorCalc + ')', ' + ')): 'const(0, domain, float32)'";
 			parameter<string> 	PatchExpr:		expr = "#patch > 0 ? add(AsList('(float32('+ string(Patch/params) +') * ' + Patch/FactorCalc + ')', ' + ')): 'const(0, domain, float32)'";
 			parameter<string> 	EvalSpatParam:	expr = "'float32(' + string(SpatialParam) + ')'";
-			//parameter<string> 	SuitExpr: expr = "switch("
-			//	"case(ModelSpec = uint8(1), ' (float32(' + string(SpatialParam) + ') * PrevState/PotQi) + ' + Proto_SuitExpr), "
-			//	"case(ModelSpec = uint8(2), '((float32(' + string(SpatialParam) + ') * PrevState/PotQi) + ' + Proto_SuitExpr + ') - (float32(' + string(SpatialParam) + ') * potential('+ Proto_SuitExpr + '[domain/BasisGrid], Parameters/FuncKernels/RooksNeighbours/Matr)[domain/grid_rel])')"
-			//	", Proto_SuitExpr)";
 			
 			parameter<Year> 	   SupplyChange:			expr = "popcali/SupplyChange";
 			parameter<uint32>	   SpatialComponent:		expr = "popcali/SpatialComponent";
@@ -1021,10 +1017,10 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				parameter<string> PopulationPatch:			Expr = "PopSet/PatchExpr";
 				parameter<uint8>  ModelSpec:				Expr = "PopSet/ModelSpec";
 				parameter<string> SpatParam:				Expr = "PopSet/EvalSpatParam";
-				parameter<string> Population_Distribution:	Expr = "switch("
-					"case(Rules/ModelSpec = uint8(1), ' ('+ Rules/SpatParam + ' * PrevState/PotQi) + '+ Rules/PopulationSuitability), "
-					"case(Rules/ModelSpec = uint8(2), '(('+ Rules/SpatParam + ' * PrevState/PotQi) + '+ Rules/PopulationSuitability +') - (' + Rules/SpatParam + ' * '+ pot_factors +')'), "
-					"'factors_Pi')";
+				parameter<string> Population_Distribution := switch(
+					case(Rules/ModelSpec = uint8(1), ' ('+ Rules/SpatParam + ' * PrevState/PotQi) + '+ Rules/PopulationSuitability), 
+					case(Rules/ModelSpec = uint8(2), '(('+ Rules/SpatParam + ' * PrevState/PotQi) + '+ Rules/PopulationSuitability +') - (' + Rules/SpatParam + ' * '+ pot_factors +')'), 
+					'factors_Pi');
 				parameter<Year>	  SupplyChange:				Expr = "PopSet/SupplyChange";
 												
 				unit<UInt32> CurrFactorWeights: Expr = "Alloc1Reg/FactorWeights";

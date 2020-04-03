@@ -25,8 +25,8 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 		attribute<float32>  mean_urb_dens 						(DestPopClaimRegion): expr = "sum(float32(ModelType/isUrban[PrevState/landuse]) * PrevState/Qi, RegionRel) / sum(float32(ModelType/isUrban[PrevState/landuse]), RegionRel)";
 		
 		attribute<float32>  Si			(domain): expr = "switch("
-			"case(PrevState/LandUse != ModelType/Urban && ResultingState/LandUse = ModelType/Urban, float32(0.5) * (mean_urb_dens[RegionRel] + PrevState/Variables/Neigh_Si)), "
-			"case(PrevState/Si = float32(0) && ResultingState/LandUse != ModelType/Urban, prevState/Qi), "
+			"case(PrevState/LandUse != ModelType/V/Urban && ResultingState/LandUse = ModelType/V/Urban, float32(0.5) * (mean_urb_dens[RegionRel] + PrevState/Variables/Neigh_Si)), "
+			"case(PrevState/Si = float32(0) && ResultingState/LandUse != ModelType/V/Urban, prevState/Qi), "
 			"case(PrevState/S_Agei >= Rules/SupplyChange, PrevState/Qi), "
 			"PrevState/Si)";
 		attribute<Year>	   	S_Agei 		(domain): Expr = "Si = PrevState/Si ? PrevState/S_Agei + Parameters/PeriodSet/result/PeriodLength[PeriodId]: 0[Year]"; // 0 years if supply has changed in a year
@@ -162,7 +162,7 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 		attribute<Classifications/LU/ForestType> ForestType(domain_grid) := 
 				switch(
 					// if current land use is no (longer) forest
-					case(LandUse_Grid <> ModelType/ForestsMature && LandUse_Grid <> ModelType/ForestsYoung  || not(IsDefined(LandUse_Grid))
+					case(LandUse_Grid <> ModelType/V/ForestsMature && LandUse_Grid <> ModelType/V/ForestsYoung  || not(IsDefined(LandUse_Grid))
 						, Classifications/LU/ForestType/NoForest)
 						
 					// if it already was a kind of forest
