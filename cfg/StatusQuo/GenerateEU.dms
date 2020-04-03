@@ -127,43 +127,37 @@ container GenerateContainer
 	{
 		container impl 
 		{
-			parameter<string> CombineExpr: IsHidden = "True", Expr = 
-				"'raster_merge(invert(ActiveRun/nr_OrgEntity)[Geography/Regions/Runs/Grid], int32, '+"
-					"AsItemList("
-						"'Runs/'+ActiveRun/Name +'/XXX'"
-					")+"
-				"')'";		
-			attribute<String> CombineExprPerPeriod(Periods): Expr = 
-				"replace(CombineExpr, 'XXX', 'simulation_results/landuse/ClippedQiPerYearVT_ReadOnly/'+Periods/Name)",  isHidden = "True";
+			parameter<string> CombineExpr := 'raster_merge(Geography/Regions/Runs/Grid, int32, '+AsItemList('Runs/'+ActiveRun/Name +'/XXX')+')';		
+			attribute<String> CombineExprPerPeriod(Periods) := replace(CombineExpr, 'XXX', 'simulation_results/landuse/ClippedQiPerYearVT_ReadOnly/'+Periods/Name);
 				
-			container PopulationPerYear: Expr = "for_each_nedv(Periods/Name, 'MakeDefined('+CombineExprPerPeriod+', 0[int32])', Geography/Lambert100mGrid, int32)";
+			container PopulationPerYear := for_each_nedv(Periods/Name, 'MakeDefined('+CombineExprPerPeriod+', 0[int32])', Geography/Lambert100mGrid, int32);
 			
 			// Mozaiking the generated RunRegion maps per Period
-			parameter<String> DirName: Expr = "'%LocalDataProjDir%/Results/EU'";
-			container GeneratePeriodTemplate:IsTemplate = "True", isHidden = "True"
+			parameter<String> DirName := '%LocalDataProjDir%/Results/EU';
+			template GeneratePeriodTemplate
 			{
 				attribute<int32> Qi(Geography/Lambert100mGrid);
 				parameter<String> PeriodYearStr;
 				
-				attribute<int32> result (Geography/Lambert100mGrid): Expr = "max_elem(Qi, int32(0))", StorageName = "=DirName+'/Qi_'+PeriodYearStr+'.tif'";
+				attribute<int32> result (Geography/Lambert100mGrid) := max_elem(Qi, int32(0)), StorageName = "=DirName+'/Qi_'+PeriodYearStr+'.tif'";
 				
-				attribute<int32> Qi_per_N2merged 	(Geography/Regions/Nuts2_Merged): expr = "sum(result, Geography/RegionGrids/Nuts2_Merged)";
-				attribute<float32> dif_Qi			(Geography/Regions/Nuts2_Merged): expr = "float32(Qi_per_N2merged) - Parameters/PopSets/RegionalPopulation/Demands/Qj/s2050";
+				attribute<int32> Qi_per_N2merged 	(Geography/Regions/Nuts2_Merged) := sum(result, Geography/RegionGrids/Nuts2_Merged);
+				attribute<float32> dif_Qi			(Geography/Regions/Nuts2_Merged) := float32(Qi_per_N2merged) - Parameters/PopSets/RegionalPopulation/Demands/Qj/s2050;
 				
 			}
 		
-			container AllPeriods: Expr = 
-				"for_each_ne(Periods/Name, "
-					"'GeneratePeriodTemplate('"
-						"+'PopulationPerYear/'+Periods/Name+','"
-						"+Quote(Periods/YearStr)"
-					"+')'"
-				")";
+			container AllPeriods := for_each_ne(Periods/Name, 'GeneratePeriodTemplate('+'PopulationPerYear/'+Periods/Name+','+Quote(Periods/YearStr)+')' );
 		}
 
 		container ButtonCan: Descr = "The Generate parameter is contained in order to allow impl/All to be opened without all the meta info procesing that comes with getting Generate in the TreeView"
 		{
-			parameter<string> Generate: Expr = "'ready'", ExplicitSuppliers = "=AsList('impl/AllPeriods/'+Periods/Name+'/result',';')";
+			parameter<string> Generate := 'ready', ExplicitSuppliers = "=AsList('impl/AllPeriods/'+Periods/Name+'/result',';')";
+		}
+		container Results {
+			container Landuse := for_each_ndva(Periods/Name
+				, Geography/Lambert100mGrid, int32
+				, impl/DirName+'/Qi_' + Periods/YearStr + '.tif'
+			);
 		}
 	}		
 }
