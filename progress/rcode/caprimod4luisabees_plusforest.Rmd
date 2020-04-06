@@ -24,12 +24,12 @@ library(hms)
 library(tidyverse)
 library(readxl)
 #library(ggplot2)
-library(gdxrrw)
+#(gdxrrw)
 library(zoo)
 library(data.table)
 
 # Setup Sarah's machine
-igdx(gamsSysDir = "C:\\GAMS\\win64\\26.1")
+#igdx(gamsSysDir = "C:\\GAMS\\win64\\26.1")
 ```
 
 # Install packages
@@ -123,12 +123,12 @@ heads<-add_column(heads, COLS="COWS", .after=1)
 # Parse forest data
 ## Create demand files
 ```{r}
-rawforest <- read_excel("E:\\data\\globiomg4m\\IIASA_Reference2016_2070_forest_area_G4M_iso.xlsx") 
+rawforest <- read_excel("D:\\landuse\\LTS_rawdata\\IIASA_Reference2016_2070_forest_area_G4M_iso.xlsx") 
 longforest <-rawforest %>%
   gather(year,forestarea,as.character(2000):as.character(2070)) %>%
-  arrange(X__1) 
-longforestnoblcf<-longforest[-grep("areaused", longforest$X__2),]
-forestLTS<-ddply(longforestnoblcf,c("X__1", "year"), summarise, forestarea=sum(forestarea)) 
+  arrange(iso) 
+longforestnoblcf<-longforest[-grep("areaused", longforest$attribute),]
+forestLTS<-ddply(longforestnoblcf,c("iso", "year"), summarise, forestarea=sum(forestarea)) 
 demandforest<-forestLTS %>%
   rename(Region:=X__1, Year:=year,Forest:=forestarea)%>%
   mutate_all(funs(replace(., is.na(.), 0)))
