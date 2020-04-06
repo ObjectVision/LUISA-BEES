@@ -39,7 +39,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			attribute<String>  PrevRef: Expr = "MakeDefined(Name[ID(.)-UInt16(1)]+'/ResultingState', 'StartingState')";
 			unit<UInt16> Decennium: Expr = "../Decennium";
 			unit<UInt16> Lustrum: Expr = "../Lustrum";
-			parameter<String> BaseYearCorineDataFileName: Expr = "'%LuisettaDataDir%/landuse/CLC12_Land_Cover_Adj_Pixel.tif'"; // was, in chronological order, "'%LuisettaDataDir%/landuse/elc100_00_laea_lzw.tif'"; "'%LuisettaDataDir%/landuse/clc06.tif'"
+			parameter<String> BaseYearCorineDataFileName: Expr = "'%LuisettaDataDir%/landuse/CLC12_Land_Cover_Adj_Poly.tif'"; 
 		}
 		unit<UInt16> Decennium: NrOfRows = 5
 		{
