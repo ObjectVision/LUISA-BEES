@@ -46,24 +46,6 @@ container LU
 		
 		container V := for_each_nedv(Name, string(ID(.))+'[..]', void, .);
 		
-		// value enumeration, Obsolete
-/* REMOVE		
-		parameter<.> Urban:                   expr = "value( 0, .)";
-		parameter<.> Industrial:              expr = "value( 1, .)";
-		parameter<.> Arable: 	              expr = "value( 2, .)";
-		parameter<.> PermanentCrops:          expr = "value( 3, .)";
-		parameter<.> Pastures:                expr = "value( 4, .)";
-		parameter<.> ForestsMature:           expr = "value( 5, .)";
-		parameter<.> TransWoodlandShrub:   	  expr = "value( 6, .)";
-		parameter<.> AbanArable:         	  expr = "value(7, .)";
-		parameter<.> AbanPermanentCrops: 	  expr = "value(8, .)";
-		parameter<.> AbanPastures:       	  expr = "value(9, .)";
-		parameter<.> AbanUrban:           	  expr = "value(10, .)";		
-		parameter<.> AbanIndustry:            expr = "value(11, .)";
-		parameter<.> NewEnergyCrops:          expr = "value(12, .)";
-		parameter<.> SHVA:					  expr = "value(13, .)";
-		parameter<.> ForestsYoung:			  expr = "value(14, .)";
-*/		
 		attribute<bool> IsUrban       := ID(.) == V/Urban || ID(.) == V/AbanUrban;
 		attribute<bool> IsIndustrial  := ID(.) == V/Industrial || ID(.) == V/AbanIndustry;
 		attribute<bool> IsBuiltupArea := or( IsUrban, IsIndustrial);
@@ -77,9 +59,9 @@ container LU
 	}
 	unit<UInt32> ModelMatr: Expr = "Combine(ModelType, ModelType)";
 	
-	unit<UInt8> ViewType: Expr = "Range(UInt8, UInt8(0), UInt8(21))"
+	unit<UInt8> ViewType := Range(UInt8, 0b, 21b)
 	{
-		parameter<uint32> nrAttr: Expr = "6";
+		parameter<uint32> nrAttr := 6;
 		unit<UInt32> Elements: Expr = "Range(uint32, 0, nrAttr*#ViewType)"
 		{
 			attribute<String> Text: [
@@ -132,7 +114,7 @@ container LU
 		attribute<Bool>          IsBuiltupArea: Expr = "lookup(MT, ModelType/IsBuiltupArea)";
 		
 	}
-	unit<UInt8> IndicatorType: NrOfRows = 7
+	unit<UInt8> IndicatorType: NrOfRows = 10
 	{
 		parameter<uint32> nrAttr: Expr = "5";
 		unit<UInt32> Elements: Expr = "Range(uint32, 0, nrAttr*#ViewType)"

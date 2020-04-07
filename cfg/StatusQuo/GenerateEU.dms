@@ -154,7 +154,7 @@ container GenerateContainer
 			parameter<string> Generate := 'ready', ExplicitSuppliers = "=AsList('impl/AllPeriods/'+Periods/Name+'/result',';')";
 		}
 		container Results {
-			container Landuse := for_each_ndva(Periods/Name
+			container Population := for_each_ndva(Periods/Name
 				, Geography/Lambert100mGrid, int32
 				, impl/DirName+'/Qi_' + Periods/YearStr + '.tif'
 			);
