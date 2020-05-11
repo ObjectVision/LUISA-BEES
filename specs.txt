@@ -28,6 +28,9 @@ AbanPermanentCrops
 AbanPastures       	  
 
 classes that were de-activated in the model and were also re-instated:
+abandoned arable
+abandoned permanent crops
+abandoned pastures
 AbanUrban          	 		
 AbanIndustry
 
@@ -46,7 +49,7 @@ NECR
 SHVA
 Forests young
 
-Current legend (Sept 2019):
+Current legend (May 2020):
 urban
 industrial
 other arable
@@ -57,6 +60,8 @@ transWoodland
 abandoned arable
 abandoned permanent crops
 abandoned pastures
+AbanUrban          	 		
+AbanIndustry
 NECR
 SHVA
 Forests young
