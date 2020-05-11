@@ -27,7 +27,7 @@ AbanArable
 AbanPermanentCrops 	  
 AbanPastures       	  
 
-classes that were de-activated in the model and were NOT re-instated:
+classes that were de-activated in the model and were also re-instated:
 AbanUrban          	 		
 AbanIndustry
 
