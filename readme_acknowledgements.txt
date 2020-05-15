@@ -1,3 +1,10 @@
+# May 15 2020
+# The model has been renamed LUISA-BEES
+# further developments since Oct 2018 have been made by 
+# Maarten Hilferink and Sarah Mubareka
+# The model is managed by the EC Joint Research Center (SarahMubareka)
+#  All Rights Reserved
+
 ###################################################################
 # October 29, 2018
 # LUISETTA land use model is a simplified version of the 
@@ -7,7 +14,7 @@
 #     JRC internal
 #          Chris Jacobs-Crisioni, Jean Philippe AURAMBOUT 
 #          Claudia Baranzelli, Filipe Batista e Silva, 
-#          Carolina PERPIÑA CASTILLO,Ricardo Barranco, 
+#          Carolina PERPIÃ‘A CASTILLO,Ricardo Barranco, 
 #          Maria Pilar VIZCAINO ,Ine vandecasteele
 #     Maarten Hilferink (Object Vision consultant)
 #     Former collaborators/authors: Sarah Mubareka, Vasco Diogo, Ana Barbosa
