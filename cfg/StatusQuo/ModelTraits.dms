@@ -897,12 +897,20 @@ container ModelTraits
 			container Results1: 
 				ExplicitSuppliers = 
 					"ClippedLandUseVT;Clipped_Qi;written_ForestType";
-
+			container Results2: 
+							ExplicitSuppliers = 
+								//"Indicators/Spatial/NoFilter/LandUseIT/written_RegionData;";
+								//"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;";
+								//"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;Indicators/xTab;";
+								"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;Indicators/Spatial/NoFilter/GHG;";
+								//"Indicators/Spatial/nat2k_buff500/LandUseIT/written_RegionData;"
+								//"TotalSuitability";
 			container Results5: 
 				ExplicitSuppliers = 
 					//"Indicators/Spatial/NoFilter/LandUseIT/written_RegionData;";
 					//"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;";
 					"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;Indicators/xTab;";
+					//"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;Indicators/Spatial/NoFilter/GHG;";
 					//"Indicators/Spatial/nat2k_buff500/LandUseIT/written_RegionData;"
 					//"TotalSuitability";
 			container ResultsFathomYears: ExplicitSuppliers = "ClippedLandUseVT"; // required for generating the data for the ReadOnly mozaiking
@@ -911,6 +919,7 @@ container ModelTraits
 				ExplicitSuppliers = 
 					"= 'Results1'"
 					"+ (IsDefined(rlookup(UInt16(CurrYear), Parameters/PeriodSet/Lustrum/Year)) ? ';ResultsFathomYears' : '')"
+					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results2' : '')"
 					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results5' : '')";
 		}
 	}
