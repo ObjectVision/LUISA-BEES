@@ -52,7 +52,7 @@ Forests young
 Current legend (May 2020):
 urban
 industrial
-other arable
+arable
 permanent crops
 pastures
 forests mature
