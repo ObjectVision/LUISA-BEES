@@ -1,7 +1,7 @@
 ---
 title: "reporting results from land use model LUISA-BEES"
 author: "Sarah"
-date: "April 1 2020"
+date: "May 18 2020"
 output:
   word_document: 
     toc: yes
@@ -12,7 +12,8 @@ output:
     toc: yes
 ---
 
-```{r setup, include=TRUE, message=FALSE, warning=FALSE}
+```{r setup, include=TRUE, message=FALSE, warning=FALSE,echo=FALSE}
+setwd("C:/LUISA-BEES/LUISA-BEES/progress/rcode/R_autoreports")
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = "..") # file path relative to the root of the project directory
 #install.packages("E:\\mubarsa\\Documents\\Downloads\\rlang_0.3.1.gz", repos = NULL, type = "source")
@@ -40,15 +41,44 @@ The purpose of this document is to report the output of the land use model LUISA
 
 
 ## Create a function that reads xTab files
-```{r}
+```{r,echo=FALSE}
 datadir<-"D:/landuse/LUISA-BEES_outmay162020"
 list<- list.dirs(datadir, recursive=FALSE)
 countries<-list.dirs(datadir, full.names = FALSE, recursive=FALSE)
-filename<-"P2050_xTabMT.dbf"
+year<-c("2015","2020","2025","2030","2035","2040","2045","2050")
+```
+#loop through folders to get GHG emissions data and make graphs
+```{r,echo=FALSE}
+filename<-"All_GHG.dbf"
+wholelist<-list()
+for (y in seq_along(year)) {
+  countrylist = list()
+  for (i in seq_along(list)) {
+    ghgfile<-paste0(list[i],"/P",year[y],filename)
+    print(ghgfile)
+    ghg<-read.dbf(paste0(list[i],"/P",year[y],filename))
+    ghg$year<-year[y]
+    ghg$country<-countries[i]
+    countrylist[[i]] <- ghg
+  }
+  allcountries = do.call(rbind, countrylist)
+  wholelist[[y]] <- allcountries
+}
+all = do.call(rbind,wholelist)
+```
+EU CO2 emissions for the simulation period 2015-2050, all land use change summed
+
+```{r}
+eu_plot1<-aggregate(all$TOTAL, by=list(year=all$year, country=all$country), FUN=sum)
+eu_plot2<-aggregate(eu_plot1$x, by=list(year_allEU=eu_plot1$year), FUN=sum)
+plot(eu_plot2)
+plotpercountry<-ggplot(eu_plot1,aes(x=year, y=x,group=country,color=country)) + geom_point() +labs (title = "CO2 emissions 2015-2050",y="tCO2", x="year")
+
 ```
 
 #loop through folders to get xTab2050 data and make Sankeys
-```{r}
+```{r,echo=FALSE}
+filename<-"P2050_xTabMT.dbf"
 for (i in seq_along(list)) {
   xTab<-read.dbf(paste0(list[i],"/",filename))
   # Graphs of land use change
@@ -87,18 +117,24 @@ for (i in seq_along(list)) {
   NodeID = 'name',
   units = 'ha')
   # saveNetwork(name, paste0(datadir,countries[i],"sankey1.pdf"), selfcontained = TRUE)
- 
+
    ## Create Chord Network diagram
 
   chordNetwork(Data = xTab, width = 900, height = 900, colourScale =c("#FF0000", "#FF00FF", "#FFDD89", "#FF1212", "#00FF89", "#00FF00","#00FF99", "#FFDD89", "#00FF00", "#FF0000", "#FF0000", "#FF00FF","#FFDD89", "#00FF00","#00FF00"), labels = c("urban", "industry", "arable", "permCrops", "pastures", "forestMature", "woodland","abanArab", "abanPC", "abanPast", "abanUrban", "abanIndustry", "necr", "shva", "forestYoung"))
+ #  shiny::renderPlot({
+  #   chord
+   #})
 }
 ```
-```{r}
-for (i in seq_along(countries)) {
+
+
+```{r,echo=FALSE}
+for (i in seq_along(list)) {
+  xTab<-read.dbf(paste0(list[i],"/",filename))
   #FOR nature, agri and builtup sankey:
   #SUM the columns of land uses that can be aggregated:
   #create nodes
-  nodes <- data.frame(node = c(0:15), name = c(lu, "agriculture", "builtup", "nature")) 
+  nodes <- data.frame(node = c(0:17), name = c(lu, "agriculture", "builtup", "nature")) 
   df<-xTab
   df$builtup<-df$URBAN+df$INDUSTRIAL+df$ABANURBAN+df$ABANINDUST 
   df$agriculture<-df$ARABLE+df$PERMANENTC+ df$PASTURES+ df$ABANARABLE+ df$ABANPERMAN+ df$ABANPASTUR+df$NEWENERGYC
