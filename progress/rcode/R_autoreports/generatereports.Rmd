@@ -1,12 +1,15 @@
 ---
 title: "reporting results from land use model LUISA-BEES"
 author: "Sarah"
-date: "Apil 1 2020"
+date: "April 1 2020"
 output:
   word_document: 
     toc: yes
   html_document: 
       toc: yes
+  pdf_document: 
+    number_sections: yes
+    toc: yes
 ---
 
 ```{r setup, include=TRUE, message=FALSE, warning=FALSE}
@@ -30,91 +33,97 @@ library(foreign)
 library(networkD3)
 library(rmarkdown)
 ```
+# Introduction
+
+
+The purpose of this document is to report the output of the land use model LUISA-BEES. 
 
 
 ## Create a function that reads xTab files
 ```{r}
-datadir<-"D:\\landuse\\luisetta_outmarch312020\\"
+datadir<-"D:/landuse/LUISA-BEES_outmay162020"
+list<- list.dirs(datadir, recursive=FALSE)
 countries<-list.dirs(datadir, full.names = FALSE, recursive=FALSE)
 filename<-"P2050_xTabMT.dbf"
-#loop through folders to get xTab2050 data
-for (i in seq_along(countries)) {
-  xTab<-read.dbf(paste0(datadir/datadir[i],filename))
+```
 
-  
+#loop through folders to get xTab2050 data and make Sankeys
+```{r}
+for (i in seq_along(list)) {
+  xTab<-read.dbf(paste0(list[i],"/",filename))
+  # Graphs of land use change
+  ##Create Sankey diagrams
+  lu<-unique(as.character(colnames(xTab)))
+  #create nodes
+  nodes <- data.frame(node = c(0:19), name = c(lu, "agriculture", "builtup", "forests",  "otherNature","newEnergyCrops")) 
+  #create links
+  #CREATE new column with land use type in xTab file:
+  df<-cbind(lu,xTab)
+  #SUM the columns of land uses that can be aggregated:
+  df$builtup<-df$URBAN+df$INDUSTRIAL+df$ABANURBAN+df$ABANINDUST 
+  df$agriculture<-df$ARABLE+df$PERMANENTC+ df$PASTURES+ df$ABANARABLE+ df$ABANPERMAN+ df$ABANPASTUR
+  df$forests<-df$FORESTSMAT+ df$TRANSWOODL+ df$FORESTSYOU
+  df$otherNature<-df$SHVA
+  df$newEnergyCrops<- df$NEWENERGYC
+
+  df<-dplyr::select (df,-c(URBAN, INDUSTRIAL, ARABLE, PERMANENTC, PASTURES, FORESTSMAT, TRANSWOODL, ABANARABLE, ABANPERMAN, ABANPASTUR, ABANURBAN, ABANINDUST, FORESTSYOU,NEWENERGYC, SHVA))
+  #MERGE urban+industry=builtup; arable+PC+abandoned etc =agri; forests Y+M+Woodland summed
+  # format in prep for sankey diagram
+  links <- tidyr::gather(df, toLU, ha, -lu)
+  luc <- merge(links, nodes, by.x = "lu", by.y = "name") 
+  luc <- merge(luc, nodes, by.x = "toLU", by.y = "name")
+  forSankey <- luc[ , c("node.x", "node.y", "ha")]
+  colnames(forSankey) <- c("source", "target", "value")
+  #remove rows containing 0 or else the lines will be drawn in the Sankey:
+  gtzero<- apply(forSankey, 1, function(row) all(row !=0 ))
+  ##Subset as usual
+  forSankey<-forSankey[gtzero,]
+ 
+   #make Sankey
+ networkD3::sankeyNetwork(Links = forSankey, Nodes = nodes, 
+  Source = 'source', 
+  Target = 'target', 
+  Value = 'value', 
+  NodeID = 'name',
+  units = 'ha')
+  # saveNetwork(name, paste0(datadir,countries[i],"sankey1.pdf"), selfcontained = TRUE)
+ 
+   ## Create Chord Network diagram
+
+  chordNetwork(Data = xTab, width = 900, height = 900, colourScale =c("#FF0000", "#FF00FF", "#FFDD89", "#FF1212", "#00FF89", "#00FF00","#00FF99", "#FFDD89", "#00FF00", "#FF0000", "#FF0000", "#FF00FF","#FFDD89", "#00FF00","#00FF00"), labels = c("urban", "industry", "arable", "permCrops", "pastures", "forestMature", "woodland","abanArab", "abanPC", "abanPast", "abanUrban", "abanIndustry", "necr", "shva", "forestYoung"))
 }
 ```
-# Graphs of land use change
-##Create Sankey diagrams
-lu<-unique(as.character(colnames(xTab)))
-#create nodes
-nodes <- data.frame(node = c(0:17), name = c(lu, "agriculture", "builtup", "forests", "otherNature","newEnergyCrops")) 
-#create links
-#CREATE new column with land use type in xTab file:
-xTab<-cbind(lu,xTab)
-#SUM the columns of land uses that can be aggregated:
-df<-xTab
-df$builtup<-df$URBAN+df$INDUSTRIAL
-df$agriculture<-df$ARABLE+df$PERMANENTC+ df$PASTURES+ df$ABANARABLE+ df$ABANPERMAN+ df$ABANPASTUR
-df$forests<-df$FORESTSMAT+ df$TRANSWOODL+ df$FORESTSYOU
-df$otherNature<-df$SHVA
-df$newEnergyCrops<- df$NEWENERGYC
-
-df<-dplyr::select (df,-c(URBAN, INDUSTRIAL, ARABLE, PERMANENTC, PASTURES, FORESTSMAT, TRANSWOODL, ABANARABLE, ABANPERMAN, ABANPASTUR, FORESTSYOU,NEWENERGYC, SHVA))
-#MERGE urban+industry=builtup; arable+PC+abandoned etc =agri; forests Y+M+Woodland summed
-# format in prep for sankey diagram
-links <- tidyr::gather(df, toLU, ha, -lu)
-luc <- merge(links, nodes, by.x = "lu", by.y = "name") 
-luc <- merge(luc, nodes, by.x = "toLU", by.y = "name")
-forSankey <- luc[ , c("node.x", "node.y", "ha")]
-colnames(forSankey) <- c("source", "target", "value")
-#remove rows containing 0 or else the lines will be drawn in the Sankey:
-gtzero<- apply(forSankey, 1, function(row) all(row !=0 ))
-##Subset as usual
-forSankey<-forSankey[gtzero,]
-
-
-#make Sankey
-networkD3::sankeyNetwork(Links = forSankey, Nodes = nodes, 
-Source = 'source', 
-Target = 'target', 
-Value = 'value', 
-NodeID = 'name',
-units = 'ha')
-
-#FOR nature, agri and builtup sankey:
-#SUM the columns of land uses that can be aggregated:
-#create nodes
-nodes <- data.frame(node = c(0:15), name = c(lu, "agriculture", "builtup", "nature")) 
-df<-xTab
-df$builtup<-df$URBAN+df$INDUSTRIAL
-df$agriculture<-df$ARABLE+df$PERMANENTC+ df$PASTURES+ df$ABANARABLE+ df$ABANPERMAN+ df$ABANPASTUR+df$NEWENERGYC
-df$nature<-df$FORESTSMAT+ df$TRANSWOODL+ df$FORESTSYOU+df$SHVA
-df<-dplyr::select (df,-c(URBAN, INDUSTRIAL, ARABLE, PERMANENTC, PASTURES, FORESTSMAT, TRANSWOODL, ABANARABLE, ABANPERMAN, ABANPASTUR, FORESTSYOU,NEWENERGYC, SHVA))
-#MERGE urban+industry=builtup; arable+PC+abandoned etc =agri; nature= Y+M+Woodland summed
-# format in prep for sankey diagram
-links <- tidyr::gather(df, toLU, ha, -lu)
-luc <- merge(links, nodes, by.x = "lu", by.y = "name") 
-luc <- merge(luc, nodes, by.x = "toLU", by.y = "name")
-forSankey <- luc[ , c("node.x", "node.y", "ha")]
-colnames(forSankey) <- c("source", "target", "value")
-#remove rows containing 0 or else the lines will be drawn in the Sankey:
-gtzero<- apply(forSankey, 1, function(row) all(row !=0 ))
-##Subset as usual
-forSankey<-forSankey[gtzero,]
-
-
-#make Sankey
-networkD3::sankeyNetwork(Links = forSankey, Nodes = nodes, 
-Source = 'source', 
-Target = 'target', 
-Value = 'value', 
-NodeID = 'name',
-units = 'ha')
-
-
-
-## Create Chord Network diagram
 ```{r}
-chordNetwork(Data = xTab, width = 500, height = 500, colourScale =c("#FF0000", "#FF00FF", "#FFDD89", "#FF1212", "#00FF89", "#00FF00","#00FF99", "#FFDD89", "#00FF00", "#FF0000", "#FFDD89", "#00FF00","#00FF00"), labels = c("urban", "industry", "arable", "permCrops", "pastures", "forestMature", "woodland","abanArab", "abanPC", "abanPast", "necr", "shva", "forestY"))
+for (i in seq_along(countries)) {
+  #FOR nature, agri and builtup sankey:
+  #SUM the columns of land uses that can be aggregated:
+  #create nodes
+  nodes <- data.frame(node = c(0:15), name = c(lu, "agriculture", "builtup", "nature")) 
+  df<-xTab
+  df$builtup<-df$URBAN+df$INDUSTRIAL+df$ABANURBAN+df$ABANINDUST 
+  df$agriculture<-df$ARABLE+df$PERMANENTC+ df$PASTURES+ df$ABANARABLE+ df$ABANPERMAN+ df$ABANPASTUR+df$NEWENERGYC
+  df$nature<-df$FORESTSMAT+ df$TRANSWOODL+ df$FORESTSYOU+df$SHVA
+  df<-dplyr::select (df,-c(URBAN, INDUSTRIAL, ARABLE, PERMANENTC, PASTURES, FORESTSMAT, TRANSWOODL, ABANARABLE, ABANPERMAN, ABANPASTUR, ABANURBAN, ABANINDUST, FORESTSYOU,NEWENERGYC, SHVA))
+  #MERGE urban+industry=builtup; arable+PC+abandoned etc =agri; nature= Y+M+Woodland summed
+  # format in prep for sankey diagram
+  links <- tidyr::gather(df, toLU, ha, -lu)
+  luc <- merge(links, nodes, by.x = "lu", by.y = "name") 
+  luc <- merge(luc, nodes, by.x = "toLU", by.y = "name")
+  forSankey <- luc[ , c("node.x", "node.y", "ha")]
+  colnames(forSankey) <- c("source", "target", "value")
+  #remove rows containing 0 or else the lines will be drawn in the Sankey:
+  gtzero<- apply(forSankey, 1, function(row) all(row !=0 ))
+  ##Subset as usual
+  forSankey<-forSankey[gtzero,]
+
+
+  #make Sankey
+  networkD3::sankeyNetwork(Links = forSankey, Nodes = nodes, 
+  Source = 'source', 
+  Target = 'target', 
+  Value = 'value', 
+  NodeID = 'name',
+  units = 'ha')
+}
 ```
+
