@@ -25,7 +25,7 @@ container LU
 				'13','6','000','200','000','NewEnergyCrops' ,         	'agrimarket',		'NewEnergyMin',     'NewEnergyMax',   null,
 				'14','3','166','242','000','SHVA',    					null, 				null, 				null,             null, 
 				'15','2','036','130','056','ForestsYoung',            	'forest',			'ForestsYoMin',    	'ForestsYoMax',   '3',
-				'16','2','056','255','056','TreePlantation',           	'forest',			'ForestsPlMin',    	'ForestsOlMax',   null
+				'16','2','056','255','056','TreePlantation',           	'forest',			'ForestsPlMin',    	'ForestsPlMax',   null
 			];
 		}
 		attribute<String>           Name: Expr = "Label";
