@@ -55,6 +55,10 @@ container ModelTraits
 				attribute<bool> NewEnergyCrops    (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/V/ForestsYoung);
 				attribute<bool> SHVA              (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/V/ForestsYoung) && not(PrevState/LandUse == ModelType/V/ForestsMature) && not(PrevState/LandUse == ModelType/V/TransWoodlandShrub);
 				attribute<bool> ForestsYoung      (domain):= not(BurntForest/NewlyBurnt) && ((PrevState/LandUse == ModelType/V/ForestsYoung && PrevState/Age < 20[YearDiffRange])	||	(PrevState/LandUse == ModelType/V/TransWoodlandShrub && PrevState/Age >= 10[YearDiffRange]));
+				attribute<bool> TreePlantation    (domain):= not(IsBuiltupArea) 
+					&& not(PrevState/LandUse == ModelType/V/ForestsYoung)
+					&& not(PrevState/LandUse == ModelType/V/TransWoodlandShrub)
+					&& not(PrevState/LandUse == ModelType/V/ForestsMature);
 			}
 			container TransPot := for_each_nedv(LUT/Name
 				, replace('iif(Allowed/@LUT, TotalSuitability/@LUT * 100[EUR_m2], -100000[EUR_m2])', '@LUT', LUT/Name)
