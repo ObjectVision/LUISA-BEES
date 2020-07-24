@@ -1306,19 +1306,9 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			];
 			parameter<String> LocSpecContainerName: Expr = "'ReferenceLocSpecs'";
 			
-//			parameter<String> AllowedFile:StorageName = "=ParamPath+'/allow.txt'",    StorageType = "str", KeepData = "True";
-			parameter<String> TransitionCostsFile:  StorageName = "=ParamPath+'/TransitionCosts.txt'", StorageType = "str", KeepData = "True";
-//			parameter<String> GrossRevenuesFile:  StorageName = "=ParamPath+'/GrossRevenues.txt'", StorageType = "str", KeepData = "True";			
-			parameter<String> NeighbFile: expr = "= quote(ParamPath+'/neighmat.txt')"; //, StorageType = "str", KeepData = "True";
-			container TransitionCosts:   Expr = "Templ/TransitionCostsTempl(TransitionCostsFile)";
-//			container GrossRevenues:   Expr = "Templ/GrossRevenuesTempl(GrossRevenuesFile)";			
-			container Neighbourhood: Expr = "Templ/NeighbTempl(NeighbFile)";
-			
 			parameter<bool>	PopulationSpillovers: expr = "False";
 		}
-		container ActiveSet: Expr = "StatusQuo";   // @USERINPUT, use these lines to switch between StatusQuo and Integration
-		//container ActiveSet: Expr = "NoCAP";   // @USERINPUT, use these lines to switch between StatusQuo and Integration
-//		container ActiveSet: Expr = "Integration"; // @USERINPUT, use these lines to switch between StatusQuo and Integration
+		container ActiveSet := StatusQuo;   // @USERINPUT, use these lines to switch between StatusQuo and Integration
 	}
 	
 	// ==== Copied from EuClueScanner100m.dms
