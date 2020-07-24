@@ -1300,9 +1300,12 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			attribute<Float32> LocationSpecificPreferenceAddition(ModelType): // @USERINPUT
 			[
 				null, 1,      		// urb, ind
-				1, 1, 1,  			// arabl, permacrops, pastures
+				1, 1, 1,  			// arable, permacrops, pastures
 				1, 1,           	// forestmat, transwoodland
-				5, 1, 1				//NewEnergyCrops, SHVA, ForestsYoung
+				null, null, null, null, null, // abandoned (5x)
+				
+				5, 1, 1, 5			// NewEnergyCrops, SHVA, ForestsYoung, TreePlantations
+				
 			];
 			parameter<String> LocSpecContainerName: Expr = "'ReferenceLocSpecs'";
 			
