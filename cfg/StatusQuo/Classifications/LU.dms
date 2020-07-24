@@ -1,6 +1,6 @@
 container LU
 {	
-	unit<UInt8> ModelType: NrOfRows = 15 // @USERINPUT: keep in sync with the actual nr of model classes
+	unit<UInt8> ModelType: NrOfRows = 16 // @USERINPUT: keep in sync with the actual nr of model classes
 	{
 		parameter<uint32> nrAttr: Expr = "10";
 		unit<UInt32> Elements: Expr = "Range(uint32, 0, nrAttr*#ModelType)"
@@ -24,7 +24,8 @@ container LU
 				'12','1','071','000','117','AbanIndustry',        		null, 				null, 				null, '1', // amount is determined by decreased demand for Industry with low transition costs to Abandonment.
 				'13','6','000','200','000','NewEnergyCrops' ,         	'agrimarket',		'NewEnergyMin',     'NewEnergyMax',   null,
 				'14','3','166','242','000','SHVA',    					null, 				null, 				null,             null, 
-				'15','2','036','130','056','ForestsYoung',            	'forest',			'ForestsYoMin',    	'ForestsYoMax',   '3'
+				'15','2','036','130','056','ForestsYoung',            	'forest',			'ForestsYoMin',    	'ForestsYoMax',   '3',
+				'16','2','056','255','056','TreePlantation',           	'forest',			'ForestsPlMin',    	'ForestsOlMax',   null
 			];
 		}
 		attribute<String>           Name: Expr = "Label";
@@ -59,7 +60,7 @@ container LU
 	}
 	unit<UInt32> ModelMatr: Expr = "Combine(ModelType, ModelType)";
 	
-	unit<UInt8> ViewType := Range(UInt8, 0b, 21b)
+	unit<UInt8> ViewType := Range(UInt8, 0b, 22b)
 	{
 		parameter<uint32> nrAttr := 6;
 		unit<UInt32> Elements: Expr = "Range(uint32, 0, nrAttr*#ViewType)"
@@ -84,6 +85,7 @@ container LU
 				'080','200','050','false','0.9', 'NewEnergyCrops',
 				'166','242','000','true' ,'0.4', 'SHVA',
 				'001','099','000','true' ,'1.0', 'ForestsYoung',
+				'000','255','000','true' ,'1.0', 'TreePlantation',
 			// Exogenous Types
 				'064','064','064','false','0.4', 'Infrastructure', // other infrastructure (including construction sites and mine dumps)
 				'192','192','192','true' ,'1.0', 'OtherNature',
