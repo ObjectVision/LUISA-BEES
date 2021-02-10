@@ -73,7 +73,7 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 	container DynamicComponent: Expr = "SuitabilityGenerator/CalcSuitability(domain)";
 
 	container FeasibleSolution; // NYI, Reserved for future use
-	container ScaledTransPot := for_each_nedv(ModelType/Name, 'Int32(DynamicComponent/TransPot/'+ModelType/Name+' * CaseData/SuitScaleFactor)', domain, Int32);
+	container ScaledTransPot := for_each_nedv(ModelType/Name, 'convert(DynamicComponent/TransPot/'+ModelType/Name+' * CaseData/SuitScaleFactor, Int32)', domain, Int32);
 	parameter<Int32> Threshold := Int32(value(-9999, EUR_M2) * CaseData/SuitScaleFactor);
 	
 	attribute<Bool> BelowThresholdMap(domain) := ='and('+AsItemList(Replace('MakeDefined(ScaledTransPot/@LUT, Threshold - 1i) < Threshold','@LUT',ModelType/Name))+')';
@@ -84,7 +84,7 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 	container d_alloc :=
 		discrete_alloc(ModelType/Name, domain, 
 		   ScaledTransPot, 
-		   MakeDefined(rlookup(CaseData/DestClaimTableName, CaseData/UniqueDestRegionRefs/Values), UInt8(0)), 
+		   rlookup(CaseData/DestClaimTableName, CaseData/UniqueDestRegionRefs/Values), 
 		   CaseData/UniqueDestRegionRefs/Values, 
 		   CaseData/AtomicRegions, 
 		   CaseData/AtomicRegions/UnionData, 
