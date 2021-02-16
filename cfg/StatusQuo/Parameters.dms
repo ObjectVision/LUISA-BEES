@@ -1141,7 +1141,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			
 		}
 		
-		container ClaimTableTemplateTableChopper: IsTemplate = "True"
+		template ClaimTableTemplateTableChopper
 		{
 			// begin case parameter
 			unit<Uint32>      RegionDomain;
@@ -1150,8 +1150,12 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			parameter<string> RegionName;
 			// end case parameter
 
-			parameter<String> FileName:       expr = "'%projdir%/demand/' + ScenarioName + '/' + RegionDomainName + '/' + RegionName + '.csv'";
-			parameter<String> FieldSeparator: expr = "','";
+			parameter<String> FolderEnvName := 'env:DIR_'+ RegionDomainName;
+			parameter<String> FolderName_ := Expand(., '%'+FolderEnvName+'%');
+			parameter<bool>   hasDefault  := FolderName_ == FolderEnvName;
+			parameter<String> FolderName := replace_value(FolderName_, FolderEnvName, RegionDomainName);
+			parameter<String> FileName   := '%projdir%/demand/' + ScenarioName + '/' + FolderName + '/' + RegionName + '.csv';
+			parameter<String> FieldSeparator := strcount(FileData, ',') > strcount(FileData, ';') ? ',' : ';';
 		
 			parameter<String> FileData
 			:	StorageType = "str"
@@ -1219,7 +1223,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			}
 		}
 		
-		container DemandSet: IsTemplate = "True"
+		template DemandSet
 		{
 			parameter<String> DemandDirname;
 			
@@ -1283,8 +1287,10 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			unit<UInt16> Periods:   Expr = "PeriodSet/result";
 // 			unit<UInt16> Decennium: Expr = "PeriodSet/Decennium";
 // 			unit<UInt16> Lustrum:   Expr = "PeriodSet/Lustrum";
-			
-			parameter<String> OutputDir: Expr = "'%LocalDataProjDir%/'+Name";
+
+			parameter<String> FolderEnvName := 'env:DIR_Capri';
+			parameter<String> FolderName := replace_value(Expand(., '%'+FolderEnvName+'%'), FolderEnvName, 'Capri');
+			parameter<String> OutputDir := '%LocalDataProjDir%/' + ParamSets/ActiveSet/ParamName +'/' + FolderName + '/' + Name;
 		}
 	}
 	container ParamSets 

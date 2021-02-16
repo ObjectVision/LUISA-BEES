@@ -915,11 +915,11 @@ container ModelTraits
 					//"TotalSuitability";
 			container ResultsFathomYears: ExplicitSuppliers = "ClippedLandUseVT"; // required for generating the data for the ReadOnly mozaiking
 
-			parameter<string> CapriShadowPriceExport := 'Arable;Pastures;PermanentCrops;NewEnergyCrops\n' +
-				AsList(
-					string(d_alloc/shadow_prices/Arable) + ','
-				+	string(d_alloc/shadow_prices/Pastures) + ','
-				+	string(d_alloc/shadow_prices/PermanentCrops) + ','
+			parameter<string> CapriShadowPriceExport := 'ZoneID;Arable;Pastures;PermanentCrops;NewEnergyCrops\n' +
+				AsList(CaseData/RegionNumbers/Capri/ZoneID + ';'
+				+	string(d_alloc/shadow_prices/Arable) + ';'
+				+	string(d_alloc/shadow_prices/Pastures) + ';'
+				+	string(d_alloc/shadow_prices/PermanentCrops) + ';'
 				+	string(d_alloc/shadow_prices/NewEnergyCrops)
 				, '\n'
 				)

@@ -299,7 +299,7 @@ template JrcClueWrap:
 	{
 		container metadata
 		{
-			parameter<String> DirName: Expr = "RunParameters/OutputDir";
+			parameter<String> DirName := RunParameters/OutputDir;
 			
 			attribute<string> AllocStatusPerPeriod(Periods): Expr = "='union_data(Periods, '+asItemList('TimeSteps/'+Periods/Name+'/d_alloc/status')+')'";
 			parameter<string> AllocStatus: Expr = "asItemList(AllocStatusPerPeriod)";
