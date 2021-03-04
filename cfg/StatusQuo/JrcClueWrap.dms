@@ -248,10 +248,10 @@ template JrcClueWrap:
 		
 		container Variables: expr = "for_each_nedv(Factors/Name, Factors/StartExpr, domain, float32)";
 
-		parameter<string> GeneratedFiles: Expr = "OutputGeneration/OutputDirName+';'",		ExplicitSuppliers = "OutputGeneration/ClippedLandUseVT;OutputGeneration/Clipped_Qi;";
+		parameter<string> GeneratedFiles: Expr = "OutputGeneration/OutputDirName+';'"; // ,ExplicitSuppliers = "OutputGeneration/ClippedLandUseVT;OutputGeneration/Clipped_Qi;";
 		container OutputGeneration
 		{
-			parameter<String> OutputDirName: Expr = "simulation_results/metadata/DirName + '/'+string(Periods/CurrYear[uint16(0)])";
+			parameter<String> OutputDirName := simulation_results/metadata/DirName + '_'+string(Periods/CurrYear[uint16(0)]);
 			
 			container Indicators;
 						
@@ -338,7 +338,7 @@ template JrcClueWrap:
 //			container DifQiPerYearVT_from_ReadOnly:= for_each_nedv(Periods/Name, '!IsNull(RunRegions/RasterSets/RunAreas) ? float32(ClippedQiPerYearVT_ReadOnly/' + Periods/Name + ') - CaseData/JrcFactorData/Population/Qi_2011 : float32(0)',  domain_grid, float32);
 			
 		}
-		parameter<string>  GeneratedFiles: Expr = "endState/GeneratedFiles", ExplicitSuppliers = "endState/GeneratedFiles;simulation_results/landuse/GridData";
+		parameter<string>  GeneratedFiles: Expr = "endState/GeneratedFiles", ExplicitSuppliers = "endState/GeneratedFiles"; // ;simulation_results/landuse/GridData";
 		
 		unit<WPoint> ForestTransitionStatePerYear := range(wpoint, point(0w, 0w), point(uint16(#LU/ForestTransitionState), uint16(#Periods)))
 		{

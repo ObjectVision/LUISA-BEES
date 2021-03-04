@@ -101,7 +101,7 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 	
 	container PopulationDistribution: expr = "ModelTraits/PopulationDistribution(domain, DestPopClaimRegion, CaseData/DestPopRasterLink[domain/grid_rel])";
 	
-	parameter<String> TimeStepDirName: Expr = "simulation_results/metadata/DirName + '/'+Periods/Name[PeriodID]";
+	parameter<String> TimeStepDirName := simulation_results/metadata/DirName + '_'+Periods/Name[PeriodID];
 	
 	container ResultingState
 	{	

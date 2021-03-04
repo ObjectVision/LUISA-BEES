@@ -923,7 +923,7 @@ container ModelTraits
 				+	string(d_alloc/shadow_prices/NewEnergyCrops) + ';' + string(float32(Claims/DemandMax/NewEnergyCrops - Claims/DemandMin/NewEnergyCrops) / float32(Claims/DemandMin/NewEnergyCrops + Claims/DemandMax/NewEnergyCrops)) + ';'
 				, '\n'
 				)
-			,	StorageName = "=OutputDirName+'/CapriShadowPrices.csv'"
+			,	StorageName = "=OutputDirName+'_ShadowPrices.csv'"
 			,	StorageType = "str";
 			
 			container Results: ExplicitSuppliers = "CapriShadowPriceExport"
