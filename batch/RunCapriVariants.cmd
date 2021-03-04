@@ -1,17 +1,102 @@
-set DIR_CAPRI=CAPRI_01
-del "C:\LD2\luisa-bees\CalcCachex64.v7.306" /S /Q
+set LOCALDATA_PROJDIR=C:\LD2\luisa-bees\CalcCachex64.v7.309
+
+echo ====  ARABLE_INC=0.0
+set ARABLE_INC=0.0
+
+set ARABLE_WIDTH=0.00
+set DIR_OUTPUT=ARABLE_00_00
+del "%LOCALDATA_PROJDIR%" /S /Q
 call RunAFew-Impl.cmd
 
-set DIR_CAPRI=CAPRI_05
-del "C:\LD2\luisa-bees\CalcCachex64.v7.306" /S /Q
+set ARABLE_WIDTH=0.01
+set DIR_OUTPUT=ARABLE_00_01
+del "%LOCALDATA_PROJDIR%" /S /Q
 call RunAFew-Impl.cmd
 
-set DIR_CAPRI=CAPRI_10
-del "C:\LD2\luisa-bees\CalcCachex64.v7.306" /S /Q
+set ARABLE_WIDTH=0.02
+set DIR_OUTPUT=ARABLE_00_02
+del "%LOCALDATA_PROJDIR%" /S /Q
 call RunAFew-Impl.cmd
 
-set DIR_CAPRI=CAPRI
-del "C:\LD2\luisa-bees\CalcCachex64.v7.306" /S /Q
+set ARABLE_WIDTH=0.05
+set DIR_OUTPUT=ARABLE_00_05
+del "%LOCALDATA_PROJDIR%" /S /Q
 call RunAFew-Impl.cmd
 
-pause
+set ARABLE_WIDTH=0.10
+set DIR_OUTPUT=ARABLE_00_10
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+set ARABLE_WIDTH=0.20
+set DIR_OUTPUT=ARABLE_00_20
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+echo ====  ARABLE_INC=0.05
+set ARABLE_INC=0.05
+
+set ARABLE_WIDTH=0.00
+set DIR_OUTPUT=ARABLE_05_00
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+set ARABLE_WIDTH=0.01
+set DIR_OUTPUT=ARABLE_05_01
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+set ARABLE_WIDTH=0.02
+set DIR_OUTPUT=ARABLE_05_02
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+set ARABLE_WIDTH=0.05
+set DIR_OUTPUT=ARABLE_05_05
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+set ARABLE_WIDTH=0.10
+set DIR_OUTPUT=ARABLE_05_10
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+set ARABLE_WIDTH=0.20
+set DIR_OUTPUT=ARABLE_05_20
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+echo ====  ARABLE_INC=0.10
+set ARABLE_INC=0.10
+
+set ARABLE_WIDTH=0.00
+set DIR_OUTPUT=ARABLE_10_00
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+set ARABLE_WIDTH=0.01
+set DIR_OUTPUT=ARABLE_10_01
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+set ARABLE_WIDTH=0.02
+set DIR_OUTPUT=ARABLE_10_02
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+set ARABLE_WIDTH=0.05
+set DIR_OUTPUT=ARABLE_10_05
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+set ARABLE_WIDTH=0.10
+set DIR_OUTPUT=ARABLE_10_10
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+set ARABLE_WIDTH=0.20
+set DIR_OUTPUT=ARABLE_10_20
+del "%LOCALDATA_PROJDIR%" /S /Q
+call RunAFew-Impl.cmd
+
+pause Ready

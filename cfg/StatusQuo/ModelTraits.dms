@@ -915,23 +915,23 @@ container ModelTraits
 					//"TotalSuitability";
 			container ResultsFathomYears: ExplicitSuppliers = "ClippedLandUseVT"; // required for generating the data for the ReadOnly mozaiking
 
-			parameter<string> CapriShadowPriceExport := 'ZoneID;Arable;Pastures;PermanentCrops;NewEnergyCrops\n' +
+			parameter<string> CapriShadowPriceExport := 'ZoneID;Arable;ArableSlack;Pastures;PasturesSlack;PermanentCrops;PermanentCropsSlack;NewEnergyCrops;NewEnergyCropsSlack\n' +
 				AsList(CaseData/RegionNumbers/Capri/ZoneID + ';'
-				+	string(d_alloc/shadow_prices/Arable) + ';'
-				+	string(d_alloc/shadow_prices/Pastures) + ';'
-				+	string(d_alloc/shadow_prices/PermanentCrops) + ';'
-				+	string(d_alloc/shadow_prices/NewEnergyCrops)
+				+	string(d_alloc/shadow_prices/Arable        ) + ';' + string(float32(Claims/DemandMax/Arable         - Claims/DemandMin/Arable        ) / float32(Claims/DemandMin/Arable         + Claims/DemandMax/Arable        )) + ';'
+				+	string(d_alloc/shadow_prices/Pastures      ) + ';' + string(float32(Claims/DemandMax/Pastures       - Claims/DemandMin/Pastures      ) / float32(Claims/DemandMin/Pastures       + Claims/DemandMax/Pastures      )) + ';'
+				+	string(d_alloc/shadow_prices/PermanentCrops) + ';' + string(float32(Claims/DemandMax/PermanentCrops - Claims/DemandMin/PermanentCrops) / float32(Claims/DemandMin/PermanentCrops + Claims/DemandMax/PermanentCrops)) + ';'
+				+	string(d_alloc/shadow_prices/NewEnergyCrops) + ';' + string(float32(Claims/DemandMax/NewEnergyCrops - Claims/DemandMin/NewEnergyCrops) / float32(Claims/DemandMin/NewEnergyCrops + Claims/DemandMax/NewEnergyCrops)) + ';'
 				, '\n'
 				)
 			,	StorageName = "=OutputDirName+'/CapriShadowPrices.csv'"
 			,	StorageType = "str";
 			
-			container Results: 
-				ExplicitSuppliers = 
-					"= 'Results1;CapriShadowPriceExport'"
-					"+ (IsDefined(rlookup(UInt16(CurrYear), Parameters/PeriodSet/Lustrum/Year)) ? ';ResultsFathomYears' : '')"
-					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results2' : '')"
-					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results5' : '')";
+			container Results: ExplicitSuppliers = "CapriShadowPriceExport"
+//					"= 'Results1;CapriShadowPriceExport'"
+//					"+ (IsDefined(rlookup(UInt16(CurrYear), Parameters/PeriodSet/Lustrum/Year)) ? ';ResultsFathomYears' : '')"
+//					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results2' : '')"
+//					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results5' : '')"
+			;
 		}
 	}
 }

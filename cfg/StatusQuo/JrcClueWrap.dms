@@ -134,7 +134,7 @@ template JrcClueWrap:
 		// ============ Regions
 
 		// ============ claims
-		container ClaimTables: Expr = "DemandSet/ClaimTables";
+		container ClaimTables := DemandSet/ClaimTables;
 		attribute<String> ClaimTableName		(ModelType): Expr = "MakeDefined(DC/OrgRegion[ModelType/DemandCharacteristicsRel], 'ForestDemandRegions')";
 		attribute<String> DestClaimTableName	(ModelType): Expr = "MakeDefined(DC/ModelRegion[ModelType/DemandCharacteristicsRel], ClaimTableName)";
 		

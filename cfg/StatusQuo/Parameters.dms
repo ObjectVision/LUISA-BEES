@@ -1150,11 +1150,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			parameter<string> RegionName;
 			// end case parameter
 
-			parameter<String> FolderEnvName := 'env:DIR_'+ RegionDomainName;
-			parameter<String> FolderName_ := Expand(., '%'+FolderEnvName+'%');
-			parameter<bool>   hasDefault  := FolderName_ == FolderEnvName;
-			parameter<String> FolderName := replace_value(FolderName_, FolderEnvName, RegionDomainName);
-			parameter<String> FileName   := '%projdir%/demand/' + ScenarioName + '/' + FolderName + '/' + RegionName + '.csv';
+			parameter<String> FileName   := '%projdir%/demand/' + ScenarioName + '/' + RegionDomainName + '/' + RegionName + '.csv';
 			parameter<String> FieldSeparator := strcount(FileData, ',') > strcount(FileData, ';') ? ',' : ';';
 		
 			parameter<String> FileData
@@ -1265,9 +1261,28 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 								
 			parameter<Bool> ClaimTablesOK: Expr = "='and('+asItemList('all(ClaimTablesOrg/'+RunRegion_Specific_RegionRefs/Values+'/Data/region_allowed), all(ClaimTablesOrg/'+RunRegion_Specific_RegionRefs/Values+'/Data/check_rel)')+')'";
 						
-			container ClaimTables: Expr = "ClaimTablesOrg", IntegrityCheck = "ClaimTablesOK";
+					
+			// ============ claims; overrule Capri/data: ArableMin and ArableMax
+			container ClaimTables := ClaimTablesOrg, IntegrityCheck = "ClaimTablesOK"
+			{
+				container Capri := ClaimTablesOrg/Capri {
+					unit<uint32> Domain := ClaimTablesOrg/Capri/Domain;
+					
+					parameter<float32> Arable_Width_factor := float32(replace_value(Expand(., '%env:ARABLE_WIDTH%'), 'env:ARABLE_WIDTH', '0.20'));
+					parameter<float32> Arable_Inc_factor   := float32(replace_value(Expand(., '%env:ARABLE_INC%'  ), 'env:ARABLE_INC'  , '0.00'));
+					
+					container data := ClaimTablesOrg/Capri/data {
+						attribute<float32> ArableMin_org(Domain) := float32(ClaimTablesOrg/Capri/data/ArableMin);
+						attribute<float32> ArableMax_org(Domain) := float32(ClaimTablesOrg/Capri/data/ArableMax);
+						attribute<float32> ArableMid_org(Domain) := 0.5f * (ArableMin_org+ArableMax_org);
+						attribute<float32> ArableMid    (Domain) := ArableMid_org * (1f+Arable_Inc_factor);
+						
+						attribute<float32> ArableMin(Domain) := ArableMid * (1f - Arable_Width_factor);
+						attribute<float32> ArableMax(Domain) := ArableMid * (1f + Arable_Width_factor);
+					}
+				}
+			}
 		}
-		
 		container Run : IsTemplate = "True"
 		{
 			parameter<String> Name;
@@ -1288,8 +1303,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 // 			unit<UInt16> Decennium: Expr = "PeriodSet/Decennium";
 // 			unit<UInt16> Lustrum:   Expr = "PeriodSet/Lustrum";
 
-			parameter<String> FolderEnvName := 'env:DIR_Capri';
-			parameter<String> FolderName := replace_value(Expand(., '%'+FolderEnvName+'%'), FolderEnvName, 'Capri');
+			parameter<String> FolderName := replace_value(Expand(., '%env:DIR_OUTPUT%'), 'env:DIR_OUTPUT', 'GUI');
 			parameter<String> OutputDir := '%LocalDataProjDir%/' + ParamSets/ActiveSet/ParamName +'/' + FolderName + '/' + Name;
 		}
 	}
