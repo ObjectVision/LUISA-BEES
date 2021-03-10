@@ -172,7 +172,7 @@ template JrcClueWrap:
 		
 		container ClaimTableSelections: Expr = "for_each_ne(UniqueRegionRefs/Values, 'ClaimTableSelectionTemplate(ClaimTables/'+UniqueRegionRefs/Values+', Parameters/PeriodSet/StartYear)')";
 		
-		container adapt_claim: expr = "for_each_nednv(ModelType/Name, "
+		container adapt_claim_org: expr = "for_each_nednv(ModelType/Name, "
 					"'MakeDefined('+"
 							"'rjoin('+"
 								"'RunRegions/UnitSets/'+ClaimTableName+'/ZoneId, '+"
@@ -180,8 +180,12 @@ template JrcClueWrap:
 								"'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MinClaimColumn, 'ZeroClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'+"
 							"')'+"
 						"', float32(0))'"
-						", RegionNumbers, ClaimTableName, float32)", FreeData = "False";
-		
+						", RegionNumbers,
+						ClaimTableName, float32)", FreeData = "False";
+		container adapt_claim := adapt_claim_org {
+			unit<uint16> Capri := RegionNumbers/Capri;
+			attribute<float32> Arable(Capri) := float32(OrgLandUseCount/Arable); 
+		}
 		unit<uint16> AtomicRegions := overlay(UniqueDestRegionRefs/Values, domain, RegionData)
 		,	DialogType = "map", DialogData = "per_domain_grid"
 		{
@@ -213,7 +217,7 @@ template JrcClueWrap:
 					"domain, Float32"
 				")";
 		// ============ Fixed Parameters
-		parameter<Float32> SuitScaleFactor: Expr = "value(1, Meter2 / luHa)";
+		parameter<Float32> SuitScaleFactor := value(10000, Meter2 / luHa);
 		unit<int32> EUR_Ha_int32: Expr = "int32(EUR_HA)";
 		
 		#include<getOptimalk_NUTS2.dms>

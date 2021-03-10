@@ -173,54 +173,60 @@ container ModelTraits
 			// do transformation of min/max separately, then integrate in final demand containers.
 			attribute<float32> AllowedSuitableUrban 	(UrbanClaimZones): expr = "= 'sum(float32(DynamicComponent/TransPot/Urban > float32(0) && !DynamicComponent/Allowed/ForestsMature), CaseData/RegionData/'+ ClaimTableName[uint8(0)] +')'";
 			
+			container ClaimTableL := for_each_nednv(ID(ModelType) == ModelType/V/Urban ? '' : ModelType/Name,
+				'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MinClaimColumn, 'ZeroClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'
+				, ClaimTableSelections, ClaimTableName+'/sel', float32);
+				
+			container ClaimTableR := for_each_nednv(ID(ModelType) == ModelType/V/Urban ? '' : ModelType/Name,
+				'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MaxClaimColumn, 'ZeroClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'
+				, ClaimTableSelections, ClaimTableName+'/sel', float32);
+					
 			container CollectMinDemandFromClaimTables := for_each_nednv(ID(ModelType) == ModelType/V/Urban ? '' : ModelType/Name,
 				'MakeDefined('+
 					'rjoin('+
 						'RunRegions/UnitSets/'+ClaimTableName+'/ZoneId, '+
 						'CaseData/ClaimTables/'+ClaimTableName+'/Data/RegionUp[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity], '+
-						'min_elem('+
-							'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MinClaimColumn, 'ZeroClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity]),'+
-							'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MaxClaimColumn, 'HighClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'+
-							')'+
+						'min_elem('+'ClaimTableL/' + ModelType/Name+', ClaimTableR/'+ModelType/Name+')'+
 					') - CaseData/adapt_claim/' + ModelType/Name + 
 				', float32(0))'
 				, CaseData/RegionNumbers, ClaimTableName, float32) 
 			{
 				attribute<float32> Urban (UrbanClaimZones) := min_elem(ClaimTableSelections/MinUrban/Claim, ClaimTableSelections/MaxUrban/Claim, AllowedSuitableUrban) * float32(0.9);
 			}
-					
+			
 			container CollectMaxDemandFromClaimTables := for_each_nednv(ID(ModelType) == ModelType/V/Urban ? '' : ModelType/Name,
 				'MakeDefined('+
 					'rjoin('+
 						'RunRegions/UnitSets/'+ClaimTableName+'/ZoneId, '+
 						'CaseData/ClaimTables/'+ClaimTableName+'/Data/RegionUp[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity], '+
-						'max_elem('+
-							'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MinClaimColumn, 'ZeroClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity]),'+
-							'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MaxClaimColumn, 'HighClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'+
-							')'+
+						'max_elem('+'ClaimTableL/' + ModelType/Name+', ClaimTableR/'+ModelType/Name+')'+
 					') - CaseData/adapt_claim/' + ModelType/Name + 
 				', float32(0))'
 				, CaseData/RegionNumbers, ClaimTableName, float32) 
 			{
 				attribute<float32> Urban (UrbanClaimZones) := max_elem(ClaimTableSelections/MinUrban/Claim, ClaimTableSelections/MaxUrban/Claim) * float32(1.1111);
 			}
+			
+			
 	// demand containers below aggregate the demands to the wanted aggregation level
-			Container DemandMin: expr = "for_each_nednv(ModelType/Name, "
-					"IsDefined(ModelType/DemandCharacteristics) ? "
-						"'(MakeDefined(uint32((sum(CollectMinDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * "
-						"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, "
-							"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)"
-								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')) * float32(0.8)), 0))' "
-					" : 'uint32(CollectMinDemandFromClaimTables/'+ModelType/Name+')', "
-				 	" CaseData/RegionNumbers, DestClaimTableName, uint32)";
-			Container DemandMax: expr = "for_each_nednv(ModelType/Name, "
-				"IsDefined(ModelType/DemandCharacteristics) ? "
-						"'(MakeDefined(uint32((sum(CollectMaxDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * "
-						"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, "
-							"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)"
-								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +'))* float32(1.25)), 0))' "
-					" : 'uint32(CollectMaxDemandFromClaimTables/'+ModelType/Name+')', "
-				 	" CaseData/RegionNumbers, DestClaimTableName, uint32)";				
+			Container DemandMin := for_each_nednv(ModelType/Name
+				,	IsDefined(ModelType/DemandCharacteristics) 
+					? '(MakeDefined(uint32((sum(CollectMinDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * 
+						Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, 
+							Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)
+								+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')) * float32(0.99)), 0))' 
+					: 'uint32(CollectMinDemandFromClaimTables/'+ModelType/Name+')'
+				, 	CaseData/RegionNumbers, DestClaimTableName, uint32
+				);
+					 
+			Container DemandMax := for_each_nednv(ModelType/Name, 
+				IsDefined(ModelType/DemandCharacteristics) ? 
+						'(MakeDefined(uint32((sum(CollectMaxDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * 
+						Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, 
+							Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)
+								+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +'))* float32(1.01)), 0))' 
+					 : 'uint32(CollectMaxDemandFromClaimTables/'+ModelType/Name+')', 
+				 	 CaseData/RegionNumbers, DestClaimTableName, uint32);				
 		}
 	}
 	container TestSumsAlloc                                                       //
@@ -915,14 +921,45 @@ container ModelTraits
 					//"TotalSuitability";
 			container ResultsFathomYears: ExplicitSuppliers = "ClippedLandUseVT"; // required for generating the data for the ReadOnly mozaiking
 
-			parameter<string> CapriShadowPriceExport := 'ZoneID;Arable;ArableSlack;Pastures;PasturesSlack;PermanentCrops;PermanentCropsSlack;NewEnergyCrops;NewEnergyCropsSlack\n' +
-				AsList(CaseData/RegionNumbers/Capri/ZoneID + ';'
-				+	string(d_alloc/shadow_prices/Arable        ) + ';' + string(float32(Claims/DemandMax/Arable         - Claims/DemandMin/Arable        ) / float32(Claims/DemandMin/Arable         + Claims/DemandMax/Arable        )) + ';'
-				+	string(d_alloc/shadow_prices/Pastures      ) + ';' + string(float32(Claims/DemandMax/Pastures       - Claims/DemandMin/Pastures      ) / float32(Claims/DemandMin/Pastures       + Claims/DemandMax/Pastures      )) + ';'
-				+	string(d_alloc/shadow_prices/PermanentCrops) + ';' + string(float32(Claims/DemandMax/PermanentCrops - Claims/DemandMin/PermanentCrops) / float32(Claims/DemandMin/PermanentCrops + Claims/DemandMax/PermanentCrops)) + ';'
-				+	string(d_alloc/shadow_prices/NewEnergyCrops) + ';' + string(float32(Claims/DemandMax/NewEnergyCrops - Claims/DemandMin/NewEnergyCrops) / float32(Claims/DemandMin/NewEnergyCrops + Claims/DemandMax/NewEnergyCrops)) + ';'
-				, '\n'
-				)
+			unit<uint16> Capri := CaseData/RegionNumbers/Capri {
+				attribute<uint32> Arable_Min   := Claims/DemandMin/Arable;
+				attribute<uint32> Arable_Max   := Claims/DemandMax/Arable;
+				attribute<string> Arable_slack := MakeDefined(string((float32(Arable_Max) - float32(Arable_Min)) / (float32(Arable_Max) + float32(Arable_Min))), '');
+				attribute<uint32> Arable_Alloc := sum_uint32(uint8(d_alloc/landuse == ModelType/V/Arable), CaseData/RegionData/Capri);
+				attribute<int32>  Arable_Price := d_alloc/shadow_prices/Arable;
+				attribute<string> Arable_String := string(Arable_Min) + ';' + string(Arable_Max) + ';' + string(Arable_slack) + ';' + string(Arable_Alloc) + ';' + MakeDefined(string(Arable_Price), '');
+				
+				attribute<uint32> Pastures_Min   := Claims/DemandMin/Pastures;
+				attribute<uint32> Pastures_Max   := Claims/DemandMax/Pastures;
+				attribute<string> Pastures_slack := MakeDefined(string((float32(Pastures_Max) - float32(Pastures_Min)) / (float32(Pastures_Max) + float32(Pastures_Min))), '');
+				attribute<uint32> Pastures_Alloc := sum_uint32(uint8(d_alloc/landuse == ModelType/V/Pastures), CaseData/RegionData/Capri);
+				attribute<int32>  Pastures_Price := d_alloc/shadow_prices/Pastures;
+				attribute<string> Pastures_String := string(Pastures_Min) + ';' + string(Pastures_Max) + ';' + string(Pastures_slack) + ';' + string(Pastures_Alloc) + ';' + MakeDefined(string(Pastures_Price), '');
+				
+				attribute<uint32> PermanentCrops_Min   := Claims/DemandMin/PermanentCrops;
+				attribute<uint32> PermanentCrops_Max   := Claims/DemandMax/PermanentCrops;
+				attribute<string> PermanentCrops_slack := MakeDefined(string((float32(PermanentCrops_Max) - float32(PermanentCrops_Min)) / (float32(PermanentCrops_Max) + float32(PermanentCrops_Min))), '');
+				attribute<uint32> PermanentCrops_Alloc := sum_uint32(uint8(d_alloc/landuse == ModelType/V/PermanentCrops), CaseData/RegionData/Capri);
+				attribute<int32>  PermanentCrops_Price := d_alloc/shadow_prices/PermanentCrops;
+				attribute<string> PermanentCrops_String := string(PermanentCrops_Min) + ';' + string(PermanentCrops_Max) + ';' + string(PermanentCrops_slack) + ';' + string(PermanentCrops_Alloc) + ';' + MakeDefined(string(PermanentCrops_Price), '');
+				
+				attribute<uint32> NewEnergyCrops_Min   := Claims/DemandMin/NewEnergyCrops;
+				attribute<uint32> NewEnergyCrops_Max   := Claims/DemandMax/NewEnergyCrops;
+				attribute<string> NewEnergyCrops_slack := MakeDefined(string((float32(NewEnergyCrops_Max) - float32(NewEnergyCrops_Min)) / (float32(NewEnergyCrops_Max) + float32(NewEnergyCrops_Min))), '');
+				attribute<uint32> NewEnergyCrops_Alloc := sum_uint32(uint8(d_alloc/landuse == ModelType/V/NewEnergyCrops), CaseData/RegionData/Capri);
+				attribute<int32>  NewEnergyCrops_Price := d_alloc/shadow_prices/NewEnergyCrops;
+				attribute<string> NewEnergyCrops_String := string(NewEnergyCrops_Min) + ';' + string(NewEnergyCrops_Max) + ';' + string(NewEnergyCrops_slack) + ';' + string(NewEnergyCrops_Alloc) + ';' + MakeDefined(string(NewEnergyCrops_Price), '');
+				
+				attribute<string> Line := CaseData/RegionNumbers/Capri/ZoneID + ';' + Arable_string + ';' + Pastures_string + ';' + PermanentCrops_string + ';' + NewEnergyCrops_string;
+			}
+			parameter<string> CapriShadowPriceExport := 'ZoneID;'
+				+'Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;' +
+				+'Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;' +
+				+'PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;' +
+				+'NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;' +
+				+'\n'
+				+ AsList(Capri/Line, '\n')
+				+ '\n\n' + '"'+replace(d_alloc/status,'};','}"\n"')+'"'
 			,	StorageName = "=OutputDirName+'_ShadowPrices.csv'"
 			,	StorageType = "str";
 			

@@ -74,7 +74,7 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 
 	container FeasibleSolution; // NYI, Reserved for future use
 	container ScaledTransPot := for_each_nedv(ModelType/Name, 'convert(DynamicComponent/TransPot/'+ModelType/Name+' * CaseData/SuitScaleFactor, Int32)', domain, Int32);
-	parameter<Int32> Threshold := Int32(value(-9999, EUR_M2) * CaseData/SuitScaleFactor);
+	parameter<Int32> Threshold := Int32(value(-9999, EUR_ha) * CaseData/SuitScaleFactor);
 	
 	attribute<Bool> BelowThresholdMap(domain) := ='and('+AsItemList(Replace('MakeDefined(ScaledTransPot/@LUT, Threshold - 1i) < Threshold','@LUT',ModelType/Name))+')';
 
@@ -91,8 +91,8 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 		
 		   Claims/DemandMin, 
 		   Claims/DemandMax, 
-		   Threshold,
-//		   Int32(value(0 / 0, EUR_HA)), // Dit is de threshold! GEEN Threshold => geen dis-allowed cells
+//		   Threshold,
+		   Int32(value(0 / 0, EUR_HA)), // Dit is de threshold! GEEN Threshold => geen dis-allowed cells
 		   FeasibleSolution
 		 )
 	{

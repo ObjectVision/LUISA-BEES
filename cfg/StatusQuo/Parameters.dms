@@ -1031,7 +1031,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 						"'add(const('+MakeDefined(String(Alloc1Reg/ConstWeight), ' -9999.1')+', domain, Float32)'"
 						"+asList(', '+SuitTermExpr, '', CurrFactorWeights/LandUseType)+')'";
 								
-				attribute<string> SuitabilityExpExpr   (ModelType): Expr = "'exp(min_elem(MakeDefined(SuitabilityData/'+ModelType/Name+', Float32(-1000000)), float32(80)))'";
+				attribute<string> SuitabilityExpExpr   (ModelType): Expr = "'exp(min_elem(MakeDefined(SuitabilityData/'+ModelType/Name+', Float32(-1000000)), float32(60)))'";
 				attribute<string> SuitabilityLogitExpr 		(ModelType): Expr = "SuitabilityExpExpr+'/(Float32(1)+'+SuitabilityExpExpr+')'";
 				attribute<string> SuitabilityRescaleExpr	(ModelType) :=
 					'MakeDefined(protoSuitabilityLogit/'+ ModelType/Name + ' / nth_element(protoSuitabilityLogit/'+ ModelType/Name +', domain/p99_value), float32(0))';

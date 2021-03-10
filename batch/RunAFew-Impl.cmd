@@ -13,6 +13,7 @@ set ProgramPath=%ProgramFolder%\GeoDmsRun.exe
 del "%LOCALDATA_PROJDIR%" /S /Q
 
 REM "%ProgramFolder%\GeoDmsGui.exe"
+REM  pause
 REM "%ProgramPath%" /LbatchtraceNL.log "%luisetta%\cfg\StatusQuo.dms" /runs/Netherlands/endstate/GeneratedFiles /runs/Netherlands/simulation_results/GeneratedFiles
 
 rem "%ProgramPath%" /LbatchtraceAT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Austria/simulation_results/GeneratedFiles
