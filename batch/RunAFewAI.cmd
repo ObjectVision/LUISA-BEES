@@ -1,8 +1,18 @@
 set ARABLE_WIDTH=0.%AW%
 
 echo ====  ARABLE_INC=0.00
-set ARABLE_INC=0.0
+set ARABLE_INC=0.00
 set DIR_OUTPUT=AI00_AW%AW%
+call RunAFew-Impl.cmd
+
+echo ====  ARABLE_INC=0.01
+set ARABLE_INC=0.01
+set DIR_OUTPUT=AI01_AW%AW%
+call RunAFew-Impl.cmd
+
+echo ====  ARABLE_INC=0.02
+set ARABLE_INC=0.02
+set DIR_OUTPUT=AI02_AW%AW%
 call RunAFew-Impl.cmd
 
 echo ====  ARABLE_INC=0.05
