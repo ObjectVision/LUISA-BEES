@@ -19,11 +19,11 @@ REM "%ProgramPath%" /LbatchtraceNL.log "%luisetta%\cfg\StatusQuo.dms" /runs/Neth
 rem "%ProgramPath%" /LbatchtraceAT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Austria/simulation_results/GeneratedFiles
 rem "%ProgramPath%" /LbatchtraceBL.log "%luisetta%\cfg\StatusQuo.dms" /runs/BelLux/simulation_results/GeneratedFiles
 rem "%ProgramPath%" /LbatchtraceBG.log "%luisetta%\cfg\StatusQuo.dms" /runs/Bulgaria/simulation_results/GeneratedFiles
- "%ProgramPath%" /LbatchtraceCY.log "%luisetta%\cfg\StatusQuo.dms" /runs/Cyprus/simulation_results/GeneratedFiles
+ rem "%ProgramPath%" /LbatchtraceCY.log "%luisetta%\cfg\StatusQuo.dms" /runs/Cyprus/simulation_results/GeneratedFiles
 rem "%ProgramPath%" /LbatchtraceHR.log "%luisetta%\cfg\StatusQuo.dms" /runs/Croatia/simulation_results/GeneratedFiles
 rem "%ProgramPath%" /LbatchtraceCZ.log "%luisetta%\cfg\StatusQuo.dms" /runs/Czechia/simulation_results/GeneratedFiles
- "%ProgramPath%" /LbatchtraceDK.log "%luisetta%\cfg\StatusQuo.dms" /runs/Denmark/simulation_results/GeneratedFiles
- "%ProgramPath%" /LbatchtraceEE.log "%luisetta%\cfg\StatusQuo.dms" /runs/Estonia/simulation_results/GeneratedFiles
+ rem "%ProgramPath%" /LbatchtraceDK.log "%luisetta%\cfg\StatusQuo.dms" /runs/Denmark/simulation_results/GeneratedFiles
+ rem "%ProgramPath%" /LbatchtraceEE.log "%luisetta%\cfg\StatusQuo.dms" /runs/Estonia/simulation_results/GeneratedFiles
 rem "%ProgramPath%" /LbatchtraceFI.log "%luisetta%\cfg\StatusQuo.dms" /runs/Finland/simulation_results/GeneratedFiles
 rem "%ProgramPath%" /LbatchtraceFR.log "%luisetta%\cfg\StatusQuo.dms" /runs/France/simulation_results/GeneratedFiles
 rem "%ProgramPath%" /LbatchtraceDE.log "%luisetta%\cfg\StatusQuo.dms" /runs/Germany/simulation_results/GeneratedFiles
