@@ -91,8 +91,7 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 		
 		   Claims/DemandMin, 
 		   Claims/DemandMax, 
-//		   Threshold,
-		   Int32(value(0 / 0, EUR_HA)), // Dit is de threshold! GEEN Threshold => geen dis-allowed cells
+		   Threshold,   // dis-allow allocation below stated minimum
 		   FeasibleSolution
 		 )
 	{
