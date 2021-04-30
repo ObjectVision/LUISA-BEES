@@ -81,7 +81,17 @@ container JrcFactorDataTempl: IsTemplate = "True", IsHidden = "true"  //, Expr =
              attribute<uint8> GridData: IsHidden = "True";
              attribute<uint8> ReadData(domain_grid);
              attribute<uint8> IsContaminated(domain_grid): Expr  = "ReadData == 4[uint8] || ReadData == 5[uint8]  ? uint8(20) : uint8(0)";
-           }					
+           }		
+		unit<wpoint> FibonacciArableClassif:
+             StorageName       = "%LuisettaDataDir%/suitability/suitarafibonacc.tif"
+             , StorageReadOnly = "True"
+			 , StorageType = "gdal.grid"
+             , DialogData      = "Geography/LambertEA"
+          {
+             attribute<uint8> GridData: IsHidden = "True";
+             attribute<uint8> ReadData(domain_grid);
+             attribute<int8> ReadDataint8(domain_grid): Expr  = "int8(ReadData)";
+           }			   
 	}
 	
 	container LocSpec_NECR
@@ -114,6 +124,8 @@ container JrcFactorDataTempl: IsTemplate = "True", IsHidden = "true"  //, Expr =
 		attribute<int8> AbanArable        (domain_grid) := const(0, domain_grid, int8);
 		attribute<int8> AbanPermanentCrops(domain_grid) := const(0, domain_grid, int8);
 		attribute<int8> AbanPastures      (domain_grid) := const(0, domain_grid, int8);
+		attribute<int8> AbanUrban         (domain_grid) := const(0, domain_grid, int8);
+		attribute<int8> AbanIndustry      (domain_grid) := const(0, domain_grid, int8);
 	}
 
 	// endogenous distance factors
