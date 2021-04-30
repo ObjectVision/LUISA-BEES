@@ -1,34 +1,55 @@
-set geodmsversion=GeoDms7206
+rem echo off
+set geodmsversion=GeoDms7309
+set LOCALDATA_PROJDIR=C:\LD2\luisa-bees\CalcCachex64.v7.309
+
 set pf=%Program Files%
-set luisetta=C:\luisetta\LUISA-BEES\simulation_results
-set ProgramPath=C:\Program Files\ObjectVision\%geodmsversion%\GeoDmsRun.exe
+set luisetta=C:\prj\jrc\luisa-BEES
+set ProgramFolder=C:\Program Files\ObjectVision\%geodmsversion%
+set ProgramFolder=C:\dev\geodms\bin\Release\x64
+rem set ProgramFolder=C:\dev\geodms\bin\Debug\x64
+set ProgramPath=%ProgramFolder%\GeoDmsRun.exe
 
-rem "%ProgramPath%" /LbatchtraceAT.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Austria/simulation_results/GeneratedFiles 
-rem "%ProgramPath%" /LbatchtraceBL.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/BelgLux/simulation_results/GeneratedFiles 
-rem "%ProgramPath%" /LbatchtraceBG.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Bulgaria/simulation_results/GeneratedFiles
-rem "%ProgramPath%" /LbatchtraceCY.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Cyprus/simulation_results/GeneratedFiles 
-rem "%ProgramPath%" /LbatchtraceHR.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Croatia/simulation_results/GeneratedFiles 
-rem "%ProgramPath%" /LbatchtraceCZ.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Czechia/simulation_results/GeneratedFiles 
-rem "%ProgramPath%" /LbatchtraceDK.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Denmark/simulation_results/GeneratedFiles 
-rem "%ProgramPath%" /LbatchtraceEE.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Estonia/simulation_results/GeneratedFiles 
-rem "%ProgramPath%" /LbatchtraceFI.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Finland/simulation_results/GeneratedFiles
-rem TO DO "%ProgramPath%" /LbatchtraceFR.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/France/simulation_results/GeneratedFiles 
-rem "%ProgramPath%" /LbatchtraceDE.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Germany/simulation_results/GeneratedFiles 
-rem "%ProgramPath%" /LbatchtraceEL.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Greece/simulation_results/GeneratedFiles 
-rem TO DO "%ProgramPath%" /LbatchtraceHU.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Hungary/simulation_results/GeneratedFiles 
-rem "%ProgramPath%" /LbatchtraceIE.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Ireland/simulation_results/GeneratedFiles 
-rem "%ProgramPath%" /LbatchtraceIT.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Italy/simulation_results/GeneratedFiles 
-"%ProgramPath%" /LbatchtraceLV.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Latvia/simulation_results/GeneratedFiles 
-"%ProgramPath%" /LbatchtraceLT.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Lithuania/simulation_results/GeneratedFiles 
-"%ProgramPath%" /LbatchtraceMT.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Malta/simulation_results/GeneratedFiles 
-"%ProgramPath%" /LbatchtraceNL.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Netherlands/simulation_results/GeneratedFiles 
-"%ProgramPath%" /LbatchtracePL.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Poland/simulation_results/GeneratedFiles 
-"%ProgramPath%" /LbatchtracePT.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Portugal/simulation_results/GeneratedFiles 
-"%ProgramPath%" /LbatchtraceRO.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Romania/simulation_results/GeneratedFiles 
-"%ProgramPath%" /LbatchtraceSK.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Slovakia/simulation_results/GeneratedFiles 
- "%ProgramPath%" /LbatchtraceSI.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Slovenia/simulation_results/GeneratedFiles 
- "%ProgramPath%" /LbatchtraceES.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Spain/simulation_results/GeneratedFiles 
- "%ProgramPath%" /LbatchtraceSE.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/Sweden/simulation_results/GeneratedFiles 
- "%ProgramPath%" /LbatchtraceUK.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms" /Runs/United_Kingdom/simulation_results/GeneratedFiles 
 
- rem "%ProgramPath%" /LbatchtraceALL.log "C:\luisabees\LUISA-BEES\cfg\StatusQuo.dms"  /GenerateContainer/MozaikLandUse/impl/AllPeriods/P2050/result
+del "%LOCALDATA_PROJDIR%" /S /Q
+
+REM "%ProgramFolder%\GeoDmsGui.exe"
+REM  pause
+
+REM Shortcut
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceSK.log "%luisetta%\cfg\StatusQuo.dms" /runs/Slovakia/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceBL.log "%luisetta%\cfg\StatusQuo.dms" /runs/BelgLux/simulation_results/GeneratedFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtraceDK.log "%luisetta%\cfg\StatusQuo.dms" /runs/Denmark/simulation_results/GeneratedFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtraceNL.log "%luisetta%\cfg\StatusQuo.dms" /runs/Netherlands/simulation_results/GeneratedFiles
+exit /B
+REM Shortcut
+
+"%ProgramPath%" /L%LocalDataDir%/batchtraceAT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Austria/simulation_results/GeneratedFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtraceBL.log "%luisetta%\cfg\StatusQuo.dms" /runs/BelLux/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceBG.log "%luisetta%\cfg\StatusQuo.dms" /runs/Bulgaria/simulation_results/GeneratedFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtraceCY.log "%luisetta%\cfg\StatusQuo.dms" /runs/Cyprus/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceHR.log "%luisetta%\cfg\StatusQuo.dms" /runs/Croatia/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceCZ.log "%luisetta%\cfg\StatusQuo.dms" /runs/Czechia/simulation_results/GeneratedFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtraceDK.log "%luisetta%\cfg\StatusQuo.dms" /runs/Denmark/simulation_results/GeneratedFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtraceEE.log "%luisetta%\cfg\StatusQuo.dms" /runs/Estonia/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceFI.log "%luisetta%\cfg\StatusQuo.dms" /runs/Finland/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceFR.log "%luisetta%\cfg\StatusQuo.dms" /runs/France/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceDE.log "%luisetta%\cfg\StatusQuo.dms" /runs/Germany/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceEL.log "%luisetta%\cfg\StatusQuo.dms" /runs/Greece/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceHU.log "%luisetta%\cfg\StatusQuo.dms" /runs/Hungary/simulation_results/GeneratedFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtraceIE.log "%luisetta%\cfg\StatusQuo.dms" /runs/Ireland/simulation_results/GeneratedFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtraceIT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Italy/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceLV.log "%luisetta%\cfg\StatusQuo.dms" /runs/Latvia/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceLT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Lithuania/simulation_results/GeneratedFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtraceNL.log "%luisetta%\cfg\StatusQuo.dms" /runs/Netherlands/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtracePL.log "%luisetta%\cfg\StatusQuo.dms" /runs/Poland/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtracePT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Portugal/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceRO.log "%luisetta%\cfg\StatusQuo.dms" /runs/Romania/simulation_results/GeneratedFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtraceSK.log "%luisetta%\cfg\StatusQuo.dms" /runs/Slovakia/simulation_results/GeneratedFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtraceSI.log "%luisetta%\cfg\StatusQuo.dms" /runs/Slovenia/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceES.log "%luisetta%\cfg\StatusQuo.dms" /runs/Spain/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceSE.log "%luisetta%\cfg\StatusQuo.dms" /runs/Sweden/simulation_results/GeneratedFiles
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceUK.log "%luisetta%\cfg\StatusQuo.dms" /runs/United_Kingdom/simulation_results/GeneratedFiles
+
+REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceALL.log "%luisetta%\cfg\StatusQuo.dms"  /GenerateContainer/MozaikLandUse/impl/AllPeriods/P2050/result
+

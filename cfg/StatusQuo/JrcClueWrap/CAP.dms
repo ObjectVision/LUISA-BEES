@@ -87,7 +87,7 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 			attribute<bool>    ErosionRisk_isok	  (domain_grid):  expr = "JrcFactorData/TiffData/erosionRisk/erosionRisk > MinErosionRisk[RegionGrid]";
 			
 			attribute<int8> Art16Agri(domain_grid): expr = "SourceData/Natura2000 && Natura2000_agri[RegionGrid] ? int8(35) : int8(0)";
-			attribute<int8> Art16For(domain_grid): expr = "SourceData/Natura2000 && Natura2000_forest[RegionGrid] ? int8(35) : int8(0)";
+			attribute<int8> Art16For (domain_grid): expr = "SourceData/Natura2000 && Natura2000_forest[RegionGrid] ? int8(35) : int8(0)";
 			attribute<int8> Art18Areas (domain_grid): expr = 
 				"switch("
 					"case(SourceData/art18_totally, int8(15)), "
@@ -109,13 +109,14 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 					"case(SourceData/art20_partially, int8(25)), "
 					"int8(0)"
 				")";
+			attribute<int8> AvgArableSuitab (domain_grid) : expr = "JrcFactorData/TiffData/FibonacciArableClassif/ReadDataint8";
 
 	//		attribute<int8> gaecGrassland(domain_grid): expr = 
 	//			"SourceData/IsGrassland && Grassland ? int8(35) : int8(0)";
 			attribute<int8> gaecOlive  (domain_grid): expr = "SourceData/IsOlive   && Olive  [RegionGrid] ? int8(35) : int8(0)";	
 			attribute<int8> gaecPasture(domain_grid): expr = "SourceData/IsPasture && Pasture[RegionGrid] ? int8(35) : int8(0)";
 
-			attribute<int8> LocSpecsAra  (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas)";
+			attribute<int8> LocSpecsAra  (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas,AvgArableSuitab)";
 			attribute<int8> LocSpecsPast (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas, gaecPasture)";
 			attribute<int8> LocSpecsPC   (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas, gaecOlive)";
 			//     		 attribute<int8> LocSpecsSNV  (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas, gaecGrassland)";    

@@ -1031,7 +1031,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 						"'add(const('+MakeDefined(String(Alloc1Reg/ConstWeight), ' -9999.1')+', domain, Float32)'"
 						"+asList(', '+SuitTermExpr, '', CurrFactorWeights/LandUseType)+')'";
 								
-				attribute<string> SuitabilityExpExpr   (ModelType): Expr = "'exp(min_elem(MakeDefined(SuitabilityData/'+ModelType/Name+', Float32(-1000000)), float32(80)))'";
+				attribute<string> SuitabilityExpExpr   (ModelType): Expr = "'exp(min_elem(MakeDefined(SuitabilityData/'+ModelType/Name+', Float32(-1000000)), float32(60)))'";
 				attribute<string> SuitabilityLogitExpr 		(ModelType): Expr = "SuitabilityExpExpr+'/(Float32(1)+'+SuitabilityExpExpr+')'";
 				attribute<string> SuitabilityRescaleExpr	(ModelType) :=
 					'MakeDefined(protoSuitabilityLogit/'+ ModelType/Name + ' / nth_element(protoSuitabilityLogit/'+ ModelType/Name +', domain/p99_value), float32(0))';
@@ -1141,7 +1141,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			
 		}
 		
-		container ClaimTableTemplateTableChopper: IsTemplate = "True"
+		template ClaimTableTemplateTableChopper
 		{
 			// begin case parameter
 			unit<Uint32>      RegionDomain;
@@ -1150,8 +1150,8 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			parameter<string> RegionName;
 			// end case parameter
 
-			parameter<String> FileName:       expr = "'%projdir%/demand/' + ScenarioName + '/' + RegionDomainName + '/' + RegionName + '.csv'";
-			parameter<String> FieldSeparator: expr = "','";
+			parameter<String> FileName   := '%projdir%/demand/' + ScenarioName + '/' + RegionDomainName + '/' + RegionName + '.csv';
+			parameter<String> FieldSeparator := strcount(FileData, ',') > strcount(FileData, ';') ? ',' : ';';
 		
 			parameter<String> FileData
 			:	StorageType = "str"
@@ -1219,7 +1219,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			}
 		}
 		
-		container DemandSet: IsTemplate = "True"
+		template DemandSet
 		{
 			parameter<String> DemandDirname;
 			
@@ -1283,8 +1283,9 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			unit<UInt16> Periods:   Expr = "PeriodSet/result";
 // 			unit<UInt16> Decennium: Expr = "PeriodSet/Decennium";
 // 			unit<UInt16> Lustrum:   Expr = "PeriodSet/Lustrum";
-			
-			parameter<String> OutputDir: Expr = "'%LocalDataProjDir%/'+Name";
+
+			parameter<String> FolderName := replace_value(Expand(., '%env:DIR_OUTPUT%'), 'env:DIR_OUTPUT', 'GUI');
+			parameter<String> OutputDir := '%ProjDir%/results/' + ParamSets/ActiveSet/ParamName +'/' + replace(FolderName + '/' + Name, '/', '_');
 		}
 	}
 	container ParamSets 
@@ -1297,15 +1298,22 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 			unit<UInt8>       ModelType: Expr = "Classifications/LU/ModelType";
 //			parameter<String> OrgLandUseExpr: Expr= "'CorineGrid/Jrc9Data'";
 			
-			attribute<Float32> LocationSpecificPreferenceAddition(ModelType): // @USERINPUT
+			// @USERINPUT, just use 0 or 1 (or anything in between if you really need to)
+			// LocationSpecificPreferenceAddition is used in TotalSuitability/X as factor for CaseData/LocSpec/XXX, thus
+			//
+			// TotalSuitability := exp(SuitabilityData/XXX)/its sum * CaseData/LocSpec/XXX * LocationSpecificPreferenceAddition
+			//
+			// which, for small variations, is comparable to  
+			//
+			// log(TotalSuitability) := SuitabilityData/XXX - log(its sum of exponents) + log(CaseData/LocSpec/XXX) + log(LocationSpecificPreferenceAddition)
+			attribute<Float32> LocationSpecificPreferenceAddition(ModelType): 
+			
 			[
-				null, 1,      		// urb, ind
-				1, 1, 1,  			// arable, permacrops, pastures
-				1, 1,           	// forestmat, transwoodland
-				null, null, null, null, null, // abandoned (5x)
-				
-				5, 1, 1, 5			// NewEnergyCrops, SHVA, ForestsYoung, TreePlantations
-				
+				0, 1,     // urb, ind
+				1, 1, 1,  // arabl, permacrops, pastures
+				1, 1,     // forestmat, transwoodland
+				0, 0, 0, 0, 0,     // Abandoned Arable, PC, Pasture, Urban, Industry 
+				1, 1, 1, 1	  //NewEnergyCrops, SHVA, ForestsYoung, TreePlantations
 			];
 			parameter<String> LocSpecContainerName: Expr = "'ReferenceLocSpecs'";
 			

@@ -134,7 +134,7 @@ template JrcClueWrap:
 		// ============ Regions
 
 		// ============ claims
-		container ClaimTables: Expr = "DemandSet/ClaimTables";
+		container ClaimTables := DemandSet/ClaimTables;
 		attribute<String> ClaimTableName		(ModelType): Expr = "MakeDefined(DC/OrgRegion[ModelType/DemandCharacteristicsRel], 'ForestDemandRegions')";
 		attribute<String> DestClaimTableName	(ModelType): Expr = "MakeDefined(DC/ModelRegion[ModelType/DemandCharacteristicsRel], ClaimTableName)";
 		
@@ -213,7 +213,7 @@ template JrcClueWrap:
 					"domain, Float32"
 				")";
 		// ============ Fixed Parameters
-		parameter<Float32> SuitScaleFactor: Expr = "value(1, Meter2 / luHa)";
+		parameter<Float32> SuitScaleFactor := value(10000, Meter2 / luHa);
 		unit<int32> EUR_Ha_int32: Expr = "int32(EUR_HA)";
 		
 		#include<getOptimalk_NUTS2.dms>
@@ -251,7 +251,7 @@ template JrcClueWrap:
 		parameter<string> GeneratedFiles: Expr = "OutputGeneration/OutputDirName+';'",		ExplicitSuppliers = "OutputGeneration/ClippedLandUseVT;OutputGeneration/Clipped_Qi;";
 		container OutputGeneration
 		{
-			parameter<String> OutputDirName: Expr = "simulation_results/metadata/DirName + '/'+string(Periods/CurrYear[uint16(0)])";
+			parameter<String> OutputDirName := simulation_results/metadata/DirName + '_'+string(Periods/CurrYear[uint16(0)]);
 			
 			container Indicators;
 						
@@ -299,7 +299,7 @@ template JrcClueWrap:
 	{
 		container metadata
 		{
-			parameter<String> DirName: Expr = "RunParameters/OutputDir";
+			parameter<String> DirName := RunParameters/OutputDir;
 			
 			attribute<string> AllocStatusPerPeriod(Periods): Expr = "='union_data(Periods, '+asItemList('TimeSteps/'+Periods/Name+'/d_alloc/status')+')'";
 			parameter<string> AllocStatus: Expr = "asItemList(AllocStatusPerPeriod)";
