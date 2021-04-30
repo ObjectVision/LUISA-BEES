@@ -1302,7 +1302,8 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				null, 1,      		// urb, ind
 				1, 1, 1,  			// arabl, permacrops, pastures
 				1, 1,           	// forestmat, transwoodland
-				5, 1, 1				//NewEnergyCrops, SHVA, ForestsYoung
+				0, 0, 0, 0, 0,          	// AbanArable, AbanPC, AbanPast, AbanUrb, AbanInd
+				1, 1, 1				//NewEnergyCrops, SHVA, ForestsYoung
 			];
 			parameter<String> LocSpecContainerName: Expr = "'ReferenceLocSpecs'";
 			

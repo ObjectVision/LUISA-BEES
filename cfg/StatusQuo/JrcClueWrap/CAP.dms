@@ -109,13 +109,15 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 					"case(SourceData/art20_partially, int8(25)), "
 					"int8(0)"
 				")";
+			// To improve 'expressiveness' for arable land for CAPRI link
+			attribute<int8>   AvgArableSuitability      	(domain_grid): Expr= "JrcFactorData/TiffData/LocSpecArable/ReadDataint8";
 
 	//		attribute<int8> gaecGrassland(domain_grid): expr = 
 	//			"SourceData/IsGrassland && Grassland ? int8(35) : int8(0)";
 			attribute<int8> gaecOlive  (domain_grid): expr = "SourceData/IsOlive   && Olive  [RegionGrid] ? int8(35) : int8(0)";	
 			attribute<int8> gaecPasture(domain_grid): expr = "SourceData/IsPasture && Pasture[RegionGrid] ? int8(35) : int8(0)";
 
-			attribute<int8> LocSpecsAra  (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas)";
+			attribute<int8> LocSpecsAra  (domain_grid): expr = "(max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas))";
 			attribute<int8> LocSpecsPast (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas, gaecPasture)";
 			attribute<int8> LocSpecsPC   (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas, gaecOlive)";
 			//     		 attribute<int8> LocSpecsSNV  (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas, gaecGrassland)";    
