@@ -1,7 +1,7 @@
-set AW=00
-call RunAFewAI.cmd
-pause 8*11*25*1
-exit /B
+REM set AW=00
+REM call RunAFewAI.cmd
+REM pause 8*11*25*2
+REM exit /B
 
 set AW=00
 call RunAFewAI.cmd
@@ -14,4 +14,5 @@ call RunAFewAI.cmd
 REM set AW=20
 REM call RunAFewAI.cmd
 
-pause 8*11*25*4
+REM pause 8*11*25*4
+pause 8*2*25*4

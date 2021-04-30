@@ -3,16 +3,13 @@ container CompareDemands
 	unit<int32> Percent := 0.01 * BaseUnit('', int32);
 	
 	container Classifications {
-//		unit<uint32> Country := range(uint32, 0, 11) {
-//			attribute<string> name: [ 'Austria', 'BelLux', 'Cyprus', 'Denmark', 'Estonia', 'Ireland', 'Italy', 'Malta', 'Netherlands', 'Slovakia', 'Slovenia'];
-//			attribute<string> code: [ 'AT', 'BL', 'CY', 'DK', 'EE', 'IE', 'IT', 'MT', 'NL', 'SK', 'SI' ];
-//		unit<uint32> Country := range(uint32, 0, 9) {
-//			attribute<string> name: [ 'Austria', 'Cyprus', 'Denmark', 'Estonia', 'Ireland', 'Italy', 'Malta', 'Netherlands', 'Slovenia'];
-//			attribute<string> code: [ 'AT', 'CY', 'DK', 'EE', 'IE', 'IT', 'MT', 'NL', 'SI' ];
-//		}
+		unit<uint32> AllCountries := range(uint32, 0, 11) {
+			attribute<string> name: [ 'Austria', 'BelgLux', 'Cyprus', 'Denmark', 'Estonia', 'Ireland', 'Italy', 'Malta', 'Netherlands', 'Slovakia', 'Slovenia'];
+			attribute<string> code: [ 'AT', 'BL', 'CY', 'DK', 'EE', 'IE', 'IT', 'MT', 'NL', 'SK', 'SI' ];
+		}
 		unit<uint32> Country := range(uint32, 0, 2) {
-			attribute<string> name: [ 'Denmark', 'Netherlands'];
 			attribute<string> code: [ 'DK', 'NL'];
+			attribute<string> name:= rjoin(code, AllCountries/code, AllCountries/name);
 		}
 		unit<uint32> AI := range(uint32, 0, 25) {
 			attribute<Percent>  p : [ -20,  -15,  -10,   -9,   -8,   -7,   -6,   -5,   -4,   -3,   -2,   -1,    0,    1,    2,    3,    4,    5,    6,    7,    8,    9,   10,   15,   20  ];
@@ -20,17 +17,23 @@ container CompareDemands
 			attribute<string>   code : [ '80', '85', '90', '91', '92', '93', '94', '95', '96', '97', '98', '99', '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '15', '20' ];
 			attribute<string>   name  := 'AI'+code;	
 		}
+		unit<uint32> AW := range(uint32, 0, 2) {
+			attribute<Percent>  p : [ 00,  05]; //, 10, 20  ];
+			attribute<Float64>  f := float64(p) * (1.0 / float64(100[Percent]));
+			attribute<string>   code : [ '00', '05']; //, '10', '20' ];
+			attribute<string>   name  := 'AW'+code;	
+		}
 		unit<uint32> Year := range(uint32, 0, 8) {
 			attribute<string> name  : [ 'P2015', 'P2020', 'P2025', 'P2030', 'P2035', 'P2040', 'P2045', 'P2050' ];
 		}
-		unit<uint32> ResultFile := combine(AI, Country, Year)
+		unit<uint32> ResultFile := combine(AW, AI, Country, Year)
 		{
-			attribute<string> name := AI/name[nr_1]+'_AW10_'+Country/name[nr_2]+'_'+Year/name[nr_3];
+			attribute<string> name := AI/name[nr_2]+'_'+AW/name[nr_1]+'_'+Country/name[nr_3]+'_'+Year/name[nr_4];
 			attribute<string> FileName := name+'_ShadowPrices.csv';
-			attribute<string> graph_file_key := Country/code[nr_2];
-			attribute<string> graph_col_key  := Year/name[nr_3];
-			attribute<Percent> graph_row_value := AI/p[nr_1];
-			attribute<string>     graph_row_key   := AI/name[nr_1];
+			attribute<string> graph_file_key := AW/name[nr_1]+'/'+Country/code[nr_3];
+			attribute<string> graph_col_key  := Year/name[nr_4];
+			attribute<Percent> graph_row_value := AI/p[nr_2];
+			attribute<string>     graph_row_key   := AI/name[nr_2];
 		}
 		
 	}
@@ -63,7 +66,7 @@ container CompareDemands
 			attribute<string> result
 			:= 'ArableDemandFactor;'+AsList(Classifications/Year/name, ';')+'\n'
 				+AsList(string(FileRow/result_line), '\n', FileRow/nr_1)
-			,	StorageName = "%projdir%/results/CapriInteraction/MergedResults/AW10"
+			,	StorageName = "%projdir%/results/CapriInteraction/MergedResults"
 			,	StorageType = "strfiles"
 			;
 		}

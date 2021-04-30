@@ -1,8 +1,8 @@
 set ARABLE_WIDTH=0.%AW%
 
 REM Shortcut
-REM set ARABLE_INC=-0.02
-REM set DIR_OUTPUT=AI98_AW%AW%
+REM set ARABLE_INC=0.04
+REM set DIR_OUTPUT=AI04_AW%AW%
 REM call RunAFew-Impl.cmd
 REM exit /B
 REM Shortcut
