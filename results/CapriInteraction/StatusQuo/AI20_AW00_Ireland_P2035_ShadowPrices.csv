@@ -1,0 +1,5 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+IR01;303617;309750;0.00999891;0;;1676479;2335393;0.164241;0;;0;554;1;0;;5632;8619;0.209599;0;
+IR02;775746;791418;0.0100002;0;;2174828;2951178;0.151453;0;;0;4690;1;0;;8083;12370;0.209603;0;
+
+"DiscrAlloc.FeasibilityTest failed: total of the minimum claims is 5781780 while there are only 5757366 allocatable cells, total minimum claims should be decreased with at least 24414 cells; "

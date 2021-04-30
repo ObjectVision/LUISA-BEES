@@ -1,0 +1,10 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+IR01;253014;258125;0.00999924;253168;;1676479;2335393;0.164241;1846848;;0;554;1;554;;5632;8619;0.209599;5632;
+IR02;646455;659515;0.0100002;634781;;2174828;2951178;0.151453;2174454;;0;4690;1;0;;8083;12370;0.209603;0;
+
+"ClaimRange(type 1 (Industrial), NUTS2_LUISA 1 (IE02)) = [min 14169, max 14590]; 12879 allocated for price {0, 0}"
+" ClaimRange(type 2 (Arable), Capri 1 (IR02: Southern and Eastern)) = [min 646455, max 659515]; 634781 allocated for price {886930, -2765018}"
+" ClaimRange(type 4 (Pastures), Capri 1 (IR02: Southern and Eastern)) = [min 2174828, max 2951178]; 2174454 allocated for price {764637, 9245302}"
+" ClaimRange(type 5 (ForestsMature), ForestDemandRegions 0 (Ireland)) = [min 723854, max 2059038]; 719710 allocated for price {589245, -807784}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 1 (IR02: Southern and Eastern)) = [min 8083, max 12370]; 0 allocated for price {0, 0}"
+" "

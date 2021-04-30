@@ -1,0 +1,17 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;704430;718661;0.0100001;771256;;318506;454476;0.175903;814682;;0;2323;1;13950;;0;0;;23710;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 58731, max 60241]; 88383 allocated for price {-631572, 14357372}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 19637, max 20439]; 33195 allocated for price {-1270381, 12084763}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 704430, max 718661]; 771256 allocated for price {-498239, 6900682}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 0, max 2323]; 13950 allocated for price {-1173181, 3950257}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 318506, max 454476]; 814682 allocated for price {-498239, 838648}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 3 allocated for price {0, 0}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 2033 allocated for price {-598239, -11390675}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 1 allocated for price {-895791, -6975338}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 10 allocated for price {-398239, -19595937}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 89 allocated for price {-531571, -12061478}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 30 allocated for price {-1059270, 917043}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 0, max 0]; 23710 allocated for price {-498239, -32053168}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 44 allocated for price {-2004910, -22361939}"
+" "

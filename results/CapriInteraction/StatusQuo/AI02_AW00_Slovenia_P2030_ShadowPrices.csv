@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+SI00;191080;194941;0.010002;194991;;105071;222916;0.359298;256947;;34908;46960;0.147213;46960;;253;387;0.209375;131468;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (SI01)) = [min 25311, max 25796]; 35434 allocated for price {-1982331, 13360453}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 1 (SI02)) = [min 23905, max 25482]; 39791 allocated for price {-1982331, 14753413}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (SI01)) = [min 5925, max 6101]; 8096 allocated for price {-2482327, 14860974}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 1 (SI02)) = [min 4167, max 4276]; 5882 allocated for price {-2475993, 14861989}"
+" ClaimRange(type 2 (Arable), Capri 0 (SI00: Slovenia)) = [min 191080, max 194941]; 194991 allocated for price {-2282331, 14708943}"
+" ClaimRange(type 4 (Pastures), Capri 0 (SI00: Slovenia)) = [min 105071, max 222916]; 256947 allocated for price {-1782331, 13252911}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 34838 allocated for price {-1682331, 11668737}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 300 allocated for price {-1682331, 7399290}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 2147 allocated for price {-1682331, 5984316}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 9 allocated for price {-1882280, 7286873}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (SI00: Slovenia)) = [min 253, max 387]; 131468 allocated for price {-2082331, -4191215}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 3047 allocated for price {-2282331, -8670598}"
+" "

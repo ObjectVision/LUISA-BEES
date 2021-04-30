@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+SI00;180446;184091;0.00999898;184141;;105167;223063;0.359187;262026;;36453;49327;0.150082;49327;;2766;4232;0.209488;131580;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (SI01)) = [min 24432, max 24973]; 33534 allocated for price {-3938316, 9532663}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 1 (SI02)) = [min 27777, max 30948]; 42038 allocated for price {-3733491, 3857373}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (SI01)) = [min 6650, max 6928]; 8977 allocated for price {-4233486, 4982485}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 1 (SI02)) = [min 4805, max 4973]; 6834 allocated for price {-4136078, 3925510}"
+" ClaimRange(type 2 (Arable), Capri 0 (SI00: Slovenia)) = [min 180446, max 184091]; 184141 allocated for price {-4033491, 3630411}"
+" ClaimRange(type 4 (Pastures), Capri 0 (SI00: Slovenia)) = [min 105167, max 223063]; 262026 allocated for price {-3533491, 2199765}"
+" ClaimRange(type 5 (ForestsMature), ForestDemandRegions 0 (Slovenia)) = [min 1218233, max 2008218]; 1215684 allocated for price {0, 0}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 456 allocated for price {-3533492, -4195629}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 354 allocated for price {-3742883, 653753}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 6 allocated for price {-3883486, -8083905}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (SI00: Slovenia)) = [min 2766, max 4232]; 131580 allocated for price {-3833491, -14152503}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 2404 allocated for price {-4233491, -14248914}"
+" "

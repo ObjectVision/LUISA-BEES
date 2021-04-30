@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+MT00;9700;9896;0.010002;12789;;233;853;0.570902;917;;0;156;1;187;;161;246;0.208845;426;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (MT00)) = [min 9050, max 10042]; 12933 allocated for price {-1110718, -36800}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (MT00)) = [min 1091, max 1140]; 1571 allocated for price {-1115390, -45198}"
+" ClaimRange(type 2 (Arable), Capri 0 (MT00: Malta)) = [min 9700, max 9896]; 12789 allocated for price {-1839955, -47916}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (MT00: Malta)) = [min 0, max 156]; 187 allocated for price {-3260715, -82217}"
+" ClaimRange(type 4 (Pastures), Capri 0 (MT00: Malta)) = [min 233, max 853]; 917 allocated for price {-1410717, -98876}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 74 allocated for price {-1710717, -184916}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 14 allocated for price {-1810717, -196692}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 38 allocated for price {-1310717, -233146}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 155 allocated for price {-1010718, -273260}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 5 allocated for price {-1165390, -259818}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (MT00: Malta)) = [min 161, max 246]; 426 allocated for price {-1639955, -209806}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 77 allocated for price {-610718, -325362}"
+" "

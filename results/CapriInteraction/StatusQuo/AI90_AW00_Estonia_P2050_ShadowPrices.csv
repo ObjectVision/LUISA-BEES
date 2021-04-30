@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;467529;476975;0.010001;531525;;333124;476847;0.177442;561283;;278;2819;0.820471;3573;;733;1123;0.210129;1656;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 62091, max 65319]; 95014 allocated for price {-1713186, 4482136}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 21039, max 22174]; 38637 allocated for price {-2357192, 10483155}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 467529, max 476975]; 531525 allocated for price {-1490138, 7492194}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 278, max 2819]; 3573 allocated for price {-2054842, 5237619}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 333124, max 476847]; 561283 allocated for price {-1979852, 4085976}"
+" ClaimRange(type 5 (ForestsMature), ForestDemandRegions 0 (Estonia)) = [min 2356688, max 3781340]; 2339634 allocated for price {0, 0}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 57897 allocated for price {-738186, -2362016}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 1 allocated for price {-1279853, -2477326}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 17732 allocated for price {-1879852, -8618009}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 17 allocated for price {-2132193, 5336085}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 733, max 1123]; 1656 allocated for price {-1486685, 3266024}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 85 allocated for price {-1286525, -14538201}"
+" "

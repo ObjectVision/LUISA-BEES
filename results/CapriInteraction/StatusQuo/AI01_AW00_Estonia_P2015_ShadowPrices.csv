@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;628764;641466;0.00999976;682515;;310681;442502;0.175019;659099;;884;3746;0.618143;5220;;0;0;;28938;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 57674, max 58806]; 77870 allocated for price {-335497, 2940388}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 18707, max 19323]; 27146 allocated for price {-968439, 305099}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 628764, max 641466]; 682515 allocated for price {-502163, 1635942}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 884, max 3746]; 5220 allocated for price {-677153, 526438}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 310681, max 442502]; 659099 allocated for price {-2163, -2936512}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 15 allocated for price {-900429, -8294530}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 265621 allocated for price {-402163, -11506855}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 74 allocated for price {-402163, -12881928}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 663 allocated for price {-235496, -23478462}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 72 allocated for price {-757328, -14266501}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 0, max 0]; 28938 allocated for price {-302164, -24400232}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 153 allocated for price {-1494338, -11922148}"
+" "

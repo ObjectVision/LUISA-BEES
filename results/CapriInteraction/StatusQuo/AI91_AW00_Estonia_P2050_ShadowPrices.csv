@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;472724;482274;0.01;536640;;333124;476847;0.177442;561220;;278;2819;0.820471;3738;;733;1123;0.210129;1756;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 62091, max 65319]; 97133 allocated for price {-1130671, -1150224}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 21039, max 22174]; 39330 allocated for price {-1775610, -242128}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 472724, max 482274]; 536640 allocated for price {-909976, 27522}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 278, max 2819]; 3738 allocated for price {-1472327, -266645}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 333124, max 476847]; 561220 allocated for price {-1397337, -1376320}"
+" ClaimRange(type 5 (ForestsMature), ForestDemandRegions 0 (Estonia)) = [min 2356688, max 3781340]; 2339634 allocated for price {0, 0}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 249960 allocated for price {-997338, -8054864}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 222 allocated for price {-697337, -13827790}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 13841 allocated for price {-1297337, -14138905}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 17 allocated for price {-1550611, -5389198}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 733, max 1123]; 1756 allocated for price {-906132, -14341664}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 1091 allocated for price {-704010, -33049597}"
+" "

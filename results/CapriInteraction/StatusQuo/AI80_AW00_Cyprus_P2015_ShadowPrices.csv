@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+CY00;102279;104345;0.00999884;241246;;1984;3373;0.259287;8281;;37424;51873;0.161808;140564;;0;0;;122485;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (CY00)) = [min 55490, max 57509]; 155474 allocated for price {-226132, -127374}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (CY00)) = [min 13455, max 13769]; 37480 allocated for price {-116153, -189096}"
+" ClaimRange(type 2 (Arable), Capri 0 (CY00: Cyprus)) = [min 102279, max 104345]; 241246 allocated for price {-1075584, -160940}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (CY00: Cyprus)) = [min 37424, max 51873]; 140564 allocated for price {-340597, -782160}"
+" ClaimRange(type 4 (Pastures), Capri 0 (CY00: Cyprus)) = [min 1984, max 3373]; 8281 allocated for price {-316057, -2361660}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 100 allocated for price {-1098315, -243066}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 2478 allocated for price {-716057, -2792592}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 529 allocated for price {-229459, -1092410}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 12 allocated for price {-215753, -2385905}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 77 allocated for price {-126112, -788204}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (CY00: Cyprus)) = [min 0, max 0]; 122485 allocated for price {-875584, -4398380}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 144 allocated for price {-2013292, -3075207}"
+" "

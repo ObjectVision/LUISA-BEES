@@ -1,0 +1,17 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+CY00;115775;118114;0.0100005;238974;;1638;2842;0.26875;5761;;37879;52567;0.162395;130846;;1275;1952;0.209792;134093;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (CY00)) = [min 57274, max 60455]; 151447 allocated for price {-1815871, 22644}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (CY00)) = [min 16086, max 16730]; 43074 allocated for price {-1811502, -696532}"
+" ClaimRange(type 2 (Arable), Capri 0 (CY00: Cyprus)) = [min 115775, max 118114]; 238974 allocated for price {-2810555, -77346}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (CY00: Cyprus)) = [min 37879, max 52567]; 130846 allocated for price {-2148853, -282274}"
+" ClaimRange(type 4 (Pastures), Capri 0 (CY00: Cyprus)) = [min 1638, max 2842]; 5761 allocated for price {-2410580, -2555236}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 80 allocated for price {-2300362, -1341787}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 33 allocated for price {-2507637, -2903044}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 542 allocated for price {-2040811, -3404716}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 281 allocated for price {-2310580, -3992256}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 73 allocated for price {-1715851, -2052116}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 744 allocated for price {-1711502, -2463212}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (CY00: Cyprus)) = [min 1275, max 1952]; 134093 allocated for price {-2610555, -3701426}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 2470 allocated for price {-3610665, -7053464}"
+" "

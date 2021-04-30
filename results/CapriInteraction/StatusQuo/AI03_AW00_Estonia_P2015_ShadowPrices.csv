@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;641215;654169;0.0100001;694312;;310681;442502;0.175019;653250;;884;3746;0.618143;5151;;0;0;;28907;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 57674, max 58806]; 77429 allocated for price {-335391, 9788190}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 18707, max 19323]; 26970 allocated for price {-968603, 10590423}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 641215, max 654169]; 694312 allocated for price {-502057, 8851540}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 884, max 3746]; 5151 allocated for price {-677047, 7588207}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 310681, max 442502]; 653250 allocated for price {-2057, 4177626}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 15 allocated for price {-900323, -1180392}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 260395 allocated for price {-402057, -4466037}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 74 allocated for price {-402057, -5767790}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 663 allocated for price {-235390, -16630660}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 72 allocated for price {-757492, -3981177}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 0, max 0]; 28907 allocated for price {-302058, -17290446}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 148 allocated for price {-1494232, -8604444}"
+" "

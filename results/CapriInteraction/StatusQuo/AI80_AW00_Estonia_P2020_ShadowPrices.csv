@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;490038;499938;0.0100002;549908;;318506;454476;0.175903;731629;;0;2323;1;3395;;0;0;;33387;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 58731, max 60241]; 87286 allocated for price {-891826, 4808814}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 19637, max 20439]; 34298 allocated for price {-1533046, 4383097}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 490038, max 499938]; 549908 allocated for price {-958493, -7534518}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 0, max 2323]; 3395 allocated for price {-1933483, -4763573}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 318506, max 454476]; 731629 allocated for price {-758493, -5692886}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 135725 allocated for price {-858493, -16162673}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 484 allocated for price {-1158493, -16671658}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 171073 allocated for price {-658493, -18291231}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 49 allocated for price {-791825, -16798596}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 98 allocated for price {-1308047, -16968463}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 0, max 0]; 33387 allocated for price {-1158492, -25155342}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 54 allocated for price {-2265164, -24317063}"
+" "

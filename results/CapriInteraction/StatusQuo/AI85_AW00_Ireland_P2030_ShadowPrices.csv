@@ -1,0 +1,5 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+IR01;215596;219951;0.00999892;219951;-499999;1671504;2327778;0.164098;1886838;0;0;587;1;587;-1168462;0;0;;0;-307143
+IR02;549029;560121;0.0100005;549029;292440;2179675;2958596;0.151592;2244472;0;0;4669;1;4669;-836031;0;0;;0;0
+
+"DiscrAlloc completed for 88 tiles with a total magnified suitability of 250752774660 over 5757366 land units = 43553.384423 per land unit, which is optimal"

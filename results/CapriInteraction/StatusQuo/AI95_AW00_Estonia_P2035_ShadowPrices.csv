@@ -1,0 +1,15 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;478140;487800;0.0100006;531607;;366745;528297;0.180497;678811;;0;1879;1;2575;;0;0;;471;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 60395, max 62843]; 91781 allocated for price {-3350977, -8093589}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 20539, max 21547]; 36984 allocated for price {-4084312, -9354496}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 478140, max 487800]; 531607 allocated for price {-2108334, -9204753}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 0, max 1879]; 2575 allocated for price {-2283324, -9698589}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 366745, max 528297]; 678811 allocated for price {-1608334, -12501119}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 4393 allocated for price {-2208334, -20477921}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 19 allocated for price {-1708333, -24745894}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 398229 allocated for price {-1508334, -31943624}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 15 allocated for price {-3859313, -23251366}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 0, max 0]; 471 allocated for price {-2008337, -42960167}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 334 allocated for price {-1008333, -40199919}"
+" "

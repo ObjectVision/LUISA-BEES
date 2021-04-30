@@ -1,0 +1,54 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+AT11;185276;189019;0.0100001;188627;;0;3092;1;3092;;18905;23396;0.106168;21877;;516;790;0.209801;516;
+AT12;774009;789646;0.0100003;789646;;79866;146609;0.294704;146609;;43521;60000;0.159185;48558;;2387;3655;0.209864;3655;
+AT13;5490;5601;0.0100081;5490;;47;48;0.0105263;47;;696;711;0.010661;696;;0;0;;0;
+AT21;71410;72853;0.0100026;83747;;74776;162970;0.370959;188676;;7;435;0.968326;492;;844;1292;0.209738;1942;
+AT22;158151;161346;0.0100001;196253;;134413;226985;0.25615;277868;;5487;14735;0.457324;17968;;1222;1870;0.209573;2674;
+AT31;290921;296798;0.00999968;297691;;115167;212976;0.298068;272742;;114;1350;0.844262;1589;;1421;2176;0.209897;2407;
+AT32;16683;17020;0.00999911;19589;;97089;184437;0.310266;214814;;70;344;0.661836;591;;709;1086;0.210028;1292;
+AT33;25906;26429;0.00999331;31951;;88270;212432;0.412907;326223;;0;43;1;43;;1038;1589;0.209745;2335;
+AT34;6302;6430;0.0100534;8712;;23926;56191;0.402724;80466;;0;71;1;93;;265;407;0.21131;632;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 1 (AT21)) = [min 31267, max 32184]; 37241 allocated for price {-2019056, 4839808}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 2 (AT22)) = [min 65611, max 69004]; 82991 allocated for price {-1346946, 10541214}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 3 (AT31)) = [min 74033, max 76957]; 84884 allocated for price {-1147506, -19214808}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 4 (AT32)) = [min 26093, max 27427]; 31915 allocated for price {-3067804, 9054696}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 5 (AT33)) = [min 37048, max 39193]; 58725 allocated for price {-3270095, 7727231}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 6 (AT34)) = [min 18890, max 19855]; 27629 allocated for price {-1571363, 31935990}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (AT31)) = [min 8300, max 8514]; 10064 allocated for price {-1147506, -24900228}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 1 (AT34)) = [min 1558, max 1592]; 2797 allocated for price {-1571363, 27365798}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 3 (AT22)) = [min 5109, max 5242]; 7437 allocated for price {-1346946, 4738300}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 6 (AT33)) = [min 2475, max 2528]; 3898 allocated for price {-4052959, 2198510}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 7 (AT32)) = [min 2164, max 2210]; 2558 allocated for price {-3552955, 33098610}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 8 (AT21)) = [min 2450, max 2507]; 2927 allocated for price {-2507951, 13310033}"
+" ClaimRange(type 2 (Arable), Capri 3 (AT21: Kaernten)) = [min 71410, max 72853]; 83747 allocated for price {-2285337, 711714}"
+" ClaimRange(type 2 (Arable), Capri 4 (AT22: Steiermark)) = [min 158151, max 161346]; 196253 allocated for price {-1813613, 6767540}"
+" ClaimRange(type 2 (Arable), Capri 5 (AT31: Oberoesterreich)) = [min 290921, max 296798]; 297691 allocated for price {-1947505, -19282860}"
+" ClaimRange(type 2 (Arable), Capri 6 (AT32: Salzburg)) = [min 16683, max 17020]; 19589 allocated for price {-3352968, 32166580}"
+" ClaimRange(type 2 (Arable), Capri 7 (AT33: Tirol)) = [min 25906, max 26429]; 31951 allocated for price {-3353003, 10386955}"
+" ClaimRange(type 2 (Arable), Capri 8 (AT34: Vorarlberg)) = [min 6302, max 6430]; 8712 allocated for price {-1862791, 31088818}"
+" ClaimRange(type 3 (PermanentCrops), Capri 3 (AT21: Kaernten)) = [min 7, max 435]; 492 allocated for price {-2507951, 4683127}"
+" ClaimRange(type 3 (PermanentCrops), Capri 4 (AT22: Steiermark)) = [min 5487, max 14735]; 17968 allocated for price {-1313613, 4575984}"
+" ClaimRange(type 3 (PermanentCrops), Capri 5 (AT31: Oberoesterreich)) = [min 114, max 1350]; 1589 allocated for price {-1807679, -36231240}"
+" ClaimRange(type 3 (PermanentCrops), Capri 6 (AT32: Salzburg)) = [min 70, max 344]; 591 allocated for price {-2923350, 3127960}"
+" ClaimRange(type 3 (PermanentCrops), Capri 8 (AT34: Vorarlberg)) = [min 0, max 71]; 93 allocated for price {-2020017, 37256592}"
+" ClaimRange(type 4 (Pastures), Capri 3 (AT21: Kaernten)) = [min 74776, max 162970]; 188676 allocated for price {-2168670, -3660820}"
+" ClaimRange(type 4 (Pastures), Capri 4 (AT22: Steiermark)) = [min 134413, max 226985]; 277868 allocated for price {-1745625, -7528296}"
+" ClaimRange(type 4 (Pastures), Capri 5 (AT31: Oberoesterreich)) = [min 115167, max 212976]; 272742 allocated for price {-1747505, -41962479}"
+" ClaimRange(type 4 (Pastures), Capri 6 (AT32: Salzburg)) = [min 97089, max 184437]; 214814 allocated for price {-3712967, 1256644}"
+" ClaimRange(type 4 (Pastures), Capri 7 (AT33: Tirol)) = [min 88270, max 212432]; 326223 allocated for price {-3853002, 7374347}"
+" ClaimRange(type 4 (Pastures), Capri 8 (AT34: Vorarlberg)) = [min 23926, max 56191]; 80466 allocated for price {-2201354, 14372270}"
+" ClaimRange(type 5 (ForestsMature), ForestDemandRegions 0 (Austria)) = [min 3904847, max 6407111]; 3867597 allocated for price {209878, 57278302}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Austria)) = [min 0, max 0]; 1 allocated for price {-3852960, -8792925}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Austria)) = [min 0, max 0]; 1 allocated for price {-3252968, 6545180}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Austria)) = [min 0, max 0]; 7 allocated for price {-3752965, -12803293}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Austria)) = [min 0, max 0]; 6 allocated for price {-3170009, -12197099}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Austria)) = [min 0, max 0]; 6 allocated for price {-3810192, -23280950}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 3 (AT21: Kaernten)) = [min 844, max 1292]; 1942 allocated for price {-2085338, -45264252}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 4 (AT22: Steiermark)) = [min 1222, max 1870]; 2674 allocated for price {-1613614, -29594170}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 5 (AT31: Oberoesterreich)) = [min 1421, max 2176]; 2407 allocated for price {-1726126, -41959770}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 6 (AT32: Salzburg)) = [min 709, max 1086]; 1292 allocated for price {-3152968, -19076220}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 7 (AT33: Tirol)) = [min 1038, max 1589]; 2335 allocated for price {-3352965, -12941461}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 8 (AT34: Vorarlberg)) = [min 265, max 407]; 632 allocated for price {-1641373, 3832518}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Austria)) = [min 0, max 0]; 1 allocated for price {-3264649, -14925021}"
+" "

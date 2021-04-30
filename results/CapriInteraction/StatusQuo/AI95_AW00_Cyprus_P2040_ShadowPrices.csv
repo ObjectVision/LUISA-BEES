@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+CY00;116152;118498;0.00999787;234293;;1368;2429;0.279431;4681;;39345;54812;0.164268;134249;;1547;2367;0.209504;137439;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (CY00)) = [min 58010, max 61670]; 151797 allocated for price {-1746175, 1252704}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (CY00)) = [min 16641, max 17409]; 43332 allocated for price {-1741011, 1084457}"
+" ClaimRange(type 2 (Arable), Capri 0 (CY00: Cyprus)) = [min 116152, max 118498]; 234293 allocated for price {-2760412, 483539}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (CY00: Cyprus)) = [min 39345, max 54812]; 134249 allocated for price {-2069711, 306432}"
+" ClaimRange(type 4 (Pastures), Capri 0 (CY00: Cyprus)) = [min 1368, max 2429]; 4681 allocated for price {-2340806, 538685}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 279 allocated for price {-2041011, -571203}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 6 allocated for price {-2435069, 100608}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 251 allocated for price {-1956859, -3109788}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 64 allocated for price {-1796154, -3585816}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 401 allocated for price {-1791011, -3187983}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (CY00: Cyprus)) = [min 1547, max 2367]; 137439 allocated for price {-2582387, -3252432}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 1328 allocated for price {-3541836, -1456236}"
+" "

@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+CY00;118803;121203;0.00999975;237729;;1091;2005;0.29522;3570;;39531;55096;0.164488;133123;;2603;3984;0.209655;133750;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (CY00)) = [min 58956, max 63235]; 153231 allocated for price {-901919, 374572}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (CY00)) = [min 17092, max 17964]; 43921 allocated for price {-897963, 345791}"
+" ClaimRange(type 2 (Arable), Capri 0 (CY00: Cyprus)) = [min 118803, max 121203]; 237729 allocated for price {-1925740, 122876}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (CY00: Cyprus)) = [min 39531, max 55096]; 133123 allocated for price {-1242805, 43786}"
+" ClaimRange(type 4 (Pastures), Capri 0 (CY00: Cyprus)) = [min 1091, max 2005]; 3570 allocated for price {-1497901, -166978}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 133 allocated for price {-1497963, -1621709}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 71 allocated for price {-1594129, 341369}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 46 allocated for price {-1130364, -2311614}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 64 allocated for price {-801899, -4463948}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 1271 allocated for price {-797963, -1515519}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (CY00: Cyprus)) = [min 2603, max 3984]; 133750 allocated for price {-1756681, -4807028}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 1759 allocated for price {-2697343, -8848460}"
+" "

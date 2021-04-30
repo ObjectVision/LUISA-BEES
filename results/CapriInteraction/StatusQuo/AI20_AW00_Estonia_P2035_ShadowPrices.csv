@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;603967;616168;0.00999971;657522;;366745;528297;0.180497;937345;;0;1879;1;2438;;0;0;;5433;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 60395, max 62843]; 101529 allocated for price {-1100168, -703919}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 20539, max 21547]; 37091 allocated for price {-1744192, 424884}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 603967, max 616168]; 657522 allocated for price {-1566834, -766321}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 0, max 1879]; 2438 allocated for price {-1741824, -2619874}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 366745, max 528297]; 937345 allocated for price {-1066834, -5151079}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 1557 allocated for price {-966834, -13315665}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 380 allocated for price {-1466834, -12607942}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 3808 allocated for price {-966834, -25531824}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 58 allocated for price {-1000167, -27122769}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 13 allocated for price {-1519193, -20348846}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 0, max 0]; 5433 allocated for price {-1366835, -25601811}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 54 allocated for price {-373507, -35926768}"
+" "

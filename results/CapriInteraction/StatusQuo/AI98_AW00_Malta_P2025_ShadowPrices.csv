@@ -1,0 +1,17 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+MT00;8773;8950;0.00998702;12937;;145;718;0.663963;786;;0;655;1;926;;0;0;;3;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (MT00)) = [min 8191, max 8816]; 12810 allocated for price {-842448, -68096}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (MT00)) = [min 917, max 948]; 1393 allocated for price {-842450, -75078}"
+" ClaimRange(type 2 (Arable), Capri 0 (MT00: Malta)) = [min 8773, max 8950]; 12937 allocated for price {-1559108, -92732}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (MT00: Malta)) = [min 0, max 655]; 926 allocated for price {-2992438, -77861}"
+" ClaimRange(type 4 (Pastures), Capri 0 (MT00: Malta)) = [min 145, max 718]; 786 allocated for price {-1142447, -113216}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 18 allocated for price {-1142446, -82438}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 23 allocated for price {-1459102, -196442}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 19 allocated for price {-1542447, -218584}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 214 allocated for price {-1042447, -204146}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 1 allocated for price {-892447, -359956}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 11 allocated for price {-892450, -289698}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (MT00: Malta)) = [min 0, max 0]; 3 allocated for price {-1359109, -231512}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 56 allocated for price {-442446, -284752}"
+" "

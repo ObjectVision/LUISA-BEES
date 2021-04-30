@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+CY00;111867;114127;0.0100003;223833;;862;1654;0.314785;2776;;39947;55732;0.164979;136957;;2835;4338;0.209536;131372;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (CY00)) = [min 60115, max 65148]; 164455 allocated for price {-1034840, 1219172}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (CY00)) = [min 17490, max 18460]; 47506 allocated for price {-1023270, 870844}"
+" ClaimRange(type 2 (Arable), Capri 0 (CY00: Cyprus)) = [min 111867, max 114127]; 223833 allocated for price {-1960955, 243636}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (CY00: Cyprus)) = [min 39947, max 55732]; 136957 allocated for price {-1245728, 170300}"
+" ClaimRange(type 4 (Pastures), Capri 0 (CY00: Cyprus)) = [min 862, max 1654]; 2776 allocated for price {-1623242, -472568}"
+" ClaimRange(type 5 (ForestsMature), ForestDemandRegions 0 (Cyprus)) = [min 177337, max 285822]; 177250 allocated for price {0, 0}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 116 allocated for price {-1461830, -173284}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 5 allocated for price {-1609995, -4133904}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 265 allocated for price {-1265319, 363916}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 14 allocated for price {-1084835, -46998}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 254 allocated for price {-1073270, -5617916}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (CY00: Cyprus)) = [min 2835, max 4338]; 131372 allocated for price {-1926314, -7399756}"
+" "

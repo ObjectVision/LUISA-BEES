@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;479633;489323;0.0100005;532152;;362759;522197;0.180165;614876;;0;2003;1;2691;;79;121;0.21;323;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 61096, max 63863]; 92064 allocated for price {-2205532, 25327310}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 20748, max 21808]; 36980 allocated for price {-3105531, 25317819}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 479633, max 489323]; 532152 allocated for price {-2672198, 25325734}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 0, max 2003]; 2691 allocated for price {-2847188, 25084026}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 362759, max 522197]; 614876 allocated for price {-2172198, 22022606}"
+" ClaimRange(type 5 (ForestsMature), ForestDemandRegions 0 (Estonia)) = [min 2343401, max 3756165]; 2339634 allocated for price {0, 0}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 394770 allocated for price {-2072198, 20838824}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 21 allocated for price {-2072198, 20919166}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 70746 allocated for price {-2072198, 8617721}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 15 allocated for price {-2880532, 13072499}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 79, max 121]; 323 allocated for price {-2472206, -1874122}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 333 allocated for price {-1478871, -13133491}"
+" "

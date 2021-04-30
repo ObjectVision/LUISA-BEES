@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;600117;612241;0.0100003;648516;;355485;511065;0.17954;626119;;0;1812;1;2291;;0;0;;7230;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 59921, max 62105]; 92839 allocated for price {-2588136, 4973318}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 20335, max 21292]; 35258 allocated for price {-2666670, 3253643}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 600117, max 612241]; 648516 allocated for price {-1266670, 1292122}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 0, max 1812]; 2291 allocated for price {-1941661, -1365360}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 355485, max 511065]; 626119 allocated for price {-766670, -3009776}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 11277 allocated for price {-666670, -7125482}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 149 allocated for price {-1166670, -13709780}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 323642 allocated for price {-666670, -18234041}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 10 allocated for price {-2488135, -19153122}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 12 allocated for price {-2441671, -17321037}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 0, max 0]; 7230 allocated for price {-1166670, -30614296}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 40 allocated for price {-2273341, -27112541}"
+" "

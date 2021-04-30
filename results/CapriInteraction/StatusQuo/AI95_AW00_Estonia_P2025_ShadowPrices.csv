@@ -1,0 +1,17 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;560660;571987;0.0100005;620411;;336288;481688;0.177756;959806;;0;1984;1;3027;;0;0;;27050;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 59297, max 61126]; 91820 allocated for price {-533993, 7311344}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 19979, max 20854]; 36984 allocated for price {-1172288, 4919883}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 560660, max 571987]; 620411 allocated for price {-900660, -83618}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 0, max 1984]; 3027 allocated for price {-1575650, -3455266}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 336288, max 481688]; 959806 allocated for price {-400660, -4135524}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 2167 allocated for price {-500660, -12286590}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 5 allocated for price {-800660, -10433469}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 2194 allocated for price {-800660, -20055512}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 3697 allocated for price {-500660, -24380789}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 129 allocated for price {-433992, -14935506}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 45 allocated for price {-947289, -14391137}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 0, max 0]; 27050 allocated for price {-700661, -22056388}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 51 allocated for price {0, 0}"
+" "

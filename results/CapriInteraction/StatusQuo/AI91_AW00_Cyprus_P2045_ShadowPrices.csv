@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+CY00;110317;112546;0.0100017;226660;;1091;2005;0.29522;3746;;39531;55096;0.164488;137339;;2603;3984;0.209655;131639;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (CY00)) = [min 58956, max 63235]; 159039 allocated for price {-900396, 1203456}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (CY00)) = [min 17092, max 17964]; 46752 allocated for price {-892655, 1186320}"
+" ClaimRange(type 2 (Arable), Capri 0 (CY00: Cyprus)) = [min 110317, max 112546]; 226660 allocated for price {-1949227, 942250}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (CY00: Cyprus)) = [min 39531, max 55096]; 137339 allocated for price {-1235804, 722680}"
+" ClaimRange(type 4 (Pastures), Capri 0 (CY00: Cyprus)) = [min 1091, max 2005]; 3746 allocated for price {-1492585, 1095474}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 94 allocated for price {-1141125, -556900}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 41 allocated for price {-1587067, -147096}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 576 allocated for price {-1123157, -802100}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 71 allocated for price {-800376, -1675744}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 1080 allocated for price {-792655, -580360}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (CY00: Cyprus)) = [min 2603, max 3984]; 131639 allocated for price {-1749227, -2627670}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 1522 allocated for price {-2696069, -7914952}"
+" "

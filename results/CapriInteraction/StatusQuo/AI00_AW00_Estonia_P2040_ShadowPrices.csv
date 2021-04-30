@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;499618;509711;0.00999971;551195;;362759;522197;0.180165;617603;;0;2003;1;2653;;79;121;0.21;330;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 61096, max 63863]; 90476 allocated for price {-1616252, 6936426}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 20748, max 21808]; 36355 allocated for price {-2263809, 7191019}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 499618, max 509711]; 551195 allocated for price {-2082918, 6920888}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 0, max 2003]; 2653 allocated for price {-2257908, 6461303}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 362759, max 522197]; 617603 allocated for price {-1582918, 3453630}"
+" ClaimRange(type 5 (ForestsMature), ForestDemandRegions 0 (Estonia)) = [min 2343401, max 3756165]; 2339634 allocated for price {0, 0}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 379516 allocated for price {-1482918, 1965708}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 22 allocated for price {-1482918, 1246583}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 66024 allocated for price {-1482918, -10255575}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 15 allocated for price {-2038810, -5541731}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 79, max 121]; 330 allocated for price {-1882919, -15723842}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 346 allocated for price {-889591, -28425531}"
+" "

@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+SI00;162775;166064;0.0100019;166119;;105151;223039;0.359207;288182;;36706;49712;0.150501;49712;;2277;3485;0.209649;149945;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (SI01)) = [min 24720, max 25262]; 34613 allocated for price {-3350001, 11609543}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 1 (SI02)) = [min 26809, max 29582]; 41167 allocated for price {-3350001, 11794517}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (SI01)) = [min 6466, max 6715]; 9424 allocated for price {-3849998, 11843203}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 1 (SI02)) = [min 4633, max 4783]; 6944 allocated for price {-3797465, 11969582}"
+" ClaimRange(type 2 (Arable), Capri 0 (SI00: Slovenia)) = [min 162775, max 166064]; 166119 allocated for price {-3650001, 11654379}"
+" ClaimRange(type 4 (Pastures), Capri 0 (SI00: Slovenia)) = [min 105151, max 223039]; 288182 allocated for price {-3150001, 10375741}"
+" ClaimRange(type 5 (ForestsMature), ForestDemandRegions 0 (Slovenia)) = [min 1217144, max 2006154]; 1215627 allocated for price {0, 0}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 36 allocated for price {-3150002, 3774269}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 559 allocated for price {-3154796, 401273}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 1 allocated for price {-3499998, -313237}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (SI00: Slovenia)) = [min 2277, max 3485]; 149945 allocated for price {-3450001, 5160365}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 931 allocated for price {-3850001, -3179798}"
+" "

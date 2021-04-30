@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;520665;531184;0.0100005;579209;;318506;454476;0.175903;732140;;0;2323;1;3359;;0;0;;32045;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 58731, max 60241]; 86908 allocated for price {-868453, 2148370}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 19637, max 20439]; 33855 allocated for price {-1509464, 443397}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 520665, max 531184]; 579209 allocated for price {-935120, -10122464}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 0, max 2323]; 3359 allocated for price {-1910110, -7551305}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 318506, max 454476]; 732140 allocated for price {-735120, -8602530}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 114250 allocated for price {-835120, -19373409}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 154 allocated for price {-1135120, -22553462}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 165272 allocated for price {-635120, -21533675}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 49 allocated for price {-768452, -20264600}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 91 allocated for price {-1284465, -23230333}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 0, max 0]; 32045 allocated for price {-1135119, -29063786}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 54 allocated for price {-2241791, -27226707}"
+" "

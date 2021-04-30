@@ -1,0 +1,17 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+MT00;9683;9878;0.00996882;13993;;120;679;0.699625;733;;0;861;1;1191;;0;0;;60;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (MT00)) = [min 7777, max 8227]; 11559 allocated for price {-987908, -30896}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (MT00)) = [min 855, max 880]; 1234 allocated for price {-997133, -40272}"
+" ClaimRange(type 2 (Arable), Capri 0 (MT00: Malta)) = [min 9683, max 9878]; 13993 allocated for price {-1696506, -65710}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (MT00: Malta)) = [min 0, max 861]; 1191 allocated for price {-3137891, -35651}"
+" ClaimRange(type 4 (Pastures), Capri 0 (MT00: Malta)) = [min 120, max 679]; 733 allocated for price {-1287906, -44943}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 3 allocated for price {0, 0}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 3 allocated for price {-1596506, -71975}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 12 allocated for price {-1687906, -148295}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 174 allocated for price {-1187906, -143213}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 117 allocated for price {-887908, -267836}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 57 allocated for price {-897133, -217742}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (MT00: Malta)) = [min 0, max 0]; 60 allocated for price {-1496507, -243120}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Malta)) = [min 0, max 0]; 61 allocated for price {-587908, -410366}"
+" "

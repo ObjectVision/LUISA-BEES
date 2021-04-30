@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;484629;494420;0.0100005;537203;;362759;522197;0.180165;641196;;0;2003;1;2580;;79;121;0.21;5753;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 61096, max 63863]; 102372 allocated for price {-2852290, 27070642}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 20748, max 21808]; 39648 allocated for price {-2931582, 25014647}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 484629, max 494420]; 537203 allocated for price {-1499924, 18400290}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 0, max 2003]; 2580 allocated for price {-1674914, 17855602}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 362759, max 522197]; 641196 allocated for price {-999924, 15024344}"
+" ClaimRange(type 5 (ForestsMature), ForestDemandRegions 0 (Estonia)) = [min 2343401, max 3756165]; 2339634 allocated for price {0, 0}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 7213 allocated for price {-899924, 13387630}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 6 allocated for price {-899924, 5264740}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 408032 allocated for price {-899924, 1168039}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 15 allocated for price {-2706583, 12281897}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 79, max 121]; 5753 allocated for price {-1399924, -15152560}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 45 allocated for price {-2506595, -12370189}"
+" "

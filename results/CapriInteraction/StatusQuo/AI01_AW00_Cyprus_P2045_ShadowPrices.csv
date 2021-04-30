@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+CY00;122440;124913;0.00999786;241286;;1091;2005;0.29522;3635;;39531;55096;0.164488;132296;;2603;3984;0.209655;132043;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (CY00)) = [min 58956, max 63235]; 152779 allocated for price {-1309936, 3195328}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (CY00)) = [min 17092, max 17964]; 43408 allocated for price {-1306797, 2470324}"
+" ClaimRange(type 2 (Arable), Capri 0 (CY00: Cyprus)) = [min 122440, max 124913]; 241286 allocated for price {-2310211, 2811410}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (CY00: Cyprus)) = [min 39531, max 55096]; 132296 allocated for price {-2048503, 2619754}"
+" ClaimRange(type 4 (Pastures), Capri 0 (CY00: Cyprus)) = [min 1091, max 2005]; 3635 allocated for price {-1906752, 2338651}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 20 allocated for price {-1864073, 2067799}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 62 allocated for price {-2003804, -2039060}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 34 allocated for price {-1936036, -288026}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 238 allocated for price {-1209916, 316128}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 2294 allocated for price {-1206797, 569654}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (CY00: Cyprus)) = [min 2603, max 3984]; 132043 allocated for price {-2110211, -912390}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 167 allocated for price {-3106002, -1341048}"
+" "

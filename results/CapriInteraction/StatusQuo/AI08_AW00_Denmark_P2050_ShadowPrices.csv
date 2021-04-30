@@ -1,0 +1,23 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+DK00;2395344;2443735;0.01;2528266;;116189;221931;0.312735;295695;;3381;12680;0.57898;14444;;0;29;1;36128;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (DK01)) = [min 97555, max 106418]; 132011 allocated for price {-4201929, 3168450}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 1 (DK03)) = [min 59290, max 62467]; 86691 allocated for price {-4201929, 1115472}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 2 (DK04)) = [min 66185, max 71343]; 83206 allocated for price {-4201929, 4607054}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 3 (DK05)) = [min 27128, max 28041]; 32106 allocated for price {-3964237, 1582448}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (DK02)) = [min 5646, max 5831]; 7749 allocated for price {-4866977, 1407054}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 1 (DK05)) = [min 5584, max 5875]; 8942 allocated for price {-4867613, 2589211}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 2 (DK03)) = [min 12620, max 13073]; 17326 allocated for price {-4867573, 3490167}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 3 (DK01)) = [min 10139, max 10496]; 12008 allocated for price {-4751121, 2338291}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 4 (DK04)) = [min 13954, max 14592]; 21963 allocated for price {-4867624, 1508696}"
+" ClaimRange(type 2 (Arable), Capri 0 (DK00: Denmark)) = [min 2395344, max 2443735]; 2528266 allocated for price {-4668595, 916084}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (DK00: Denmark)) = [min 3381, max 12680]; 14444 allocated for price {-4793572, -949032}"
+" ClaimRange(type 4 (Pastures), Capri 0 (DK00: Denmark)) = [min 116189, max 221931]; 295695 allocated for price {-4168595, -5772210}"
+" ClaimRange(type 5 (ForestsMature), ForestDemandRegions 0 (Denmark)) = [min 628006, max 1062054]; 587329 allocated for price {0, 0}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Denmark)) = [min 0, max 0]; 14197 allocated for price {-4468595, -20283918}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Denmark)) = [min 0, max 0]; 6410 allocated for price {-4068595, -23532635}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Denmark)) = [min 0, max 0]; 108 allocated for price {-4101929, -31120516}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Denmark)) = [min 0, max 0]; 21 allocated for price {-4656462, -29577123}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (DK00: Denmark)) = [min 0, max 29]; 36128 allocated for price {-4468596, -33273246}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Denmark)) = [min 0, max 0]; 10 allocated for price {-3566856, -31405975}"
+" "

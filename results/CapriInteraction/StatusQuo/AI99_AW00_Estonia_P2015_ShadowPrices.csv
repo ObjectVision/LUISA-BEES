@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;616313;628764;0.0100002;670648;;310681;442502;0.175019;663166;;884;3746;0.618143;5267;;0;0;;30601;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 57674, max 58806]; 78334 allocated for price {-335285, 739962}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 18707, max 19323]; 27423 allocated for price {-967949, -4724377}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 616313, max 628764]; 670648 allocated for price {-501951, -929328}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 884, max 3746]; 5267 allocated for price {-676941, -1914364}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 310681, max 442502]; 663166 allocated for price {-1951, -5404090}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 15 allocated for price {-900217, -10762108}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 270962 allocated for price {-401951, -13901569}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 75 allocated for price {-401951, -15235006}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 663 allocated for price {-235284, -25678888}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 73 allocated for price {-756838, -19086627}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 0, max 0]; 30601 allocated for price {-301952, -26212194}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 159 allocated for price {-1494126, -11331427}"
+" "

@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+CY00;114929;117251;0.0100009;234796;;1368;2429;0.279431;4741;;39345;54812;0.164268;135426;;1547;2367;0.209504;130837;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (CY00)) = [min 58010, max 61670]; 154813 allocated for price {-1050473, -1183392}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (CY00)) = [min 16641, max 17409]; 44829 allocated for price {-1038799, -1560460}"
+" ClaimRange(type 2 (Arable), Capri 0 (CY00: Cyprus)) = [min 114929, max 117251]; 234796 allocated for price {-1948319, -2788053}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (CY00: Cyprus)) = [min 39345, max 54812]; 135426 allocated for price {-1255057, -2798040}"
+" ClaimRange(type 4 (Pastures), Capri 0 (CY00: Cyprus)) = [min 1368, max 2429]; 4741 allocated for price {-1638580, -1652695}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 74 allocated for price {-1827996, -3089060}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 2 allocated for price {-1627282, -3476132}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 98 allocated for price {-1277187, -7235904}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 71 allocated for price {-1100452, -4062592}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 287 allocated for price {-1088799, -7542340}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (CY00: Cyprus)) = [min 1547, max 2367]; 130837 allocated for price {-1931704, -9965472}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 2432 allocated for price {-2845292, -7160688}"
+" "

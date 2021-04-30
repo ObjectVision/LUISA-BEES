@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;659891;673222;0.0099999;711864;;310681;442502;0.175019;642317;;884;3746;0.618143;5083;;0;0;;28891;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 57674, max 58806]; 76739 allocated for price {-335226, 9570885}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 18707, max 19323]; 26572 allocated for price {-968935, 7090771}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 659891, max 673222]; 711864 allocated for price {-501892, 9194389}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 884, max 3746]; 5083 allocated for price {-676882, 7739522}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 310681, max 442502]; 642317 allocated for price {-1892, 4371133}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 3 allocated for price {-935225, -468537}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 255025 allocated for price {-401892, -4346066}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 73 allocated for price {-401892, -5890527}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 663 allocated for price {-235225, -16847965}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 60 allocated for price {-757824, -13079479}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 0, max 0]; 28891 allocated for price {-301893, -17093021}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 96 allocated for price {-1508563, -594419}"
+" "

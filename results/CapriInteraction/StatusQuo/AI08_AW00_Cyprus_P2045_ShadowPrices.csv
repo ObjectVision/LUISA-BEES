@@ -1,0 +1,15 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+CY00;130926;133571;0.0100001;248339;;1091;2005;0.29522;3365;;39531;55096;0.164488;127096;;2603;3984;0.209655;138158;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (CY00)) = [min 58956, max 63235]; 147768 allocated for price {-1757456, -3967696}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (CY00)) = [min 17092, max 17964]; 42202 allocated for price {-1757335, -5432032}"
+" ClaimRange(type 2 (Arable), Capri 0 (CY00: Cyprus)) = [min 130926, max 133571]; 248339 allocated for price {-2756339, -4157496}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (CY00: Cyprus)) = [min 39531, max 55096]; 127096 allocated for price {-2497152, -4210351}"
+" ClaimRange(type 4 (Pastures), Capri 0 (CY00: Cyprus)) = [min 1091, max 2005]; 3365 allocated for price {-2357295, -7173904}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 138 allocated for price {-2618029, -5780488}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 37 allocated for price {-2450911, -4575079}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 157 allocated for price {-1657448, -7645496}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 910 allocated for price {-1807335, -11948952}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (CY00: Cyprus)) = [min 2603, max 3984]; 138158 allocated for price {-2556339, -7776016}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 10 allocated for price {-3556050, -13145904}"
+" "

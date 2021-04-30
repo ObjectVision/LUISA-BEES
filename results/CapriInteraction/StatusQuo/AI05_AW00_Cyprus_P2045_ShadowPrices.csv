@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+CY00;127289;129860;0.00999809;249354;;1091;2005;0.29522;3437;;39531;55096;0.164488;129436;;2603;3984;0.209655;132846;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (CY00)) = [min 58956, max 63235]; 148713 allocated for price {-1759662, 915312}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (CY00)) = [min 17092, max 17964]; 42513 allocated for price {-1756721, 744076}"
+" ClaimRange(type 2 (Arable), Capri 0 (CY00: Cyprus)) = [min 127289, max 129860]; 249354 allocated for price {-2771633, 910454}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (CY00: Cyprus)) = [min 39531, max 55096]; 129436 allocated for price {-2101606, 1259024}"
+" ClaimRange(type 4 (Pastures), Capri 0 (CY00: Cyprus)) = [min 1091, max 2005]; 3437 allocated for price {-2356684, 517711}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 43 allocated for price {-2607841, -2537344}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 28 allocated for price {-2452910, -387152}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 31 allocated for price {-1989162, 657074}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 131 allocated for price {-1659635, -5239208}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 1489 allocated for price {-1656721, -4016684}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (CY00: Cyprus)) = [min 2603, max 3984]; 132846 allocated for price {-2571633, -2998586}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Cyprus)) = [min 0, max 0]; 109 allocated for price {-3556557, -5373048}"
+" "

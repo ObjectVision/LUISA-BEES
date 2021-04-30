@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;481226;490948;0.0100003;538450;;355485;511065;0.17954;796048;;0;1812;1;2444;;0;0;;32267;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 59921, max 62105]; 90657 allocated for price {-705066, -539274}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 20335, max 21292]; 36455 allocated for price {-1345709, -1772539}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 481226, max 490948]; 538450 allocated for price {-1071734, -2939706}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 0, max 1812]; 2444 allocated for price {-1746725, -4109028}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 355485, max 511065]; 796048 allocated for price {-571734, -6294914}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 19229 allocated for price {-671733, -16923708}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 26 allocated for price {-971734, -22338070}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 231699 allocated for price {-671733, -24709539}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 44 allocated for price {-755064, -25380964}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 13 allocated for price {-1120710, -19908269}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 0, max 0]; 32267 allocated for price {-871735, -25010156}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 54 allocated for price {0, 0}"
+" "

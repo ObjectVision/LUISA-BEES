@@ -1,0 +1,17 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+SI00;159234;162450;0.00999739;162507;;105071;222916;0.359298;283091;;34908;46960;0.147213;47114;;253;387;0.209375;162254;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (SI01)) = [min 25311, max 25796]; 35456 allocated for price {-3696750, 5803293}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 1 (SI02)) = [min 23905, max 25482]; 35935 allocated for price {-3696750, 5813583}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (SI01)) = [min 5925, max 6101]; 8596 allocated for price {-4196745, 6142760}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 1 (SI02)) = [min 4167, max 4276]; 6528 allocated for price {-4188911, 6251646}"
+" ClaimRange(type 2 (Arable), Capri 0 (SI00: Slovenia)) = [min 159234, max 162450]; 162507 allocated for price {-3996750, 5773979}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (SI00: Slovenia)) = [min 34908, max 46960]; 47114 allocated for price {-3496750, 5159974}"
+" ClaimRange(type 4 (Pastures), Capri 0 (SI00: Slovenia)) = [min 105071, max 222916]; 283091 allocated for price {-3496750, 4545533}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 11773 allocated for price {-2542013, -3118127}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 69 allocated for price {-3396750, -955341}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 765 allocated for price {-3542013, -3244447}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 1 allocated for price {-3846745, -5889480}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (SI00: Slovenia)) = [min 253, max 387]; 162254 allocated for price {-3796750, -11174967}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Slovenia)) = [min 0, max 0]; 5817 allocated for price {-3996750, -13611940}"
+" "

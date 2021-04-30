@@ -1,0 +1,57 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+NL11;120000;122425;0.0100031;122425;;60595;95463;0.22343;72348;;1504;5248;0.554502;5248;;0;0;;0;
+NL12;40970;41797;0.0099919;40970;;235244;340349;0.182603;242953;;628;1916;0.506289;1541;;0;0;;0;
+NL13;103470;105560;0.00999856;105560;;59659;82047;0.157989;90263;;708;2875;0.6048;3055;;0;0;;7921;
+NL21;84681;86392;0.0100016;86392;;159519;199220;0.110668;168703;;572;2585;0.637631;2585;;0;0;;0;
+NL22;107865;110044;0.00999959;111123;;156418;194658;0.108922;208545;;5453;14944;0.465314;15034;;0;0;;630;
+NL23;50118;51131;0.010005;67376;;2925;3177;0.0412979;7058;;2881;10069;0.555058;15860;;0;0;;2352;
+NL31;15415;15726;0.00998683;15415;;72917;90082;0.105307;72917;;1365;3265;0.410367;1365;;0;0;;0;
+NL32;64057;65351;0.00999938;65351;;77109;115422;0.198997;104435;;2013;10462;0.677275;10462;;0;0;;0;
+NL33;53633;54717;0.0100046;56551;;86880;96512;0.0525214;108112;;1822;7964;0.627631;8684;;0;0;;573;
+NL34;137016;139784;0.01;139784;;0;20418;1;3441;;4473;21557;0.65632;4473;;0;0;;0;
+NL41;171884;175356;0.00999885;197633;;41631;43889;0.0264032;59179;;2462;15388;0.724146;19517;;0;0;;34134;
+NL42;77096;78654;0.0100032;92220;;14323;17839;0.109322;28504;;1356;8958;0.737056;10908;;0;0;;2;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 2 (NL13)) = [min 14441, max 14766]; 15876 allocated for price {-912936, 16282828}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 4 (NL22)) = [min 40812, max 42092]; 43990 allocated for price {-939602, -2006126}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 5 (NL23)) = [min 9120, max 9700]; 14192 allocated for price {-2496639, 12862665}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 8 (NL33)) = [min 54803, max 56820]; 61560 allocated for price {-1480908, 18100729}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 10 (NL41)) = [min 56056, max 58303]; 71593 allocated for price {-939602, -766382}"
+" ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 11 (NL42)) = [min 27362, max 28179]; 33681 allocated for price {-939602, -1703293}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 1 (NL41)) = [min 16271, max 16637]; 20419 allocated for price {-939602, -942161}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 3 (NL42)) = [min 7424, max 7573]; 9079 allocated for price {-939602, -2088601}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 6 (NL33)) = [min 10076, max 10281]; 11737 allocated for price {-1480908, 15490681}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 9 (NL22)) = [min 9643, max 9854]; 10329 allocated for price {-939602, -3425852}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 10 (NL23)) = [min 2543, max 2603]; 3803 allocated for price {-2993858, 12328216}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 11 (NL13)) = [min 3069, max 3134]; 3369 allocated for price {-1508451, 11920505}"
+" ClaimRange(type 2 (Arable), Capri 4 (NL22: Gelderland)) = [min 107865, max 110044]; 111123 allocated for price {-1339602, -951095}"
+" ClaimRange(type 2 (Arable), Capri 5 (NL23: Flevoland)) = [min 50118, max 51131]; 67376 allocated for price {-2796901, 11683065}"
+" ClaimRange(type 2 (Arable), Capri 8 (NL33: Zuid-Holland)) = [min 53633, max 54717]; 56551 allocated for price {-1796901, 15309207}"
+" ClaimRange(type 2 (Arable), Capri 10 (NL41: Noord-Brabant)) = [min 171884, max 175356]; 197633 allocated for price {-1539602, -1187186}"
+" ClaimRange(type 2 (Arable), Capri 11 (NL42: Limburg (NL))) = [min 77096, max 78654]; 92220 allocated for price {-1539602, -2595112}"
+" ClaimRange(type 3 (PermanentCrops), Capri 2 (NL13: Drenthe)) = [min 708, max 2875]; 3055 allocated for price {-712979, 13830041}"
+" ClaimRange(type 3 (PermanentCrops), Capri 4 (NL22: Gelderland)) = [min 5453, max 14944]; 15034 allocated for price {-1109603, -2404055}"
+" ClaimRange(type 3 (PermanentCrops), Capri 5 (NL23: Flevoland)) = [min 2881, max 10069]; 15860 allocated for price {-2496901, 10683548}"
+" ClaimRange(type 3 (PermanentCrops), Capri 8 (NL33: Zuid-Holland)) = [min 1822, max 7964]; 8684 allocated for price {-1566901, 10969298}"
+" ClaimRange(type 3 (PermanentCrops), Capri 10 (NL41: Noord-Brabant)) = [min 2462, max 15388]; 19517 allocated for price {-1309584, -3101657}"
+" ClaimRange(type 3 (PermanentCrops), Capri 11 (NL42: Limburg (NL))) = [min 1356, max 8958]; 10908 allocated for price {-1289602, -4683077}"
+" ClaimRange(type 4 (Pastures), Capri 2 (NL13: Drenthe)) = [min 59659, max 82047]; 90263 allocated for price {-712977, 10860674}"
+" ClaimRange(type 4 (Pastures), Capri 4 (NL22: Gelderland)) = [min 156418, max 194658]; 208545 allocated for price {-839602, -5340425}"
+" ClaimRange(type 4 (Pastures), Capri 5 (NL23: Flevoland)) = [min 2925, max 3177]; 7058 allocated for price {-2296901, 5855131}"
+" ClaimRange(type 4 (Pastures), Capri 8 (NL33: Zuid-Holland)) = [min 86880, max 96512]; 108112 allocated for price {-1296901, 10905965}"
+" ClaimRange(type 4 (Pastures), Capri 10 (NL41: Noord-Brabant)) = [min 41631, max 43889]; 59179 allocated for price {-1039602, -5470468}"
+" ClaimRange(type 4 (Pastures), Capri 11 (NL42: Limburg (NL))) = [min 14323, max 17839]; 28504 allocated for price {-1039602, -6878101}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Netherlands)) = [min 0, max 0]; 6 allocated for price {-2896901, 4452615}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Netherlands)) = [min 0, max 0]; 1692 allocated for price {-2696901, -3634802}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Netherlands)) = [min 0, max 0]; 340 allocated for price {-2396901, 1222518}"
+" ClaimRange(type 9 (AbanPastures), ForestDemandRegions 0 (Netherlands)) = [min 0, max 0]; 1241 allocated for price {-2196901, -3589564}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Netherlands)) = [min 0, max 0]; 4 allocated for price {-2393558, -5129355}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Netherlands)) = [min 0, max 0]; 9 allocated for price {-2793858, 8205726}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 2 (NL13: Drenthe)) = [min 0, max 0]; 7921 allocated for price {-1012977, -13585942}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 4 (NL22: Gelderland)) = [min 0, max 0]; 630 allocated for price {-1139603, -31164769}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 5 (NL23: Flevoland)) = [min 0, max 0]; 2352 allocated for price {-2596902, -9371791}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 8 (NL33: Zuid-Holland)) = [min 0, max 0]; 573 allocated for price {-1596902, -14942059}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 10 (NL41: Noord-Brabant)) = [min 0, max 0]; 34134 allocated for price {-1339603, -24379452}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 11 (NL42: Limburg (NL))) = [min 0, max 0]; 2 allocated for price {-1340373, -12513622}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Netherlands)) = [min 0, max 0]; 237 allocated for price {-2996901, -10822517}"
+" "

@@ -1,0 +1,16 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+EE00;715920;730383;0.00999998;765235;;310681;442502;0.175019;624685;;884;3746;0.618143;4927;;0;0;;22805;
+
+"ClaimRange(type 0 (Urban), NUTS2_merged_LUISA 0 (EE00)) = [min 57674, max 58806]; 74918 allocated for price {-336478, 11753803}"
+" ClaimRange(type 1 (Industrial), NUTS2_LUISA 0 (EE00)) = [min 18707, max 19323]; 25599 allocated for price {-971081, 11394319}"
+" ClaimRange(type 2 (Arable), Capri 0 (EE00: Estonia)) = [min 715920, max 730383]; 765235 allocated for price {-503144, 12880499}"
+" ClaimRange(type 3 (PermanentCrops), Capri 0 (EE00: Estonia)) = [min 884, max 3746]; 4927 allocated for price {-678134, 10872056}"
+" ClaimRange(type 4 (Pastures), Capri 0 (EE00: Estonia)) = [min 310681, max 442502]; 624685 allocated for price {-3144, 7606063}"
+" ClaimRange(type 6 (TransWoodlandShrub), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 3 allocated for price {-936477, 1714381}"
+" ClaimRange(type 7 (AbanArable), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 228416 allocated for price {-403144, -1479632}"
+" ClaimRange(type 8 (AbanPermanentCrops), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 60 allocated for price {-403144, -3373421}"
+" ClaimRange(type 10 (AbanUrban), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 611 allocated for price {-236477, -15792887}"
+" ClaimRange(type 11 (AbanIndustry), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 49 allocated for price {-759970, -14174941}"
+" ClaimRange(type 12 (NewEnergyCrops), Capri 0 (EE00: Estonia)) = [min 0, max 0]; 22805 allocated for price {-303145, -16178681}"
+" ClaimRange(type 13 (SHVA), ForestDemandRegions 0 (Estonia)) = [min 0, max 0]; 78 allocated for price {-1509815, -3458627}"
+" "
