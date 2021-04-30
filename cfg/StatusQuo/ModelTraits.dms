@@ -178,7 +178,7 @@ container ModelTraits
 				, ClaimTableSelections, ClaimTableName+'/sel', float32);
 				
 			container ClaimTableR := for_each_nednv(ID(ModelType) == ModelType/V/Urban ? '' : ModelType/Name,
-				'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MaxClaimColumn, 'ZeroClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'
+				'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MaxClaimColumn, 'HighClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'
 				, ClaimTableSelections, ClaimTableName+'/sel', float32);
 					
 			container CollectMinDemandFromClaimTables := for_each_nednv(ID(ModelType) == ModelType/V/Urban ? '' : ModelType/Name,
