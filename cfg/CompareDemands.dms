@@ -7,8 +7,8 @@ container CompareDemands
 			attribute<string> name: [ 'Austria', 'BelgLux', 'Cyprus', 'Denmark', 'Estonia', 'Ireland', 'Italy', 'Malta', 'Netherlands', 'Slovakia', 'Slovenia'];
 			attribute<string> code: [ 'AT', 'BL', 'CY', 'DK', 'EE', 'IE', 'IT', 'MT', 'NL', 'SK', 'SI' ];
 		}
-		unit<uint32> Country := range(uint32, 0, 2) {
-			attribute<string> code: [ 'DK', 'NL'];
+		unit<uint32> Country := range(uint32, 0, 9) {
+			attribute<string> code: [ 'AT', 'CY', 'DK', 'EE', 'IE', 'IT', 'MT', 'NL','SI' ];
 			attribute<string> name:= rjoin(code, AllCountries/code, AllCountries/name);
 		}
 		unit<uint32> AI := range(uint32, 0, 25) {
@@ -17,10 +17,10 @@ container CompareDemands
 			attribute<string>   code : [ '80', '85', '90', '91', '92', '93', '94', '95', '96', '97', '98', '99', '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '15', '20' ];
 			attribute<string>   name  := 'AI'+code;	
 		}
-		unit<uint32> AW := range(uint32, 0, 2) {
-			attribute<Percent>  p : [ 00,  05]; //, 10, 20  ];
+		unit<uint32> AW := range(uint32, 0, 5) {
+			attribute<Percent>  p : [ 00,  05, 10, 15, 20  ];
 			attribute<Float64>  f := float64(p) * (1.0 / float64(100[Percent]));
-			attribute<string>   code : [ '00', '05']; //, '10', '20' ];
+			attribute<string>   code : [ '00', '05', '10', '15', '20' ];
 			attribute<string>   name  := 'AW'+code;	
 		}
 		unit<uint32> Year := range(uint32, 0, 8) {

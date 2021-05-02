@@ -11,8 +11,8 @@ set AW=10
 call RunAFewAI.cmd
 set AW=15
 call RunAFewAI.cmd
-REM set AW=20
-REM call RunAFewAI.cmd
+set AW=20
+call RunAFewAI.cmd
 
-REM pause 8*11*25*4
-pause 8*2*25*4
+pause 8*9*25*5
+

@@ -1,6 +1,0 @@
-ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
-IR01;243379;248296;0.0100005;244468;;1691984;2359119;0.16468;1853067;;0;405;1;405;;6736;10310;0.209668;6736;
-IR02;629001;641708;0.00999993;629001;;2159249;2927338;0.151003;2165060;;0;4686;1;208;;9683;14818;0.209583;9683;
-
-"ClaimRange(type 5 (ForestsMature), ForestDemandRegions 0 (Ireland)) = [min 723854, max 2153371]; 720477 allocated for price {881787, -9802088}"
-" "
