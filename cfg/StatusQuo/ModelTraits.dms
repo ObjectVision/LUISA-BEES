@@ -921,6 +921,21 @@ container ModelTraits
 					//"TotalSuitability";
 			container ResultsFathomYears: ExplicitSuppliers = "ClippedLandUseVT"; // required for generating the data for the ReadOnly mozaiking
 
+			container ArableLandSupply {
+				attribute<int32>       SupplyPrice_Org(domain) := d_alloc/bid_price - (ScaledTransPot/Arable + d_alloc/shadow_prices/Arable[CaseData/RegionData/Capri]);
+				attribute<int32>       SupplyPrice    (domain) := iif(ScaledTransPot/Arable > -1000000000, SupplyPrice_Org, int32(0 / 0));
+				attribute<UniquePrice> UniquePrice_rel(domain) := rlookup(SupplyPrice, UniquePrice/values);
+				
+				unit<uint32> UniquePrice := unique(SupplyPrice) {
+					attribute<int32>  values;
+					attribute<uint32> count := pcount(UniquePrice_rel);
+					attribute<uint32> cumulative := cumulate(count);
+				}
+				parameter<string> Export := 'CumulHa;Price\n'+AsList(string(UniquePrice/cumulative)+';'+string(UniquePrice/values), '\n')
+				,	StorageName = "=OutputDirName+'_ArableLandSupply.csv'"
+				,	StorageType = "str";
+			}
+			
 			unit<uint16> Capri := CaseData/RegionNumbers/Capri {
 				attribute<uint32> Arable_Min   := Claims/DemandMin/Arable;
 				attribute<uint32> Arable_Max   := Claims/DemandMax/Arable;
@@ -963,11 +978,11 @@ container ModelTraits
 			,	StorageName = "=OutputDirName+'_ShadowPrices.csv'"
 			,	StorageType = "str";
 			
-			container Results: ExplicitSuppliers = "CapriShadowPriceExport"
-//					"= 'Results1;CapriShadowPriceExport'"
-//					"+ (IsDefined(rlookup(UInt16(CurrYear), Parameters/PeriodSet/Lustrum/Year)) ? ';ResultsFathomYears' : '')"
-//					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results2' : '')"
-//					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results5' : '')"
+			container Results: ExplicitSuppliers = 
+					"= 'Results1;CapriShadowPriceExport'"
+					"+ (IsDefined(rlookup(UInt16(CurrYear), Parameters/PeriodSet/Lustrum/Year)) ? ';ResultsFathomYears' : '')"
+					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results2' : '')"
+					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results5' : '')"
 			;
 		}
 	}

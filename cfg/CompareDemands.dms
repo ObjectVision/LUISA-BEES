@@ -32,8 +32,8 @@ container CompareDemands
 			attribute<string> FileName := name+'_ShadowPrices.csv';
 			attribute<string> graph_file_key := AW/name[nr_1]+'/'+Country/code[nr_3];
 			attribute<string> graph_col_key  := Year/name[nr_4];
-			attribute<Percent> graph_row_value := AI/p[nr_2];
-			attribute<string>     graph_row_key   := AI/name[nr_2];
+			attribute<Percent>graph_row_value := AI/p[nr_2];
+			attribute<string> graph_row_key   := AI/name[nr_2];
 		}
 		
 	}
