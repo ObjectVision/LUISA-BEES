@@ -1,6 +1,6 @@
 rem echo off
-set geodmsversion=GeoDms7309
-set LOCALDATA_PROJDIR=C:\LD2\luisa-bees\CalcCachex64.v7.309
+set geodmsversion=GeoDms7312
+set LOCALDATA_PROJDIR=C:\LD2\luisa-bees\CalcCachex64.v7.312
 
 set pf=%Program Files%
 set luisetta=C:\prj\jrc\luisa-BEES
@@ -11,10 +11,30 @@ set ProgramPath=%ProgramFolder%\GeoDmsRun.exe
 
 set ARABLE_WIDTH=0.00
 
-set ARABLE_INC=0.09
-set DIR_OUTPUT=AI09_AW00
+set ARABLE_INC=0.03
+set DIR_OUTPUT=AI03_AW00
 del "%LOCALDATA_PROJDIR%" /S /Q
-"%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+set ARABLE_INC=0.15
+set DIR_OUTPUT=AI15_AW00
+del "%LOCALDATA_PROJDIR%" /S /Q
+"%ProgramPath%" /L%LocalDataDir%/batchtraceSI.log "%luisetta%\cfg\StatusQuo.dms" /runs/Slovenia/simulation_results/GeneratedCapriFiles
+set ARABLE_INC=0.99
+set DIR_OUTPUT=AI99_AW00
+del "%LOCALDATA_PROJDIR%" /S /Q
+"%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+set ARABLE_INC=0.98
+set DIR_OUTPUT=AI98_AW00
+del "%LOCALDATA_PROJDIR%" /S /Q
+"%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+set ARABLE_INC=0.96
+set DIR_OUTPUT=AI96_AW00
+del "%LOCALDATA_PROJDIR%" /S /Q
+"%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+set ARABLE_INC=0.95
+set DIR_OUTPUT=AI95_AW00
+del "%LOCALDATA_PROJDIR%" /S /Q
+"%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
 pause
 exit
 
