@@ -1,0 +1,4 @@
+ZoneID;Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;
+DK00;4518140;4609415;0.00999994;0;;113951;218507;0.314494;0;;3959;13564;0.548137;0;;306;574;0.304545;0;
+
+"DiscrAlloc.FeasibilityTest failed: total of the minimum claims is 4904805 while there are only 4096476 allocatable cells, total minimum claims should be decreased with at least 808329 cells; total minimum claim for Region 0 : Capri 0 (DK00: Denmark) is 4636356 while it has only 4096476 allocatable cells, total minimum claims for that region should be decreased with at least 539880 cells; "

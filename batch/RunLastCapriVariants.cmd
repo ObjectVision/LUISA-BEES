@@ -14,27 +14,49 @@ set ARABLE_WIDTH=0.00
 set ARABLE_INC=0.03
 set DIR_OUTPUT=AI03_AW00
 del "%LOCALDATA_PROJDIR%" /S /Q
-"%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtrace.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+
 set ARABLE_INC=0.15
 set DIR_OUTPUT=AI15_AW00
 del "%LOCALDATA_PROJDIR%" /S /Q
-"%ProgramPath%" /L%LocalDataDir%/batchtraceSI.log "%luisetta%\cfg\StatusQuo.dms" /runs/Slovenia/simulation_results/GeneratedCapriFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtrace.log "%luisetta%\cfg\StatusQuo.dms" /runs/Slovenia/simulation_results/GeneratedCapriFiles
+
 set ARABLE_INC=0.99
 set DIR_OUTPUT=AI99_AW00
 del "%LOCALDATA_PROJDIR%" /S /Q
-"%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtrace.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+
 set ARABLE_INC=0.98
 set DIR_OUTPUT=AI98_AW00
 del "%LOCALDATA_PROJDIR%" /S /Q
-"%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtrace.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+
 set ARABLE_INC=0.96
 set DIR_OUTPUT=AI96_AW00
 del "%LOCALDATA_PROJDIR%" /S /Q
-"%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtrace.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+
 set ARABLE_INC=0.95
 set DIR_OUTPUT=AI95_AW00
 del "%LOCALDATA_PROJDIR%" /S /Q
-"%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtrace.log "%luisetta%\cfg\StatusQuo.dms" /runs/Malta/simulation_results/GeneratedCapriFiles
+
+set ARABLE_INC=0.92
+set DIR_OUTPUT=AI92_AW00
+del "%LOCALDATA_PROJDIR%" /S /Q
+"%ProgramPath%" /L%LocalDataDir%/batchtrace.log "%luisetta%\cfg\StatusQuo.dms" /runs/BelgLux/simulation_results/GeneratedCapriFiles
+
+set ARABLE_INC=0.91
+set DIR_OUTPUT=AI91_AW00
+del "%LOCALDATA_PROJDIR%" /S /Q
+"%ProgramPath%" /L%LocalDataDir%/batchtrace.log "%luisetta%\cfg\StatusQuo.dms" /runs/Denmark/simulation_results/GeneratedCapriFiles
+
+set ARABLE_INC=0.85
+set DIR_OUTPUT=AI85_AW00
+del "%LOCALDATA_PROJDIR%" /S /Q
+"%ProgramPath%" /L%LocalDataDir%/batchtrace.log "%luisetta%\cfg\StatusQuo.dms" /runs/Belglux/simulation_results/GeneratedCapriFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtrace.log "%luisetta%\cfg\StatusQuo.dms" /runs/Slovakia/simulation_results/GeneratedCapriFiles
+
 pause
 exit
 
