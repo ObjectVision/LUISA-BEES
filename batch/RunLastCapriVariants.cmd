@@ -11,10 +11,13 @@ set ProgramPath=%ProgramFolder%\GeoDmsRun.exe
 
 set ARABLE_WIDTH=0.00
 
-set ARABLE_INC=0.00
-set DIR_OUTPUT=AI00_AW00
+set ARABLE_INC=0.03
+set DIR_OUTPUT=AI03_AW00
 del "%LOCALDATA_PROJDIR%" /S /Q
-"%ProgramPath%" /L%LocalDataDir%/batchtrace.log "%luisetta%\cfg\StatusQuo.dms" /runs/Netherlands/simulation_results/GeneratedCapriFiles
+"%ProgramPath%" /L%LocalDataDir%/batchtrace.log "%luisetta%\cfg\StatusQuo.dms" /runs/Ireland/simulation_results/GeneratedCapriFiles
+
+pause
+exit
 
 set ARABLE_INC=-0.04
 set DIR_OUTPUT=AI96_AW00
