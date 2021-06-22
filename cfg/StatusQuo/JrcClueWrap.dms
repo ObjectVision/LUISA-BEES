@@ -345,6 +345,7 @@ template JrcClueWrap:
 		parameter<string>  GeneratedFiles := endState/GeneratedFiles, ExplicitSuppliers = "endState/GeneratedFiles"; // ;simulation_results/landuse/GridData";
 		parameter<string>  GeneratedCapriFiles := 'Ready'
 		, 	ExplicitSuppliers = 
+				"TimeSteps/P2020/ResultingState/OutputGeneration/Indicators/ExportXTabs;"
 				"TimeSteps/P2025/ResultingState/OutputGeneration/ArableLandSupply/Export;"
 				"TimeSteps/P2025/ResultingState/OutputGeneration/CapriShadowPriceExport";
 		

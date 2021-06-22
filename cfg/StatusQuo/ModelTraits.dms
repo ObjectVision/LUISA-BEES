@@ -805,24 +805,45 @@ container ModelTraits
 				attribute<Classifications/LU/ModelType> changed_to  (domain) := LuDiff ? CurrentLandUse  : value(255, Classifications/LU/ModelType );
 			}
 			
-			unit<WPoint> xTabData: Expr = "Range(WPoint, Point(UInt16(0),UInt16(0)), Point(UInt16(#Classifications/LU/ModelType), UInt16(#Classifications/LU/ModelType)))", IsHidden = "True"
+			unit<WPoint> xTabData := Range(WPoint, Point(UInt16(0),UInt16(0)), Point(UInt16(#Classifications/LU/ModelType), UInt16(#Classifications/LU/ModelType)))
 			{
-				attribute<UInt32> Count: Expr = "PCount(Point(UInt16(StartingLandUse), UInt16(CurrentLandUse), xTabData))";
+				attribute<UInt32> Count := PCount(Point(UInt16(StartingLandUse), UInt16(CurrentLandUse), xTabData));
 				//attribute<UInt32> Count: Expr = "PCount(Point(UInt16(PrevState/LandUse), UInt16(CurrentLandUse), xTabData))";
 			}
-			container xTab: Expr =  
-				"for_each_nedv("
-					"Classifications/LU/ModelType/Name, "
-					"'xTabData/Count["
-						"Point("
-							"UInt16(ID(Classifications/LU/ModelType)), "
-							"const('+String(ID(Classifications/LU/ModelType))+', Classifications/LU/ModelType, UInt16), "
-							"xTabData"
-						")"
-					"]', "
-					"Classifications/LU/ModelType, UInt32"
-					")",
-						StorageName = "=DirName + '_xTabMT.dbf'";
+			container xTab := for_each_nedv(Classifications/LU/ModelType/Name
+				,	'xTabData/Count['
+						'Point('
+							'UInt16(ID(Classifications/LU/ModelType)), '
+							'const('+String(ID(Classifications/LU/ModelType))+', Classifications/LU/ModelType, UInt16), '
+							'xTabData'
+						')'
+					']' 
+				,	Classifications/LU/ModelType, UInt32
+				)
+			,	StorageName = "=DirName + '_xTabMT.dbf'";
+						
+			// RegionData/Capri
+			// RegionNumbers/Capri
+			container PerCapriRegion := for_each_nea(CaseData/RegionNumbers/Capri/ZoneID
+				,	'for_each_nedv(Classifications/LU/ModelType/Name'
+					',replace('
+						'''PCount(Point(UInt16(StartingLandUse), UInt16(CurrentLandUse) / UInt16(CaseData/RegionData/Capri == '+String(ID(CaseData/RegionNumbers/Capri))+'[CaseData/RegionNumbers/Capri])'
+							', xTabData)'
+							')'
+							'['
+								'Point('
+								'  UInt16(ID(Classifications/LU/ModelType))'
+								', const(UInt16(Classifications/LU/ModelType/V/@MT), Classifications/LU/ModelType)'
+								', xTabData'
+								')'
+							']'''
+						', ''@MT'', Classifications/LU/ModelType/Name)'
+				', Classifications/LU/ModelType, UInt32'
+				')'
+			,	DirName+'_'+CaseData/RegionNumbers/Capri/ZoneID+'_xTabMT.dbf'
+			);
+			
+			parameter<string> ExportXTabs := 'Ready', ExplicitSuppliers = "='xTab;'+AsList('PerCapriRegion/'+CaseData/RegionNumbers/Capri/ZoneID, ';')";
 			container Spatial
 			{
 				container NoFilter := Templates/SpatialIndicator(domain, JrcFactorData, const(True, domain), Regions, RegionGrid, DirName + 'All');
