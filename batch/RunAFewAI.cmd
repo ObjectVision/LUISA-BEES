@@ -10,6 +10,7 @@ REM Shortcut
 set ARABLE_INC=0.00
 set DIR_OUTPUT=AI00_AW%AW%
 call RunAFew-Impl.cmd
+exit /B
 
 set ARABLE_INC=0.01
 set DIR_OUTPUT=AI01_AW%AW%

@@ -1,0 +1,124 @@
+Region;Code;Label;count
+EL11;FORFOR;Forest land remaining Forest land;570559
+EL11;FORCRP;Forest land converted to Cropland;2
+EL11;FORART;Forest land converted to Artificial land;771
+EL11;CRPCRP;Cropland remaining Cropland;528073
+EL11;CRPGRS;Cropland converted to Grassland;218
+EL11;CRPART;Cropland converted to Artificial land;2109
+EL11;GRSGRS;Grassland remaining Grassland;8646
+EL11;ARTART;Artificial land remaining Artificial land;26182
+EL11;RESRES;Residual land remaining Residual land;206801
+EL12;FORFOR;Forest land remaining Forest land;551526
+EL12;FORCRP;Forest land converted to Cropland;8422
+EL12;FORART;Forest land converted to Artificial land;1241
+EL12;CRPCRP;Cropland remaining Cropland;947496
+EL12;GRSCRP;Grassland converted to Cropland;1270
+EL12;GRSGRS;Grassland remaining Grassland;21185
+EL12;GRSART;Grassland converted to Artificial land;8
+EL12;ARTART;Artificial land remaining Artificial land;61034
+EL12;RESCRP;Residual land converted to Cropland;4458
+EL12;RESRES;Residual land remaining Residual land;211394
+EL13;FORFOR;Forest land remaining Forest land;364358
+EL13;FORART;Forest land converted to Artificial land;182
+EL13;CRPCRP;Cropland remaining Cropland;319690
+EL13;CRPGRS;Cropland converted to Grassland;2851
+EL13;CRPART;Cropland converted to Artificial land;365
+EL13;GRSGRS;Grassland remaining Grassland;10806
+EL13;ARTART;Artificial land remaining Artificial land;13023
+EL13;RESRES;Residual land remaining Residual land;157534
+EL14;FORFOR;Forest land remaining Forest land;396209
+EL14;FORCRP;Forest land converted to Cropland;196
+EL14;FORART;Forest land converted to Artificial land;694
+EL14;CRPCRP;Cropland remaining Cropland;580559
+EL14;CRPART;Cropland converted to Artificial land;989
+EL14;GRSGRS;Grassland remaining Grassland;17332
+EL14;GRSART;Grassland converted to Artificial land;166
+EL14;ARTART;Artificial land remaining Artificial land;29200
+EL14;RESCRP;Residual land converted to Cropland;1014
+EL14;RESRES;Residual land remaining Residual land;334106
+EL21;FORFOR;Forest land remaining Forest land;413903
+EL21;FORART;Forest land converted to Artificial land;644
+EL21;CRPCRP;Cropland remaining Cropland;202339
+EL21;CRPGRS;Cropland converted to Grassland;504
+EL21;CRPART;Cropland converted to Artificial land;764
+EL21;GRSGRS;Grassland remaining Grassland;6557
+EL21;ARTART;Artificial land remaining Artificial land;13004
+EL21;RESRES;Residual land remaining Residual land;220829
+EL22;FORFOR;Forest land remaining Forest land;56710
+EL22;FORCRP;Forest land converted to Cropland;3
+EL22;FORART;Forest land converted to Artificial land;349
+EL22;CRPCRP;Cropland remaining Cropland;86417
+EL22;CRPGRS;Cropland converted to Grassland;739
+EL22;CRPART;Cropland converted to Artificial land;279
+EL22;GRSGRS;Grassland remaining Grassland;5682
+EL22;ARTART;Artificial land remaining Artificial land;7046
+EL22;RESCRP;Residual land converted to Cropland;1
+EL22;RESRES;Residual land remaining Residual land;59734
+EL23;FORFOR;Forest land remaining Forest land;333251
+EL23;FORART;Forest land converted to Artificial land;697
+EL23;CRPCRP;Cropland remaining Cropland;467876
+EL23;CRPGRS;Cropland converted to Grassland;1013
+EL23;CRPART;Cropland converted to Artificial land;1478
+EL23;GRSGRS;Grassland remaining Grassland;4232
+EL23;ARTART;Artificial land remaining Artificial land;17880
+EL23;RESRES;Residual land remaining Residual land;231679
+EL24;FORFOR;Forest land remaining Forest land;542284
+EL24;FORCRP;Forest land converted to Cropland;257
+EL24;FORART;Forest land converted to Artificial land;1735
+EL24;CRPCRP;Cropland remaining Cropland;477625
+EL24;CRPGRS;Cropland converted to Grassland;3922
+EL24;CRPART;Cropland converted to Artificial land;1926
+EL24;GRSGRS;Grassland remaining Grassland;5734
+EL24;ARTART;Artificial land remaining Artificial land;26961
+EL24;RESCRP;Residual land converted to Cropland;1758
+EL24;RESRES;Residual land remaining Residual land;435175
+EL25;FORFOR;Forest land remaining Forest land;342950
+EL25;FORCRP;Forest land converted to Cropland;24
+EL25;FORART;Forest land converted to Artificial land;1425
+EL25;CRPCRP;Cropland remaining Cropland;570746
+EL25;CRPART;Cropland converted to Artificial land;1899
+EL25;GRSGRS;Grassland remaining Grassland;27873
+EL25;GRSART;Grassland converted to Artificial land;307
+EL25;ARTART;Artificial land remaining Artificial land;20304
+EL25;RESCRP;Residual land converted to Cropland;389
+EL25;RESRES;Residual land remaining Residual land;536470
+EL30;FORFOR;Forest land remaining Forest land;81125
+EL30;FORCRP;Forest land converted to Cropland;10064
+EL30;FORART;Forest land converted to Artificial land;560
+EL30;CRPCRP;Cropland remaining Cropland;97023
+EL30;CRPGRS;Cropland converted to Grassland;3
+EL30;GRSCRP;Grassland converted to Cropland;1362
+EL30;GRSGRS;Grassland remaining Grassland;5487
+EL30;ARTART;Artificial land remaining Artificial land;70036
+EL30;RESCRP;Residual land converted to Cropland;24810
+EL30;RESGRS;Residual land converted to Grassland;842
+EL30;RESART;Residual land converted to Artificial land;788
+EL30;RESRES;Residual land remaining Residual land;51424
+EL41;FORFOR;Forest land remaining Forest land;87263
+EL41;FORART;Forest land converted to Artificial land;135
+EL41;CRPCRP;Cropland remaining Cropland;142315
+EL41;CRPGRS;Cropland converted to Grassland;97
+EL41;CRPART;Cropland converted to Artificial land;405
+EL41;GRSGRS;Grassland remaining Grassland;4417
+EL41;ARTART;Artificial land remaining Artificial land;5411
+EL41;RESRES;Residual land remaining Residual land;127095
+EL42;FORFOR;Forest land remaining Forest land;59087
+EL42;FORCRP;Forest land converted to Cropland;28
+EL42;FORART;Forest land converted to Artificial land;576
+EL42;CRPCRP;Cropland remaining Cropland;133216
+EL42;CRPGRS;Cropland converted to Grassland;261
+EL42;CRPART;Cropland converted to Artificial land;5810
+EL42;GRSGRS;Grassland remaining Grassland;13830
+EL42;ARTART;Artificial land remaining Artificial land;10762
+EL42;RESCRP;Residual land converted to Cropland;527
+EL42;RESRES;Residual land remaining Residual land;270050
+EL43;FORFOR;Forest land remaining Forest land;66449
+EL43;FORCRP;Forest land converted to Cropland;1894
+EL43;FORART;Forest land converted to Artificial land;28
+EL43;CRPCRP;Cropland remaining Cropland;351549
+EL43;GRSCRP;Grassland converted to Cropland;1178
+EL43;GRSGRS;Grassland remaining Grassland;4826
+EL43;ARTART;Artificial land remaining Artificial land;12898
+EL43;RESCRP;Residual land converted to Cropland;86042
+EL43;RESART;Residual land converted to Artificial land;650
+EL43;RESRES;Residual land remaining Residual land;260671

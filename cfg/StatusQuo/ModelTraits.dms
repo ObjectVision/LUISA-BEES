@@ -807,9 +807,15 @@ container ModelTraits
 			
 			unit<WPoint> xTabData := Range(WPoint, Point(UInt16(0),UInt16(0)), Point(UInt16(#Classifications/LU/ModelType), UInt16(#Classifications/LU/ModelType)))
 			{
-				attribute<UInt32> Count := PCount(Point(UInt16(StartingLandUse), UInt16(CurrentLandUse), xTabData));
+				attribute<.> ID := ID(.);
+				attribute<string> From_name := Classifications/LU/ModelType/name[PointCol(ID(.))[Classifications/LU/ModelType]];
+				attribute<string> to_name   := Classifications/LU/ModelType/name[PointRow(ID(.))[Classifications/LU/ModelType]];
+				attribute<string> Label := from_name+to_name;
+				attribute<.> per_domain(domain) := Point(UInt16(StartingLandUse), UInt16(CurrentLandUse), xTabData);
+				attribute<UInt32> Count := PCount(per_domain);
 				//attribute<UInt32> Count: Expr = "PCount(Point(UInt16(PrevState/LandUse), UInt16(CurrentLandUse), xTabData))";
 			}
+			
 			container xTab := for_each_nedv(Classifications/LU/ModelType/Name
 				,	'xTabData/Count['
 						'Point('
@@ -843,7 +849,7 @@ container ModelTraits
 			,	DirName+'_'+CaseData/RegionNumbers/Capri/ZoneID+'_xTabMT.dbf'
 			);
 			
-			parameter<string> ExportXTabs := 'Ready', ExplicitSuppliers = "='xTab;'+AsList('PerCapriRegion/'+CaseData/RegionNumbers/Capri/ZoneID, ';')";
+			parameter<string> ExportXTabs := 'Ready', ExplicitSuppliers = "='ExportXTabData;xTab;'+AsList('PerCapriRegion/'+CaseData/RegionNumbers/Capri/ZoneID, ';')";
 			container Spatial
 			{
 				container NoFilter := Templates/SpatialIndicator(domain, JrcFactorData, const(True, domain), Regions, RegionGrid, DirName + 'All');
@@ -999,8 +1005,53 @@ container ModelTraits
 			,	StorageName = "=OutputDirName+'_ShadowPrices.csv'"
 			,	StorageType = "str";
 			
+			unit<uint8> xTabCapri := Classifications/LU/Capri/xCapri
+			{
+				attribute<.> per_domain(domain) := combine_data(., Classifications/LU/Capri/per_ModelType[Indicators/StartingLandUse], Classifications/LU/Capri/per_ModelType[Indicators/CurrentLandUse]);
+				attribute<UInt32> Count := pcount(per_domain);
+				attribute<string> Label := Classifications/LU/Capri/xCapri/Label;
+			}
+			unit<uint8> xTabCapriNonNull := subset(xTabCapri/Count > 0)
+			{
+				attribute<UInt32> Count := xTabCapri/Count[nr_OrgEntity];
+				attribute<string> Label := xTabCapri/Label[nr_OrgEntity];
+			}
+			
+			parameter<string> xTabCapriExport := 'Label;count\n'+AsList(xTabCapriNonNull/Label+';'+string(xTabCapriNonNull/Count),'\n')
+			,	StorageName = "=Indicators/DirName + '_xTabData.csv'", StorageType = 'str';
+			
+			unit<uint32> CapriRegionxTab := combine(CaseData/RegionNumbers/Capri, xTabCapri)
+			{
+				attribute<String> ZoneID := CaseData/RegionNumbers/Capri/ZoneID[nr_1];
+				attribute<.> per_domain(domain) := combine_data(., CaseData/RegionData/Capri, xTabCapri/per_domain);
+				
+				attribute<UInt32> Count := pcount(per_domain);
+				attribute<string> xTabCode  := Classifications/LU/Capri/xCapri/Code [nr_2];
+				attribute<string> xTabLabel := Classifications/LU/Capri/xCapri/Label[nr_2];
+			}
+			
+			unit<uint32> CapriRegionxTabNonNull := subset(CapriRegionxTab/Count > 0)
+			{
+				attribute<string> ZoneID:= CapriRegionxTab/ZoneID[nr_OrgEntity];
+				attribute<string> xTabCode  := CapriRegionxTab/xTabCode[nr_OrgEntity];
+				attribute<string> xTabLabel := CapriRegionxTab/xTabLabel[nr_OrgEntity];
+				attribute<UInt32> Count := CapriRegionxTab/Count[nr_OrgEntity];
+			}
+			
+			parameter<string> CapriRegionxTabExport := 'Region;Code;Label;count\n'
+					+AsList(
+						CapriRegionxTabNonNull/ZoneID
+					+';'+string(CapriRegionxTabNonNull/xTabCode)
+					+';'+string(CapriRegionxTabNonNull/xTabLabel)
+					+';'+string(CapriRegionxTabNonNull/Count)
+					,'\n'
+					)
+			,	StorageName = "=Indicators/DirName + '_xTabRegionData.csv'", StorageType = 'str';
+			
+
+			container CapriResults: ExplicitSuppliers = "CapriShadowPriceExport;xTabCapriExport;CapriRegionxTabExport";
 			container Results: ExplicitSuppliers = 
-					"= 'Results1;CapriShadowPriceExport'"
+					"= 'Results1;CapriResults'"
 					"+ (IsDefined(rlookup(UInt16(CurrYear), Parameters/PeriodSet/Lustrum/Year)) ? ';ResultsFathomYears' : '')"
 					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results2' : '')"
 					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results5' : '')"

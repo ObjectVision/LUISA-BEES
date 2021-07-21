@@ -45,13 +45,22 @@ template JrcClueWrap:
 	
 		// ============ factor data
 		container PrepareVariables {
-				attribute<Classifications/LU/Corine> CorineGrid_2012(domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2012/inFile/ReadData];
-				attribute<Classifications/LU/Corine> CorineGrid_2018(domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2018/inFile/ReadData];
-				attribute<Classifications/LU/Corine> CorineGrid     (domain_grid) := MakeDefined(CorineGrid_2012, CorineGrid_2018);
-				attribute<Classifications/LU/ModelType> LandUseGrid (domain_grid): expr = "Classifications/LU/Corine/MT[CorineGrid]";
-				attribute<Classifications/LU/ModelType> landuse (domain): expr = "LandUseGrid[domain/grid_rel]";
-			container LoadSpatialData: 	expr = "for_each_ne(MetaData/DataManagement/SpatialDataToLoad/Name, 'Templates/loadDataFile_'+MetaData/DataManagement/SpatialDataToLoad/Type+'('+Quote(MetaData/DataManagement/SpatialDataToLoad/Path)+', domain_grid)')";
-			container Variables:		expr = "for_each_nedv(Factors/Name, Factors/StartExpr, domain, float32)";
+			attribute<Classifications/LU/Corine> CorineGrid_2012(domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2012/inFile/ReadData];
+			attribute<Classifications/LU/Corine> CorineGrid_2018(domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2018/inFile/ReadData];
+			attribute<Classifications/LU/Corine> CorineGrid     (domain_grid) := MakeDefined(CorineGrid_2012, CorineGrid_2018);
+			
+			attribute<Classifications/LU/ModelType> LandUse2012Grid (domain_grid) := Classifications/LU/Corine/MT[CorineGrid_2012];
+			attribute<Classifications/LU/ModelType> LandUse2018Grid (domain_grid) := Classifications/LU/Corine/MT[CorineGrid_2018];
+			attribute<Classifications/LU/ModelType> LandUseGrid     (domain_grid) := Classifications/LU/Corine/MT[CorineGrid];
+			attribute<Classifications/LU/ModelType> landuse2012 (domain) := LandUse2012Grid[domain/grid_rel];
+			attribute<Classifications/LU/ModelType> landuse2018 (domain) := LandUse2018Grid[domain/grid_rel];
+			attribute<Classifications/LU/ModelType> landuse     (domain) := LandUseGrid    [domain/grid_rel];
+			
+			attribute<Classifications/LU/Capri> CorCapri_2012(domain) := Classifications/LU/Capri/per_ModelType[landuse2012];
+			attribute<Classifications/LU/Capri> CorCapri_2018(domain) := Classifications/LU/Capri/per_ModelType[landuse2018];
+			
+			container LoadSpatialData := for_each_ne(MetaData/DataManagement/SpatialDataToLoad/Name, 'Templates/loadDataFile_'+MetaData/DataManagement/SpatialDataToLoad/Type+'('+Quote(MetaData/DataManagement/SpatialDataToLoad/Path)+', domain_grid)');
+			container Variables       := for_each_nedv(Factors/Name, Factors/StartExpr, domain, float32);
 		}
 		container JrcFactorData: Expr = "JrcFactorDataTempl(domain_grid, RunRegions, Periods/BaseYearCorineDataFileName)";
 		
@@ -345,10 +354,8 @@ template JrcClueWrap:
 		parameter<string>  GeneratedFiles := endState/GeneratedFiles, ExplicitSuppliers = "endState/GeneratedFiles"; // ;simulation_results/landuse/GridData";
 		parameter<string>  GeneratedCapriFiles := 'Ready'
 		, 	ExplicitSuppliers = 
-				"TimeSteps/P2020/ResultingState/OutputGeneration/Indicators/ExportXTabs;"
-				"TimeSteps/P2025/ResultingState/OutputGeneration/Indicators/ExportXTabs;"
-				"TimeSteps/P2025/ResultingState/OutputGeneration/ArableLandSupply/Export;"
-				"TimeSteps/P2025/ResultingState/OutputGeneration/CapriShadowPriceExport";
+				"TimeSteps/P2015/ResultingState/OutputGeneration/CapriResults;"
+				"TimeSteps/P2020/ResultingState/OutputGeneration/CapriResults";
 		
 		unit<WPoint> ForestTransitionStatePerYear := range(wpoint, point(0w, 0w), point(uint16(#LU/ForestTransitionState), uint16(#Periods)))
 		{
