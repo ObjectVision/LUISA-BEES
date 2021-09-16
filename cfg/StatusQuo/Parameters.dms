@@ -1275,7 +1275,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 						attribute<float32> ArableMin_org(Domain) := float32(ClaimTablesOrg/Capri/data/ArableMin);
 						attribute<float32> ArableMax_org(Domain) := float32(ClaimTablesOrg/Capri/data/ArableMax);
 						attribute<float32> ArableMid_org(Domain) := 0.5f * (ArableMin_org+ArableMax_org);
-						attribute<float32> ArableMid    (Domain) := ArableMid_org * (1f+iif(Uint32(Data/year) < 2021, 0f, Arable_Inc_factor));
+						attribute<float32> ArableMid    (Domain) := ArableMid_org * (1f+iif(Uint32(Data/year) < 2019, 0f, Arable_Inc_factor));
 						
 						attribute<float32> ArableMin(Domain) := ArableMid * (1f - Arable_Width_factor);
 						attribute<float32> ArableMax(Domain) := ArableMid * (1f + Arable_Width_factor);
