@@ -31,8 +31,9 @@ library(gdxrrw)
 
 fldr_GAMS  <- "C:\\GAMS\\37"
 fn_CapriRegions <- "C:\\Users\\Cicada\\Documents\\GeoDMS\\luisabees_r\\data\\CapriRegions.csv"
-fldr_datapath <- "C:\\Users\\Cicada\\Documents\\GeoDMS\\luisabees_r\\data"           # input
-fldr_nominmax <- "C:\\Users\\Cicada\\Documents\\GeoDMS\\luisabees_r\\nominmax"       # output
+fldr_datapath <- "C:\\Users\\Cicada\\Documents\\GeoDMS\\luisabees_r\\data"                      # input
+fldr_nominmax <- "C:\\Users\\Cicada\\Documents\\GeoDMS\\luisabees_r\\nominmax"                  # output nominmax
+fldr_minmax <- "C:\\Users\\Cicada\\Documents\\GeoDMS\\luisabees_r\\enddata_july2019"            # output minmax
 
 ```
 
@@ -213,9 +214,9 @@ temptointerpolate[,2] = rep(year_range,nrow(unique_regions))
 temptointerpolate[, (cols) := lapply(.SD, na.locf, na.rm = FALSE), .SDcols = cols, by=Region]
 
 # interpolate backwards
-temptointerpolate <- setDT(as.data.frame(apply(temptointerpolate, 2, rev)))
+temptointerpolate <- setDT(map_df(temptointerpolate, rev))
 temptointerpolate[, (cols) := lapply(.SD, na.locf, na.rm = FALSE), .SDcols = cols, by=Region]
-temptointerpolate <- setDT(as.data.frame(apply(temptointerpolate, 2, rev)))
+temptointerpolate <- map_df(temptointerpolate, rev)
 
 interpolated<-temptointerpolate%>%  
   mutate(OtherArable=as.integer(OtherArableMax), PermCrop=as.integer(PermCropMax),Pasture=as.integer(PastureMax), NewEnergy=as.integer(NewEnergyMax)) %>%
@@ -248,38 +249,63 @@ interpolated %>%
 
 ```
 
-<!-- ## expand to annual and min values -->
-<!-- ```{r} -->
-<!-- cols <- c("Year", "OtherArableMax","PermCropMax","PastureMax") -->
-<!-- temptointerpolate<-setDT(demandall)[, .SD[match(2010:2070, Year)], by = Region]  -->
-<!-- temptointerpolate[, (cols) := lapply(.SD, na.approx, na.rm = FALSE), .SDcols = cols] -->
-<!-- interpolated<-temptointerpolate%>%   -->
-<!--   add_column(OtherArableMin = 0, .before = "OtherArableMax")%>% -->
-<!--   add_column(PermCropMin = 0, .before = "PermCropMax")%>% -->
-<!--   add_column(PastureMin = 0, .before = "PastureMax")%>% -->
-<!--   mutate(OtherArableMin=as.integer(OtherArableMax*0.7), PermCropMin=as.integer(PermCropMax*0.7),PastureMin=as.integer(PastureMax*0.7)) %>% -->
-<!--   mutate(OtherArableMax=as.integer(OtherArableMax), PermCropMax=as.integer(PermCropMax),PastureMax=as.integer(PastureMax)) -->
-<!-- interpolated$Region<-substr(interpolated$Region,0,4) -->
+## expand to annual and min values
+```{r}
+cols <- c("Year", "OtherArableMax","PermCropMax","PastureMax","NewEnergyMax")
 
-<!-- ``` -->
-<!-- #countries<-unique(substr(arable$RALL,1,2)) -->
-<!-- ## write to files  -->
-<!-- ```{r} -->
+temptointerpolate<-setDT(demandall)[, .SD[match(2010:2070, Year)], by = Region] 
+temptointerpolate[, (cols) := lapply(.SD, na.approx, na.rm = FALSE), .SDcols = cols, by=Region] # actual interpolation (na.approx)
+year_range <- (2010:2070)
+temptointerpolate[,2] = rep(year_range,nrow(unique_regions))
 
-<!-- enddata <- "C:\\LUISETTA\\Rproject\\capri4luisabees\\enddata_july2019" -->
-<!-- #enddatanew <- "E:/dev/CAPRI/capri4luisabees/enddatanew/" -->
+# interpolate forwards
+temptointerpolate[, (cols) := lapply(.SD, na.locf0), .SDcols = cols, by=Region]
 
-<!-- interpolated  -->
+# interpolate backwards
+temptointerpolate <- setDT(map_df(temptointerpolate, rev))
+temptointerpolate[, (cols) := lapply(.SD, na.locf0), .SDcols = cols, by=Region]
+temptointerpolate <- map_df(temptointerpolate, rev)
 
-<!-- interpolated %>%  -->
-<!--   mutate(countryiso2 = substr(Region, 1,2)) %>%  -->
-<!--   group_by(countryiso2) %>%  -->
-<!--   nest() %>%  -->
-<!--   walk2( -->
-<!--     .x = .$countryiso2, -->
-<!--     .y = .$data, -->
-<!--    .f = ~ write_csv(.y, file.path(enddata, str_c(.x, "_new.csv"))) -->
-<!--    #.f = ~ write_csv(.y, file.path(enddatanew, str_c(.x, ".csv"))) -->
-<!--   ) -->
-<!-- ``` -->
+interpolated<-temptointerpolate %>%
+add_column(OtherArableMin = 0, .before = "OtherArableMax") %>%
+add_column(PermCropMin = 0, .before = "PermCropMax") %>%
+add_column(PastureMin = 0, .before = "PastureMax") %>%
+add_column(NewEnergyMin = 0, .before = "NewEnergyMax")
+
+interpolated$Region<-substr(interpolated$Region,0,4)
+interpolated$OtherArableMin = as.integer(interpolated$OtherArableMax*0.7)
+interpolated$PermCropMin    = as.integer(interpolated$PermCropMax*0.7)
+interpolated$PastureMin     = as.integer(interpolated$PastureMax*0.7)
+interpolated$NewEnergyMin   = as.integer(interpolated$NewEnergyMax*0.7)
+
+interpolated$OtherArableMax = as.integer(interpolated$OtherArableMax)
+interpolated$PermCropMax    = as.integer(interpolated$PermCropMax)
+interpolated$PastureMax     = as.integer(interpolated$PastureMax)
+interpolated$NewEnergyMax   = as.integer(interpolated$NewEnergyMax)
+
+#interpolated %>% mutate(OtherArableMax=as.integer(OtherArableMax), PermCropMax=as.integer(PermCropMax),PastureMax=as.integer(PastureMax),NewEnergyMax=as.integer(NewEnergyMax)) 
+
+  
+```
+
+
+
+#countries<-unique(substr(arable$RALL,1,2))
+## write to files 
+```{r}
+dir.create(fldr_minmax)
+
+interpolated %>% 
+  mutate(countryiso2 = substr(Region, 1,2)) %>% 
+  group_by(countryiso2) %>% 
+  nest() %>% 
+  walk2(
+    .x = .$countryiso2,
+    .y = .$data,
+   .f = ~ write_csv(.y, file.path(fldr_minmax, str_c(.x, "_new.csv")))
+   #.f = ~ write_csv(.y, file.path(enddatanew, str_c(.x, ".csv")))
+  )
+
+```
+
 
