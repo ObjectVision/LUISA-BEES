@@ -78,7 +78,9 @@ Container Templates {
 	Template loadDataFile_float32tiff {
 		parameter<string> 	inPath;
 		unit<wpoint> 		TargetRaster: expr = "geometries/SelectedTiledRaster1k";
-		unit<wpoint>		inFile: StorageName = "= '%LuisettaDataDir%/'+ inPath+'.tif'", StorageType = "gdal.grid", StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
+		unit<wpoint>		inFile: StorageName = "= '%LuisettaDataDir%/'+ inPath+'.tif'", 
+			StorageType = "gdal.grid", 
+			StorageReadOnly = "True", DialogData = "CoordSys", DialogType = "map"
 		{
 			attribute<float32> GridData;
 			attribute<float32> ReadData (TargetRaster);

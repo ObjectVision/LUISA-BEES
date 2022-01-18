@@ -1049,7 +1049,7 @@ container ModelTraits
 			,	StorageName = "=Indicators/DirName + '_xTabRegionData.csv'", StorageType = 'str';
 			
 
-			container CapriResults: ExplicitSuppliers = "CapriShadowPriceExport;xTabCapriExport;CapriRegionxTabExport";
+			container CapriResults: ExplicitSuppliers = "CapriShadowPriceExport;xTabCapriExport;CapriRegionxTabExport;ArableLandSupply/Export";
 			container Results: ExplicitSuppliers = 
 					"= 'Results1;CapriResults'"
 					"+ (IsDefined(rlookup(UInt16(CurrYear), Parameters/PeriodSet/Lustrum/Year)) ? ';ResultsFathomYears' : '')"

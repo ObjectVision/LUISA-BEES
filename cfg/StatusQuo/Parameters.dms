@@ -1198,7 +1198,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				")"
 			{
 				attribute<String> RegionUp_Raw (Domain): Expr = "UpperCase(Region)",               StoreData = "False", FreeData = "True";
-				attribute<String> RegionUp     (Domain): Expr = "RegionUp_Raw",                    IntegrityCheck = "all(region_allowed)";
+				attribute<String> RegionUp     (Domain): Expr = "RegionUp_Raw"; //,                    IntegrityCheck = "all(region_allowed)";
 				attribute<UInt32> ZeroClaim    (Domain): Expr = "const(0,Domain)",           StoreData = "False", FreeData = "True";
 				attribute<UInt32> HighClaim    (Domain): Expr = "const(2000000000,Domain)",  StoreData = "False", FreeData = "True";
 				
@@ -1213,7 +1213,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				attribute<bool> region_exception1  (Domain):  Expr = "(strlen(RegionUp_Raw) == 4) && region_prefixKnown && (substr(RegionUp_Raw, 2, 2) == '00')";
 				attribute<bool> region_allowed     (Domain):  Expr = "isDefined(region_nr) || (region_exception1)";
 				
-				attribute<Domain> rel_curr_years		(PeriodSet/result): expr = "rlookup(PeriodSet/result/CurrYear, value(year, float32))";
+				attribute<Domain> rel_curr_years	(PeriodSet/result): expr = "rlookup(PeriodSet/result/CurrYear, value(year, float32))";
 				attribute<bool> check_rel			(PeriodSet/result): expr = "IsDefined(rel_curr_years)";
 				
 			}
@@ -1272,13 +1272,15 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 					parameter<float32> Arable_Inc_factor   := float32(replace_value(Expand(., '%env:ARABLE_INC%'  ), 'env:ARABLE_INC'  , '0.00'));
 					
 					container data := ClaimTablesOrg/Capri/data {
-						attribute<float32> ArableMin_org(Domain) := float32(ClaimTablesOrg/Capri/data/ArableMin);
-						attribute<float32> ArableMax_org(Domain) := float32(ClaimTablesOrg/Capri/data/ArableMax);
+						attribute<float32> ArableMin_org(Domain) := float32(ClaimTablesOrg/Capri/data/OtherArableMin);
+						attribute<float32> ArableMax_org(Domain) := float32(ClaimTablesOrg/Capri/data/OtherArableMax);
 						attribute<float32> ArableMid_org(Domain) := 0.5f * (ArableMin_org+ArableMax_org);
 						attribute<float32> ArableMid    (Domain) := ArableMid_org * (1f+iif(Uint32(Data/year) < 2019, 0f, Arable_Inc_factor));
 						
 						attribute<float32> ArableMin(Domain) := ArableMid * (1f - Arable_Width_factor);
 						attribute<float32> ArableMax(Domain) := ArableMid * (1f + Arable_Width_factor);
+						attribute<float32> NewEnergyMin(Domain) := const(0f, Domain);
+						attribute<float32> NewEnergyMax(Domain) := const(0f, Domain);
 					}
 				}
 			}

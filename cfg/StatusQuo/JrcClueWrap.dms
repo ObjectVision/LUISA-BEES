@@ -354,7 +354,8 @@ template JrcClueWrap:
 		parameter<string>  GeneratedFiles := endState/GeneratedFiles, ExplicitSuppliers = "endState/GeneratedFiles"; // ;simulation_results/landuse/GridData";
 		parameter<string>  GeneratedCapriFiles := 'Ready'
 		, 	ExplicitSuppliers = 
-				"TimeSteps/P2020/ResultingState/OutputGeneration/CapriResults";
+				"TimeSteps/P2020/ResultingState/OutputGeneration/CapriResults;"
+				"TimeSteps/P2025/ResultingState/OutputGeneration/CapriResults";
 				
 		parameter<string>  Generate2050 := 'Ready'
 		, 	ExplicitSuppliers = 
