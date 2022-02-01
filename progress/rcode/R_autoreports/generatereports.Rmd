@@ -1,25 +1,28 @@
 ---
-title: "reporting results from land use model LUISA-BEES"
-author: "Sarah"
-date: "May 18 2020"
+title: "Results from land use model LUISA-BEES"
+author: "Sarah Mubareka"
+date: "August 25,2020"
 output:
-  word_document: 
-    toc: yes
+#  word_document: 
+ #   toc: yes
   html_document: 
       toc: yes
-  pdf_document: 
-    number_sections: yes
-    toc: yes
+#  pdf_document: 
+ #   number_sections: yes
+#    toc: yes
+always_allow_html: true      
 ---
 
 ```{r setup, include=TRUE, message=FALSE, warning=FALSE,echo=FALSE}
-setwd("C:/LUISA-BEES/LUISA-BEES/progress/rcode/R_autoreports")
-knitr::opts_chunk$set(echo = TRUE)
+setwd("C:/luisabees/LUISA-BEES/progress/rcode/R_autoreports")
+
+knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_knit$set(root.dir = "..") # file path relative to the root of the project directory
 #install.packages("E:\\mubarsa\\Documents\\Downloads\\rlang_0.3.1.gz", repos = NULL, type = "source")
 #install.packages("ggplot2", dep = TRUE)
 #install.packages("dplyr", dep = TRUE)
 #install.packages("tidyverse", dep = TRUE)
+library(kableExtra)
 library(ggplot2)
 library(rlang)
 library(purrr)
@@ -33,29 +36,241 @@ library(data.table)
 library(foreign)
 library(networkD3)
 library(rmarkdown)
+library(rgdal)
+library(raster)
+library(gridExtra)
 ```
 # Introduction
+The land use model LUISA-BEES ("Land Use Integrated Sustainability Assessment - BioEconomy and Ecosystem Services") is a dedicated land use model to assess the biomass availability and uses for the EU bioeconomy from the forest and agriculture sectors. 
 
+This report summarises the results of a scenario that is based on the [2030 Climate and Energy package](https://ec.europa.eu/clima/policies/strategies/2030_en) reference scenario. The purpose of doing this is to assess the land availability for the energy crops that are foreseen in this scenario. Furthermore, the model was configured to encourage tree plantations on any available non-productive land, where trees could suitably grow.
 
-The purpose of this document is to report the output of the land use model LUISA-BEES. 
+The results are land use maps at 1-hectare resolution, showing a plausible pattern for land use supposing that energy crops foreseen in the C&E scenario are to be planted somewhere in Europe. The tree plantations are also mapped and quantified in view of the application of the 2020 Biodiversity Strategy.
 
+##Scenario assumptions
+*describe scenario assumptions here*
 
-## Create a function that reads xTab files
 ```{r,echo=FALSE}
-datadir<-"D:/landuse/LUISA-BEES_outmay162020"
+datadir<-"D:/landuse/LUISA-BEES_outaug232020"
 list<- list.dirs(datadir, recursive=FALSE)
 countries<-list.dirs(datadir, full.names = FALSE, recursive=FALSE)
 year<-c("2015","2020","2025","2030","2035","2040","2045","2050")
 ```
-#loop through folders to get GHG emissions data and make graphs
+#EU-level results
+The EU-level results are presented in this section.
+##Land use map
+Basic land use statistics for the EU.
 ```{r,echo=FALSE}
+# Generate EU mosaic from /GenerateContainer/MozaikLandUse/impl/AllPeriods/PYYYY/result
+EUdatadir<-"D:/landuse/LUISA_BEES_outaug232020_EUresults/Results/EU"
+landuse2015<-raster(paste0(EUdatadir,"/","LandUseVT_2015.tif"))
+landuse2020<-raster(paste0(EUdatadir,"/","LandUseVT_2020.tif"))
+landuse2025<-raster(paste0(EUdatadir,"/","LandUseVT_2025.tif"))
+landuse2030<-raster(paste0(EUdatadir,"/","LandUseVT_2030.tif"))
+landuse2035<-raster(paste0(EUdatadir,"/","LandUseVT_2035.tif"))
+landuse2040<-raster(paste0(EUdatadir,"/","LandUseVT_2040.tif"))
+landuse2045<-raster(paste0(EUdatadir,"/","LandUseVT_2045.tif"))
+landuse2050<-raster(paste0(EUdatadir,"/","LandUseVT_2050.tif"))
+par(mfrow=c(1,1))
+plot(landuse2015, main="2015")
+```
+
+```{r,echo=FALSE}
+plot(landuse2050, main="2050")
+```
+
+```{r,echo=FALSE}
+# get land use composition per year per country from /GenerateContainer/MozaikLandUse/GenerateSummary/ExportTable *does not work, sum countries manually*
+# sum land use composition per year for all countries
+#loop through folders to get landuse data and make graphs
+filename<-"All_LandUseVT.dbf"
+wholelist<-list()
+for (y in seq_along(year)) {
+  countrylist = list()
+  for (i in seq_along(list)) {
+    lufile<-paste0(list[i],"/P",year[y],filename)
+#    print(ghgfile)
+    lu<-read.dbf(paste0(list[i],"/P",year[y],filename))
+    lu$year<-year[y]
+    lu$country<-countries[i]
+    countrylist[[i]] <- lu
+  }
+  allcountries = do.call(rbind, countrylist)
+  wholelist[[y]] <- allcountries
+}
+all = do.call(rbind,wholelist)
+
+```
+#Land use composition evolution 
+##2020-2050
+```{r,echo=FALSE}
+#aggregate land use classes to reduce number of classes
+lu_agg<-all %>%
+  group_by(year, country, NUTS2) %>%
+  transmute(builtup=BUILTUP,arable=ARABLE, permanentCrop=PERMANENTC, pastures=PASTURES,energyCrops=NEWENERGYC,forest=TRANSWOODL + FORESTSYOU+FORESTSMAT,treePlantation=TREEPLANTA, abandonedAgric=ABANARABLE+ABANPERMAN+ABANPASTUR,abandonedBuiltup=ABANURBAN+ABANINDUST)
+#make grid of each LU trend in matrix
+bu<-aggregate(lu_agg$builtup, by=list(year=lu_agg$year, country=lu_agg$country), FUN=sum)
+bu2<-aggregate(bu$x, by=list(year_allEU=bu$year), FUN=sum)
+colnames(bu2)[2]<-"ha"
+#agriculture classes
+arable<-aggregate(lu_agg$arable, by=list(year=lu_agg$year, country=lu_agg$country), FUN=sum)
+arable2<-aggregate(arable$x, by=list(year_allEU=arable$year), FUN=sum)
+colnames(arable2)[2]<-"ha"
+pc<-aggregate(lu_agg$permanentCrop, by=list(year=lu_agg$year, country=lu_agg$country), FUN=sum)
+pc2<-aggregate(pc$x, by=list(year_allEU=pc$year), FUN=sum)
+colnames(pc2)[2]<-"ha"
+gl<-aggregate(lu_agg$pastures, by=list(year=lu_agg$year, country=lu_agg$country), FUN=sum)
+gl2<-aggregate(gl$x, by=list(year_allEU=gl$year), FUN=sum)
+colnames(gl2)[2]<-"ha"
+ne<-aggregate(lu_agg$energyCrops, by=list(year=lu_agg$year, country=lu_agg$country), FUN=sum)
+ne2<-aggregate(ne$x, by=list(year_allEU=ne$year), FUN=sum)
+colnames(ne2)[2]<-"ha"
+#tree classes
+pl<-aggregate(lu_agg$treePlantation, by=list(year=lu_agg$year, country=lu_agg$country), FUN=sum)
+pl2<-aggregate(pl$x, by=list(year_allEU=pl$year), FUN=sum)
+colnames(pl2)[2]<-"ha"
+forst<-aggregate(lu_agg$treePlantation, by=list(year=lu_agg$year, country=lu_agg$country), FUN=sum)
+forst2<-aggregate(forst$x, by=list(year_allEU=forst$year), FUN=sum)
+colnames(forst2)[2]<-"ha"
+#make matrix of graphs to show general trends
+par(mfrow=c(2,4))
+#pbu<-
+  plot(bu2, main="Built-up", xlab="year")
+#par<-
+  plot(arable2, main="Arable", xlab="year")
+#ppc<-
+  plot(pc2, main="Permanent crops", xlab="year")
+#pgl<-
+  plot(gl2, main="Pastures", xlab="year")
+#pne<-
+  plot(ne2, main="Energy crops", xlab="year")
+#pfo<-
+  plot(forst2, main="Forest", xlab="year")
+#ptp<-
+  plot(pl2, main="Tree plantations", xlab="year")
+#gridExtra::grid.arrange(pbu, par, nrow = 1)
+```
+
+```{r,echo=FALSE}
+#prepare data for stacked bar graphs
+lu_agg_long<-
+  lu_agg %>%  
+      gather(key = "landuse", value = "ha",
+      builtup, arable, permanentCrop, pastures, energyCrops, forest, treePlantation,abandonedAgric, abandonedBuiltup) %>%
+  group_by(year, country, landuse) %>% summarize(ha = sum(ha)) %>%
+  mutate(label_ypos=cumsum(ha)) %>%
+  group_by(year,country) %>%
+  arrange(-ha) %>%
+  mutate(landuse = factor(landuse,levels=c("abandonedAgric","abandonedBuiltup","arable", "builtup", "forest","pastures","permanentCrop","treePlantation","energyCrops"))) 
+
+  ggplot(lu_agg_long,aes(fill=landuse, y=ha, x=year,order = -as.numeric(ha))) + 
+    geom_bar(position="stack", stat="identity") +  
+  scale_fill_manual(values = c("#b0a726", "#740001","#f5dc1d","#ae0001","#008744","#f0730a","#f6eaa2","#fbdddd","#301249")) +theme(legend.position="bottom")
+
+#color palette
+#abanUrban: "#740001"
+#industry:"#301249", 
+#abanArable:"#b0a726", 
+#abanPermCrops:"#a67c00", 
+#abanPastures: "#f0730a", 
+#forestMAture: #008744
+#woodland: "#00FF99", 
+#Arab: "#f5dc1d", 
+#PC: "#bf9b30", 
+#Past: "#f6eaa2", 
+#Urban:"#ae0001", 
+#abandInd: "#8a6ca3",
+#necr: "#f09c5e", 
+#shva: "#CC9900",
+#forestYo:"#a3cc48",
+#plantations:"#fbdddd"
+
+```
+
+```{r,echo=FALSE}
+ggplot(lu_agg_long, aes(fill=year, y=ha, x=year)) + 
+    geom_bar(position="dodge", stat="identity") +
+#   discrete_scale(discrete = T, option = "E") +
+    ggtitle("Land use evolution") +
+    facet_wrap(~landuse) +
+ #   theme_ipsum() +
+    theme(legend.position="none") +
+    xlab("")
+```
+
+```{r,echo=FALSE}
+ggplot(lu_agg_long, aes(fill=year, y=ha, x=year)) + 
+    geom_line() +
+#   discrete_scale(discrete = T, option = "E") +
+    ggtitle("Land use evolution") +
+    facet_wrap(~landuse) +
+ #   theme_ipsum() +
+    theme(legend.position="none") +
+    xlab("")
+```
+##Sankey diagrams for land use change flows, 2015-2050
+```{r,echo=FALSE}
+#loop through country folders to get xTab2050 data to sum for EU (sum rows and cols)
+filename<-"P2015_xTabMT.dbf"
+augdatadir<-"D:/landuse/LUISA-BEES_outaug232020"
+listAug<- list.dirs(augdatadir, recursive=FALSE)
+allruns<-list()
+for (i in seq_along(list)) {
+  listAug[i]
+    xTabAug<-read.dbf(paste0(listAug[i],"/",filename))
+    allruns[[i]] <- xTabAug
+}
+sumxtabEU<-Reduce('+',allruns)
+#reshape data 
+lu<-unique(as.character(colnames(sumxtabEU)))
+  #create nodes - number of rows has to correspond to the number of 'old classes' plus number of 'new classes'
+  nodes <- data.frame(node = c(0:21), name = c(lu, "agriculture", "builtup", "forests",  "otherNature","newEnergyCrops","plantations")) 
+  #create links
+  #CREATE new column with land use type in sumxtabEU file:
+  df<-cbind(lu,sumxtabEU)
+  #SUM the columns of land uses that can be aggregated:
+  df$builtup<-df$URBAN+df$INDUSTRIAL+df$ABANURBAN+df$ABANINDUST 
+  df$arable<-df$ARABLE+ df$ABANARABLE
+  df$permCrop<-df$PERMANENTC+ df$ABANPERMAN
+  df$pastures<- df$PASTURES+ df$ABANPASTUR
+  df$forests<-df$FORESTSMAT+ df$TRANSWOODL+ df$FORESTSYOU
+  df$otherNature<-df$SHVA
+  df$newEnergyCrops<- df$NEWENERGYC
+  df$plantations<- df$TREEPLANTA
+
+  df<-dplyr::select (df,-c(URBAN, INDUSTRIAL, ARABLE, PERMANENTC, PASTURES, FORESTSMAT, TRANSWOODL, ABANARABLE, ABANPERMAN, ABANPASTUR, ABANURBAN, ABANINDUST, FORESTSYOU,NEWENERGYC, SHVA,TREEPLANTA))
+  # format in prep for sankey diagram
+  links <- tidyr::gather(df, toLU, ha, -lu)
+  luc <- merge(links, nodes, by.x = "lu", by.y = "name") 
+  luc <- merge(luc, nodes, by.x = "toLU", by.y = "name")
+  forSankey <- luc[ , c("node.x", "node.y", "ha")]
+  colnames(forSankey) <- c("source", "target", "value")
+  #remove rows containing 0 or else the lines will be drawn in the Sankey:
+  gtzero<- apply(forSankey, 1, function(row) all(row !=0 ))
+  ##Subset as usual
+  forSankey<-forSankey[gtzero,]
+ 
+
+chordNetwork(Data = sumxtabEU, width = 900, height = 900, initialOpacity = 0.8, colourScale =c("#FF0000", "#FF00FF", "#FFDD89", "#cc0099", "#00FF89", "#006600","#00FF99", "#FFDD89", "#00FF00", "#FF0000", "#FF0000", "#FF00FF","#FFDD89", "#CC9900","#00FF00","#666600"), labels = c("urban", "industry", "arable", "permCrops", "pastures", "forestMature", "woodland","abanArab", "abanPC", "abanPast", "abanUrban", "abanIndustry", "necr", "shva", "forestYoung","plantations"), padding = 0.1, fontSize = 14,
+  fontFamily = "sans-serif",  labelDistance = 100)
+```
+
+```{r, echo=FALSE, results='asis'}
+library(knitr)
+knitr::kable(sumxtabEU, caption = "Land use conversions, 2015-2050")
+
+```
+
+#GHG EMissions LULUCF
+```{r,echo=FALSE}
+#loop through folders to get GHG emissions data and make graphs
 filename<-"All_GHG.dbf"
 wholelist<-list()
 for (y in seq_along(year)) {
   countrylist = list()
   for (i in seq_along(list)) {
     ghgfile<-paste0(list[i],"/P",year[y],filename)
-    print(ghgfile)
+#    print(ghgfile)
     ghg<-read.dbf(paste0(list[i],"/P",year[y],filename))
     ghg$year<-year[y]
     ghg$country<-countries[i]
@@ -65,16 +280,60 @@ for (y in seq_along(year)) {
   wholelist[[y]] <- allcountries
 }
 all = do.call(rbind,wholelist)
-```
-EU CO2 emissions for the simulation period 2015-2050, all land use change summed
 
-```{r}
 eu_plot1<-aggregate(all$TOTAL, by=list(year=all$year, country=all$country), FUN=sum)
 eu_plot2<-aggregate(eu_plot1$x, by=list(year_allEU=eu_plot1$year), FUN=sum)
 plot(eu_plot2)
 plotpercountry<-ggplot(eu_plot1,aes(x=year, y=x,group=country,color=country)) + geom_point() +labs (title = "CO2 emissions 2015-2050",y="tCO2", x="year")
 
 ```
+
+```
+# Land use map
+```{r,echo=FALSE}
+country="Austria"
+landuse2015<-("P2015.tif")
+landuse2050<-("P2050.tif") 
+raster2015<-raster(paste0(datadir,"/",country,"/",landuse2015))
+raster2050<-raster(paste0(datadir,"/",country,"/",landuse2050))
+#par(mfrow=c(2,1)) 
+plot(raster2015, main="2015")
+e<-extent(raster2015)
+plot(e, add=TRUE, col='black', main="2015")
+plot(raster2050, main="2050")
+plot(e, add=TRUE, col='black', main="2050")
+#s<-stack(raster2015,raster2050)
+#plot(s,2)
+```
+
+<!-- #Investigate Amar's observation that land are changes drastically between 2 runs -->
+<!-- #Amar (CAPRI modeller) noticed differences between the land use area sums for xTab and (correctly) questioned how this could be. The base map had changed between the three runs (v0 on JRC box: orignal CLC; v1 on JRC box: forest corrected by polygon - i.e. MMU of CLC respected; Vx on my PC was run with a pixel-based correction of CLC). -->
+<!-- ```{r,echo=FALSE} -->
+<!-- #loop through folders to get xTab2050 data and make Sankeys -->
+<!-- filename<-"P2015_xTabMT.dbf" -->
+<!-- #marchdatadir<-"D:/landuse/luisetta_outmarch312020" -->
+<!-- maydatadir<-"D:/landuse/LUISA-BEES_outmay162020" -->
+<!-- augdatadir<-"D:/landuse/LUISA-BEES_outaug232020" -->
+<!-- listMay<- list.dirs(maydatadir, recursive=FALSE) -->
+<!-- listAug<- list.dirs(augdatadir, recursive=FALSE) -->
+<!-- allruns<-list() -->
+<!-- for (i in seq_along(list)) { -->
+<!--   listMay[i] -->
+<!--   listAug[i] -->
+<!--     xTabMay<-read.dbf(paste0(listMay[i],"/",filename)) -->
+<!--     xTabAug<-read.dbf(paste0(listAug[i],"/",filename)) -->
+<!--     may<-(sum(xTabMay[,])) -->
+<!--     aug<-(sum(xTabAug[,])) -->
+<!--     diff<-aug-may -->
+<!--     allruns[[i]] <- diff -->
+<!-- } -->
+<!-- diffs = do.call(rbind,allruns) -->
+<!-- diffs<-as.data.frame(diffs) -->
+<!-- diffs$country<-countries -->
+<!-- print(diffs) -->
+
+
+<!-- ``` -->
 
 #loop through folders to get xTab2050 data and make Sankeys
 ```{r,echo=FALSE}
@@ -84,8 +343,8 @@ for (i in seq_along(list)) {
   # Graphs of land use change
   ##Create Sankey diagrams
   lu<-unique(as.character(colnames(xTab)))
-  #create nodes
-  nodes <- data.frame(node = c(0:19), name = c(lu, "agriculture", "builtup", "forests",  "otherNature","newEnergyCrops")) 
+  #create nodes - number of rows has to correspond to the number of 'old classes' plus number of 'new classes'
+  nodes <- data.frame(node = c(0:21), name = c(lu, "agriculture", "builtup", "forests",  "otherNature","newEnergyCrops","plantations")) 
   #create links
   #CREATE new column with land use type in xTab file:
   df<-cbind(lu,xTab)
@@ -95,8 +354,9 @@ for (i in seq_along(list)) {
   df$forests<-df$FORESTSMAT+ df$TRANSWOODL+ df$FORESTSYOU
   df$otherNature<-df$SHVA
   df$newEnergyCrops<- df$NEWENERGYC
+  df$plantations<- df$TREEPLANTA
 
-  df<-dplyr::select (df,-c(URBAN, INDUSTRIAL, ARABLE, PERMANENTC, PASTURES, FORESTSMAT, TRANSWOODL, ABANARABLE, ABANPERMAN, ABANPASTUR, ABANURBAN, ABANINDUST, FORESTSYOU,NEWENERGYC, SHVA))
+  df<-dplyr::select (df,-c(URBAN, INDUSTRIAL, ARABLE, PERMANENTC, PASTURES, FORESTSMAT, TRANSWOODL, ABANARABLE, ABANPERMAN, ABANPASTUR, ABANURBAN, ABANINDUST, FORESTSYOU,NEWENERGYC, SHVA,TREEPLANTA))
   #MERGE urban+industry=builtup; arable+PC+abandoned etc =agri; forests Y+M+Woodland summed
   # format in prep for sankey diagram
   links <- tidyr::gather(df, toLU, ha, -lu)
@@ -120,7 +380,7 @@ for (i in seq_along(list)) {
 
    ## Create Chord Network diagram
 
-  chordNetwork(Data = xTab, width = 900, height = 900, colourScale =c("#FF0000", "#FF00FF", "#FFDD89", "#FF1212", "#00FF89", "#00FF00","#00FF99", "#FFDD89", "#00FF00", "#FF0000", "#FF0000", "#FF00FF","#FFDD89", "#00FF00","#00FF00"), labels = c("urban", "industry", "arable", "permCrops", "pastures", "forestMature", "woodland","abanArab", "abanPC", "abanPast", "abanUrban", "abanIndustry", "necr", "shva", "forestYoung"))
+  chordNetwork(Data = xTab, width = 900, height = 900, colourScale =c("#FF0000", "#FF00FF", "#FFDD89", "#cc0099", "#00FF89", "#006600","#00FF99", "#FFDD89", "#00FF00", "#FF0000", "#FF0000", "#FF00FF","#FFDD89", "#CC9900","#00FF00","#666600"), labels = c("urban", "industry", "arable", "permCrops", "pastures", "forestMature", "woodland","abanArab", "abanPC", "abanPast", "abanUrban", "abanIndustry", "necr", "shva", "forestYoung","plantations"))
  #  shiny::renderPlot({
   #   chord
    #})
@@ -130,16 +390,21 @@ for (i in seq_along(list)) {
 
 ```{r,echo=FALSE}
 for (i in seq_along(list)) {
-  xTab<-read.dbf(paste0(list[i],"/",filename))
+   xTab<-read.dbf(paste0(list[i],"/",filename))
+  lu<-unique(as.character(colnames(xTab)))
+  df<-cbind(lu,xTab)
   #FOR nature, agri and builtup sankey:
   #SUM the columns of land uses that can be aggregated:
   #create nodes
-  nodes <- data.frame(node = c(0:17), name = c(lu, "agriculture", "builtup", "nature")) 
-  df<-xTab
-  df$builtup<-df$URBAN+df$INDUSTRIAL+df$ABANURBAN+df$ABANINDUST 
-  df$agriculture<-df$ARABLE+df$PERMANENTC+ df$PASTURES+ df$ABANARABLE+ df$ABANPERMAN+ df$ABANPASTUR+df$NEWENERGYC
-  df$nature<-df$FORESTSMAT+ df$TRANSWOODL+ df$FORESTSYOU+df$SHVA
-  df<-dplyr::select (df,-c(URBAN, INDUSTRIAL, ARABLE, PERMANENTC, PASTURES, FORESTSMAT, TRANSWOODL, ABANARABLE, ABANPERMAN, ABANPASTUR, ABANURBAN, ABANINDUST, FORESTSYOU,NEWENERGYC, SHVA))
+  nodes <- data.frame(node = c(0:21), name = c(lu, "BUILTUP","PASTURE", "AGRICULTURE", "ENERGYCROPS","FORESTSandNATURE", "TREEPLANTATIONS")) 
+ # df<-xTab
+  df$BUILTUP<-df$URBAN + df$INDUSTRIAL + df$ABANURBAN + df$ABANINDUST 
+  df$PASTURE<-df$PASTURES + df$ABANPASTUR
+  df$AGRICULTURE<-df$ARABLE + df$PERMANENTC + df$ABANARABLE + df$ABANPERMAN
+  df$ENERGYCROPS<- df$NEWENERGYC
+  df$FORESTSandNATURE<-df$FORESTSMAT+ df$TRANSWOODL+ df$FORESTSYOU+df$SHVA
+  df$TREEPLANTATIONS<-df$TREEPLANTA
+  df<-dplyr::select (df,-c(URBAN, INDUSTRIAL, ARABLE, PERMANENTC, PASTURES, FORESTSMAT, TRANSWOODL, ABANARABLE, ABANPERMAN, ABANPASTUR, ABANURBAN, ABANINDUST, FORESTSYOU,NEWENERGYC, SHVA, TREEPLANTA))
   #MERGE urban+industry=builtup; arable+PC+abandoned etc =agri; nature= Y+M+Woodland summed
   # format in prep for sankey diagram
   links <- tidyr::gather(df, toLU, ha, -lu)
@@ -147,10 +412,11 @@ for (i in seq_along(list)) {
   luc <- merge(luc, nodes, by.x = "toLU", by.y = "name")
   forSankey <- luc[ , c("node.x", "node.y", "ha")]
   colnames(forSankey) <- c("source", "target", "value")
-  #remove rows containing 0 or else the lines will be drawn in the Sankey:
+  #remove rows whose column 'ha' contains 0 or else the lines will be drawn in the Sankey:
   gtzero<- apply(forSankey, 1, function(row) all(row !=0 ))
+  forSankey<-forSankey[!(forSankey$value==0),]
   ##Subset as usual
-  forSankey<-forSankey[gtzero,]
+  #forSankey<-forSankey[gtzero,]
 
 
   #make Sankey
@@ -159,7 +425,10 @@ for (i in seq_along(list)) {
   Target = 'target', 
   Value = 'value', 
   NodeID = 'name',
-  units = 'ha')
+  units = 'ha',
+  fontSize = 12,
+  nodeWidth = 20)
+
 }
 ```
 

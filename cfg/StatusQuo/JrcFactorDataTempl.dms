@@ -115,7 +115,7 @@ container JrcFactorDataTempl: IsTemplate = "True", IsHidden = "true"  //, Expr =
 		attribute<int8> ForestsMature           (domain_grid): expr = "Biodiversity/LOCSPECS/LocSpecsFor";
 		attribute<int8> TransWoodlandShrub      (domain_grid): expr = "const(0, domain_grid, int8)";
 		
-		attribute<int8> NewEnergyCrops          (domain_grid): expr = "CAP/LOCSPECS/LocSpecNecr";
+		attribute<int8> NewEnergyCrops          (domain_grid) := CAP/LOCSPECS/LocSpecNecr;
 
 		attribute<int8> SHVA                    (domain_grid): expr = "const(0, domain_grid, int8)";
 		
@@ -126,6 +126,8 @@ container JrcFactorDataTempl: IsTemplate = "True", IsHidden = "true"  //, Expr =
 		attribute<int8> AbanPastures      (domain_grid) := const(0, domain_grid, int8);
 		attribute<int8> AbanUrban         (domain_grid) := const(0, domain_grid, int8);
 		attribute<int8> AbanIndustry      (domain_grid) := const(0, domain_grid, int8);
+
+		attribute<int8> TreePlantation    (domain_grid) := const(1, domain_grid, int8);
 	}
 
 	// endogenous distance factors

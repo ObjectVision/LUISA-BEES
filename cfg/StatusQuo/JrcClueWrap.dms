@@ -172,7 +172,7 @@ template JrcClueWrap:
 		
 		container ClaimTableSelections: Expr = "for_each_ne(UniqueRegionRefs/Values, 'ClaimTableSelectionTemplate(ClaimTables/'+UniqueRegionRefs/Values+', Parameters/PeriodSet/StartYear)')";
 		
-		container adapt_claim_org: expr = "for_each_nednv(ModelType/Name, "
+		container adapt_claim: expr = "for_each_nednv(ModelType/Name, "
 					"'MakeDefined('+"
 							"'rjoin('+"
 								"'RunRegions/UnitSets/'+ClaimTableName+'/ZoneId, '+"
@@ -180,12 +180,8 @@ template JrcClueWrap:
 								"'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MinClaimColumn, 'ZeroClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'+"
 							"')'+"
 						"', float32(0))'"
-						", RegionNumbers,
-						ClaimTableName, float32)", FreeData = "False";
-		container adapt_claim := adapt_claim_org {
-			unit<uint16> Capri := RegionNumbers/Capri;
-			attribute<float32> Arable(Capri) := float32(OrgLandUseCount/Arable); 
-		}
+						", RegionNumbers, ClaimTableName, float32)", FreeData = "False";
+		
 		unit<uint16> AtomicRegions := overlay(UniqueDestRegionRefs/Values, domain, RegionData)
 		,	DialogType = "map", DialogData = "per_domain_grid"
 		{
@@ -252,7 +248,7 @@ template JrcClueWrap:
 		
 		container Variables: expr = "for_each_nedv(Factors/Name, Factors/StartExpr, domain, float32)";
 
-		parameter<string> GeneratedFiles: Expr = "OutputGeneration/OutputDirName+';'"; // ,ExplicitSuppliers = "OutputGeneration/ClippedLandUseVT;OutputGeneration/Clipped_Qi;";
+		parameter<string> GeneratedFiles: Expr = "OutputGeneration/OutputDirName+';'",		ExplicitSuppliers = "OutputGeneration/ClippedLandUseVT;OutputGeneration/Clipped_Qi;";
 		container OutputGeneration
 		{
 			parameter<String> OutputDirName := simulation_results/metadata/DirName + '_'+string(Periods/CurrYear[uint16(0)]);
@@ -342,7 +338,7 @@ template JrcClueWrap:
 //			container DifQiPerYearVT_from_ReadOnly:= for_each_nedv(Periods/Name, '!IsNull(RunRegions/RasterSets/RunAreas) ? float32(ClippedQiPerYearVT_ReadOnly/' + Periods/Name + ') - CaseData/JrcFactorData/Population/Qi_2011 : float32(0)',  domain_grid, float32);
 			
 		}
-		parameter<string>  GeneratedFiles: Expr = "endState/GeneratedFiles", ExplicitSuppliers = "endState/GeneratedFiles"; // ;simulation_results/landuse/GridData";
+		parameter<string>  GeneratedFiles: Expr = "endState/GeneratedFiles", ExplicitSuppliers = "endState/GeneratedFiles;simulation_results/landuse/GridData";
 		
 		unit<WPoint> ForestTransitionStatePerYear := range(wpoint, point(0w, 0w), point(uint16(#LU/ForestTransitionState), uint16(#Periods)))
 		{

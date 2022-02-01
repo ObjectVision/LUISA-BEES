@@ -1261,28 +1261,9 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 								
 			parameter<Bool> ClaimTablesOK: Expr = "='and('+asItemList('all(ClaimTablesOrg/'+RunRegion_Specific_RegionRefs/Values+'/Data/region_allowed), all(ClaimTablesOrg/'+RunRegion_Specific_RegionRefs/Values+'/Data/check_rel)')+')'";
 						
-					
-			// ============ claims; overrule Capri/data: ArableMin and ArableMax
-			container ClaimTables := ClaimTablesOrg, IntegrityCheck = "ClaimTablesOK"
-			{
-				container Capri := ClaimTablesOrg/Capri {
-					unit<uint32> Domain := ClaimTablesOrg/Capri/Domain;
-					
-					parameter<float32> Arable_Width_factor := float32(replace_value(Expand(., '%env:ARABLE_WIDTH%'), 'env:ARABLE_WIDTH', '0.20'));
-					parameter<float32> Arable_Inc_factor   := float32(replace_value(Expand(., '%env:ARABLE_INC%'  ), 'env:ARABLE_INC'  , '0.00'));
-					
-					container data := ClaimTablesOrg/Capri/data {
-						attribute<float32> ArableMin_org(Domain) := float32(ClaimTablesOrg/Capri/data/ArableMin);
-						attribute<float32> ArableMax_org(Domain) := float32(ClaimTablesOrg/Capri/data/ArableMax);
-						attribute<float32> ArableMid_org(Domain) := 0.5f * (ArableMin_org+ArableMax_org);
-						attribute<float32> ArableMid    (Domain) := ArableMid_org * (1f+Arable_Inc_factor);
-						
-						attribute<float32> ArableMin(Domain) := ArableMid * (1f - Arable_Width_factor);
-						attribute<float32> ArableMax(Domain) := ArableMid * (1f + Arable_Width_factor);
-					}
-				}
-			}
+			container ClaimTables: Expr = "ClaimTablesOrg", IntegrityCheck = "ClaimTablesOK";
 		}
+		
 		container Run : IsTemplate = "True"
 		{
 			parameter<String> Name;
@@ -1332,23 +1313,13 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				1, 1, 1,  // arabl, permacrops, pastures
 				1, 1,     // forestmat, transwoodland
 				0, 0, 0, 0, 0,     // Abandoned Arable, PC, Pasture, Urban, Industry 
-				1, 1, 1	  //NewEnergyCrops, SHVA, ForestsYoung
+				1, 1, 1, 1	  //NewEnergyCrops, SHVA, ForestsYoung, TreePlantations
 			];
 			parameter<String> LocSpecContainerName: Expr = "'ReferenceLocSpecs'";
 			
-//			parameter<String> AllowedFile:StorageName = "=ParamPath+'/allow.txt'",    StorageType = "str", KeepData = "True";
-			parameter<String> TransitionCostsFile:  StorageName = "=ParamPath+'/TransitionCosts.txt'", StorageType = "str", KeepData = "True";
-//			parameter<String> GrossRevenuesFile:  StorageName = "=ParamPath+'/GrossRevenues.txt'", StorageType = "str", KeepData = "True";			
-			parameter<String> NeighbFile: expr = "= quote(ParamPath+'/neighmat.txt')"; //, StorageType = "str", KeepData = "True";
-			container TransitionCosts:   Expr = "Templ/TransitionCostsTempl(TransitionCostsFile)";
-//			container GrossRevenues:   Expr = "Templ/GrossRevenuesTempl(GrossRevenuesFile)";			
-			container Neighbourhood: Expr = "Templ/NeighbTempl(NeighbFile)";
-			
 			parameter<bool>	PopulationSpillovers: expr = "False";
 		}
-		container ActiveSet: Expr = "StatusQuo";   // @USERINPUT, use these lines to switch between StatusQuo and Integration
-		//container ActiveSet: Expr = "NoCAP";   // @USERINPUT, use these lines to switch between StatusQuo and Integration
-//		container ActiveSet: Expr = "Integration"; // @USERINPUT, use these lines to switch between StatusQuo and Integration
+		container ActiveSet := StatusQuo;   // @USERINPUT, use these lines to switch between StatusQuo and Integration
 	}
 	
 	// ==== Copied from EuClueScanner100m.dms

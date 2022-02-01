@@ -206,7 +206,6 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 			
 //	NYI: ALSO WRITE: TotalSuitability
 		parameter<string> GeneratedFiles := PrevState/GeneratedFiles + ';' + TimeStepDirName,
-//			ExplicitSuppliers = "PrevState/GeneratedFiles;LandUse;OutputGeneration/Results";
-			ExplicitSuppliers = "PrevState/GeneratedFiles;OutputGeneration/Results";
+			ExplicitSuppliers = "PrevState/GeneratedFiles;LandUse;OutputGeneration/Results";
 	}
 }

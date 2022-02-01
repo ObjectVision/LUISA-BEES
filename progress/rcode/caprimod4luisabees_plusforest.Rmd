@@ -179,7 +179,7 @@ demandall<-temp2 %>%
 ```{r}
 cols <- c("Year", "OtherArableMax","PermCropMax","PastureMax","NewEnergyMax")
 temptointerpolate<-setDT(demandall)[, .SD[match(2010:2070, Year)], by = Region] 
-temptointerpolate[, (cols) := lapply(.SD, na.approx, na.rm = FALSE), .SDcols = cols]
+e
 interpolated<-temptointerpolate%>%  
   mutate(OtherArable=as.integer(OtherArableMax), PermCrop=as.integer(PermCropMax),Pasture=as.integer(PastureMax), NewEnergy=as.integer(NewEnergyMax)) %>%
   select(-OtherArableMax) %>%
