@@ -1,20 +1,19 @@
 echo on
-set geodmsversion=GeoDms7314
+set geodmsversion=GeoDms7408
 set LocalDataDir=D:\LD\luisa-bees
-set LOCALDATA_PROJDIR=%LocalDataDir%\CalcCachex64.v7.314
+set LOCALDATA_PROJDIR=%LocalDataDir%\CalcCachex64.v7.708
 
 set pf=%Program Files%
 set luisetta=C:\prj\jrc\luisa-BEES
 set ProgramFolder=C:\Program Files\ObjectVision\%geodmsversion%
-set ProgramFolder=C:\dev\geodms\bin\Release\x64
-rem set ProgramFolder=C:\dev\geodms\bin\Debug\x64
+set ProgramFolder=C:\dev\geodms7400\bin\Release\x64
 set ProgramPath=%ProgramFolder%\GeoDmsRun.exe
 set target=%1
 if "%target%"=="" set target=GeneratedCapriFiles
 echo %target%
 
 echo off
-del "%LOCALDATA_PROJDIR%" /S /Q
+del "%LocalDataDir%" /S /Q
 
 REM "%ProgramFolder%\GeoDmsGui.exe"
 REM  pause
@@ -23,8 +22,6 @@ echo on
 "%ProgramPath%" /L%LocalDataDir%/batchtraceNL.log "%luisetta%\cfg\StatusQuo.dms" /runs/Netherlands/simulation_results/%target%
 "%ProgramPath%" /L%LocalDataDir%/batchtraceAT.log "%luisetta%\cfg\StatusQuo.dms" /runs/Austria/simulation_results/%target%
 "%ProgramPath%" /L%LocalDataDir%/batchtraceIE.log "%luisetta%\cfg\StatusQuo.dms" /runs/Ireland/simulation_results/%target%
-exit /B
-
 "%ProgramPath%" /L%LocalDataDir%/batchtraceBL.log "%luisetta%\cfg\StatusQuo.dms" /runs/BelgLux/simulation_results/%target%
 "%ProgramPath%" /L%LocalDataDir%/batchtraceBG.log "%luisetta%\cfg\StatusQuo.dms" /runs/Bulgaria/simulation_results/%target%
 "%ProgramPath%" /L%LocalDataDir%/batchtraceCY.log "%luisetta%\cfg\StatusQuo.dms" /runs/Cyprus/simulation_results/%target%

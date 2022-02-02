@@ -31,11 +31,8 @@ library(gdxrrw)
 t_begin = 2010
 t_end   = 2070
 
-fldr_GAMS  <- "C:\\GAMS\\37"
-fldr_datapath <- "C:\\Users\\Cicada\\prj\\capri_r\\data"                      # input
-fldr_nominmax <- "C:\\Users\\Cicada\\prj\\capri_r\\nominmax"                  # output nominmax
-fldr_minmax <- "C:\\Users\\Cicada\\prj\\capri_r\\enddata_july2019"            # output minmax
-fldr_eqminmax <- "C:\\Users\\Cicada\\prj\\capri_r\\eqminmax"
+fldr_datapath <- "C:\\SourceData\\FORBIO\\capri\\Luisa-BEES-Capri_interaction\\ECAMPA4" # input
+fldr_eqminmax <- "C:\\prj\\JRC\\luisa-BEES\\Demand\\StatusQuo\\Capri"
 
 ```
 
@@ -167,9 +164,9 @@ colnames(landuseClass) <- c("RALL", "Y", colnames(perm)[5])
 
 
 
-#cgrass <- cleanLanduseClass(grass, unique_regions, unique_years)
-#cperm <- cleanLanduseClass(perm, unique_regions, unique_years)
-#carable <- cleanLanduseClass(arable, unique_regions, unique_years)
+cgrass <- cleanLanduseClass(grass, unique_regions, unique_years)
+cperm <- cleanLanduseClass(perm, unique_regions, unique_years)
+carable <- cleanLanduseClass(arable, unique_regions, unique_years)
 
 ```
 
@@ -251,66 +248,10 @@ interpolated<-temptointerpolate%>%
 interpolated$Region<-substr(interpolated$Region,0,4)
 
 ```
-## write to files 
-```{r}
-
-
-
-dir.create(fldr_nominmax)
-
-
-interpolated %>% 
-  mutate(countryiso2 = substr(Region, 1,2)) %>% 
-  group_by(countryiso2) %>% 
-  nest() %>% 
-  walk2(
-    .x = .$countryiso2,
-    .y = .$data,
-    .f = ~ write_csv(.y, file.path(fldr_nominmax, str_c(.x, ".csv")))
-  )
-
-
-```
-
-## expand to annual and min values
-```{r}
-
-temptointerpolate<-tempLinearinterpolation(t_begin,t_end)
-
-interpolated<-temptointerpolate %>%
-add_column(OtherArableMin = 0, .before = "OtherArableMax") %>%
-add_column(PermCropMin = 0, .before = "PermCropMax") %>%
-add_column(PastureMin = 0, .before = "PastureMax")
-
-interpolated$Region<-substr(interpolated$Region,0,4)
-interpolated$OtherArableMin = as.integer(interpolated$OtherArableMax*0.7)
-interpolated$PermCropMin    = as.integer(interpolated$PermCropMax*0.7)
-interpolated$PastureMin     = as.integer(interpolated$PastureMax*0.7)
-
-interpolated$OtherArableMax = as.integer(interpolated$OtherArableMax)
-interpolated$PermCropMax    = as.integer(interpolated$PermCropMax)
-interpolated$PastureMax     = as.integer(interpolated$PastureMax)
-
-```
 
 
 
 #countries<-unique(substr(arable$RALL,1,2))
-## write to files 
-```{r}
-dir.create(fldr_minmax)
-
-interpolated %>% 
-  mutate(countryiso2 = substr(Region, 1,2)) %>% 
-  group_by(countryiso2) %>% 
-  nest() %>% 
-  walk2(
-    .x = .$countryiso2,
-    .y = .$data,
-   .f = ~ write_csv(.y, file.path(fldr_minmax, str_c(.x, ".csv")))
-  )
-
-```
 ## expand to equal min max
 ```{r}
 temptointerpolate<-tempLinearinterpolation(t_begin, t_end)
