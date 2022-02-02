@@ -1,58 +1,57 @@
 Region;Code;Label;count
 CZ01;FORFOR;Forest land remaining Forest land;4530
-CZ01;CRPCRP;Cropland remaining Cropland;16252
-CZ01;CRPART;Cropland converted to Artificial land;37
-CZ01;GRSGRS;Grassland remaining Grassland;586
-CZ01;GRSART;Grassland converted to Artificial land;3
+CZ01;CRPCRP;Cropland remaining Cropland;16282
+CZ01;CRPART;Cropland converted to Artificial land;7
+CZ01;GRSGRS;Grassland remaining Grassland;556
+CZ01;GRSART;Grassland converted to Artificial land;33
 CZ01;ARTART;Artificial land remaining Artificial land;21615
 CZ01;RESRES;Residual land remaining Residual land;34
 CZ02;FORFOR;Forest land remaining Forest land;321411
 CZ02;FORART;Forest land converted to Artificial land;354
-CZ02;CRPCRP;Cropland remaining Cropland;645314
-CZ02;CRPART;Cropland converted to Artificial land;1710
-CZ02;GRSGRS;Grassland remaining Grassland;43576
-CZ02;GRSART;Grassland converted to Artificial land;9
+CZ02;CRPCRP;Cropland remaining Cropland;645526
+CZ02;CRPART;Cropland converted to Artificial land;1498
+CZ02;GRSGRS;Grassland remaining Grassland;43364
+CZ02;GRSART;Grassland converted to Artificial land;221
 CZ02;ARTART;Artificial land remaining Artificial land;71584
 CZ02;RESRES;Residual land remaining Residual land;2503
 CZ03;FORFOR;Forest land remaining Forest land;708183
 CZ03;FORART;Forest land converted to Artificial land;546
-CZ03;CRPCRP;Cropland remaining Cropland;685578
-CZ03;CRPGRS;Cropland converted to Grassland;4186
-CZ03;GRSGRS;Grassland remaining Grassland;262838
+CZ03;CRPCRP;Cropland remaining Cropland;689764
+CZ03;GRSGRS;Grassland remaining Grassland;262718
+CZ03;GRSART;Grassland converted to Artificial land;120
 CZ03;ARTART;Artificial land remaining Artificial land;57073
 CZ03;RESRES;Residual land remaining Residual land;6792
 CZ04;FORFOR;Forest land remaining Forest land;344666
-CZ04;CRPCRP;Cropland remaining Cropland;305283
-CZ04;CRPGRS;Cropland converted to Grassland;237
-CZ04;CRPART;Cropland converted to Artificial land;164
-CZ04;GRSGRS;Grassland remaining Grassland;135490
+CZ04;CRPCRP;Cropland remaining Cropland;305598
+CZ04;CRPART;Cropland converted to Artificial land;86
+CZ04;GRSGRS;Grassland remaining Grassland;135412
+CZ04;GRSART;Grassland converted to Artificial land;78
 CZ04;ARTART;Artificial land remaining Artificial land;42219
 CZ04;RESRES;Residual land remaining Residual land;8444
-CZ05;FORFOR;Forest land remaining Forest land;428826
-CZ05;FORART;Forest land converted to Artificial land;401
-CZ05;CRPCRP;Cropland remaining Cropland;567506
-CZ05;CRPGRS;Cropland converted to Grassland;1222
-CZ05;GRSGRS;Grassland remaining Grassland;150514
+CZ05;FORFOR;Forest land remaining Forest land;429227
+CZ05;CRPCRP;Cropland remaining Cropland;568728
+CZ05;GRSGRS;Grassland remaining Grassland;150113
+CZ05;GRSART;Grassland converted to Artificial land;401
 CZ05;ARTART;Artificial land remaining Artificial land;79362
 CZ05;RESRES;Residual land remaining Residual land;3827
-CZ06;FORFOR;Forest land remaining Forest land;417115
-CZ06;FORART;Forest land converted to Artificial land;707
-CZ06;CRPCRP;Cropland remaining Cropland;832639
-CZ06;CRPGRS;Cropland converted to Grassland;670
-CZ06;GRSGRS;Grassland remaining Grassland;55561
+CZ06;FORFOR;Forest land remaining Forest land;417151
+CZ06;FORART;Forest land converted to Artificial land;671
+CZ06;CRPCRP;Cropland remaining Cropland;833309
+CZ06;GRSGRS;Grassland remaining Grassland;53398
+CZ06;GRSART;Grassland converted to Artificial land;2163
 CZ06;ARTART;Artificial land remaining Artificial land;75905
 CZ06;RESRES;Residual land remaining Residual land;1056
-CZ07;FORFOR;Forest land remaining Forest land;359501
-CZ07;FORART;Forest land converted to Artificial land;82
+CZ07;FORFOR;Forest land remaining Forest land;359518
+CZ07;FORART;Forest land converted to Artificial land;65
 CZ07;CRPCRP;Cropland remaining Cropland;401438
-CZ07;GRSGRS;Grassland remaining Grassland;88463
-CZ07;GRSART;Grassland converted to Artificial land;347
+CZ07;GRSGRS;Grassland remaining Grassland;88446
+CZ07;GRSART;Grassland converted to Artificial land;364
 CZ07;ARTART;Artificial land remaining Artificial land;62278
 CZ07;RESRES;Residual land remaining Residual land;4519
 CZ08;FORFOR;Forest land remaining Forest land;196912
 CZ08;FORART;Forest land converted to Artificial land;327
-CZ08;CRPCRP;Cropland remaining Cropland;214388
-CZ08;CRPGRS;Cropland converted to Grassland;800
+CZ08;CRPCRP;Cropland remaining Cropland;214784
+CZ08;CRPGRS;Cropland converted to Grassland;404
 CZ08;GRSGRS;Grassland remaining Grassland;71699
 CZ08;ARTART;Artificial land remaining Artificial land;47905
 CZ08;RESRES;Residual land remaining Residual land;418
