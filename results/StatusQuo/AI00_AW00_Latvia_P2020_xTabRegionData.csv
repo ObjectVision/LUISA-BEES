@@ -1,12 +1,11 @@
 Region;Code;Label;count
-LV00;FORFOR;Forest land remaining Forest land;3458445
-LV00;FORGRS;Forest land converted to Grassland;1763
-LV00;FORART;Forest land converted to Artificial land;1733
-LV00;CRPCRP;Cropland remaining Cropland;1833745
-LV00;CRPGRS;Cropland converted to Grassland;23806
-LV00;CRPART;Cropland converted to Artificial land;15262
-LV00;CRPRES;Cropland converted to Residual land;920
-LV00;GRSGRS;Grassland remaining Grassland;683272
+LV00;FORFOR;Forest land remaining Forest land;3461941
+LV00;CRPCRP;Cropland remaining Cropland;1859860
+LV00;CRPGRS;Cropland converted to Grassland;646
+LV00;CRPART;Cropland converted to Artificial land;11992
+LV00;CRPRES;Cropland converted to Residual land;1235
+LV00;GRSGRS;Grassland remaining Grassland;675916
+LV00;GRSART;Grassland converted to Artificial land;7347
+LV00;GRSRES;Grassland converted to Residual land;9
 LV00;ARTART;Artificial land remaining Artificial land;103755
-LV00;RESGRS;Residual land converted to Grassland;1
-LV00;RESRES;Residual land remaining Residual land;8766
+LV00;RESRES;Residual land remaining Residual land;8767

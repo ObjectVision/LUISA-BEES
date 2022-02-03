@@ -1,4 +1,4 @@
-container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", Using = "Units"
+container Parameters: KeepData = "True", Using = "Units"
 {
 	unit<Float32> YearRange: Expr = "Units/YearRange";
 	unit<Float32> YearDiffRange: Expr = "Units/YearDiffRange";
@@ -1312,7 +1312,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 	container ParamSets 
 	{
 		container StatusQuo {
-			parameter<String> ParamName:   Expr = "'StatusQuo'";  	// @USERINPUT
+			parameter<String> ParamName := 'StatusQuo';  	// @USERINPUT
 			
 			parameter<String> ParamPath:   Expr = "'%projdir%/ParamSets/'+ ParamName";
 			parameter<String> LocSpecPath: Expr = "'%LuisettaDataDir%/LocSpec/' + ParamName";

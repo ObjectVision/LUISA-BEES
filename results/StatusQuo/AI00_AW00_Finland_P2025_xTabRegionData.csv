@@ -1,0 +1,46 @@
+Region;Code;Label;count
+FI13;FORFOR;Forest land remaining Forest land;6440341
+FI13;FORART;Forest land converted to Artificial land;9
+FI13;CRPFOR;Cropland converted to Forest land;108421
+FI13;CRPCRP;Cropland remaining Cropland;299688
+FI13;CRPART;Cropland converted to Artificial land;167
+FI13;GRSFOR;Grassland converted to Forest land;81
+FI13;GRSCRP;Grassland converted to Cropland;88
+FI13;ARTART;Artificial land remaining Artificial land;45268
+FI18;FORFOR;Forest land remaining Forest land;2799271
+FI18;FORCRP;Forest land converted to Cropland;1646
+FI18;FORART;Forest land converted to Artificial land;2283
+FI18;CRPFOR;Cropland converted to Forest land;214175
+FI18;CRPCRP;Cropland remaining Cropland;823914
+FI18;CRPART;Cropland converted to Artificial land;4777
+FI18;GRSFOR;Grassland converted to Forest land;249
+FI18;GRSART;Grassland converted to Artificial land;505
+FI18;ARTART;Artificial land remaining Artificial land;162760
+FI19;FORFOR;Forest land remaining Forest land;4595326
+FI19;FORCRP;Forest land converted to Cropland;1224
+FI19;FORART;Forest land converted to Artificial land;338
+FI19;CRPFOR;Cropland converted to Forest land;196481
+FI19;CRPCRP;Cropland remaining Cropland;795090
+FI19;CRPART;Cropland converted to Artificial land;944
+FI19;GRSFOR;Grassland converted to Forest land;195
+FI19;GRSART;Grassland converted to Artificial land;241
+FI19;ARTART;Artificial land remaining Artificial land;120616
+FI1A;FORFOR;Forest land remaining Forest land;10275581
+FI1A;FORART;Forest land converted to Artificial land;558
+FI1A;CRPFOR;Cropland converted to Forest land;125572
+FI1A;CRPCRP;Cropland remaining Cropland;296387
+FI1A;CRPGRS;Cropland converted to Grassland;2248
+FI1A;CRPART;Cropland converted to Artificial land;301
+FI1A;GRSFOR;Grassland converted to Forest land;524
+FI1A;GRSGRS;Grassland remaining Grassland;1990
+FI1A;GRSART;Grassland converted to Artificial land;23
+FI1A;ARTART;Artificial land remaining Artificial land;60067
+FI1A;RESART;Residual land converted to Artificial land;30
+FI1A;RESRES;Residual land remaining Residual land;723745
+FI20;FORFOR;Forest land remaining Forest land;99860
+FI20;FORART;Forest land converted to Artificial land;213
+FI20;CRPCRP;Cropland remaining Cropland;20672
+FI20;CRPGRS;Cropland converted to Grassland;510
+FI20;GRSGRS;Grassland remaining Grassland;2704
+FI20;GRSART;Grassland converted to Artificial land;15
+FI20;ARTART;Artificial land remaining Artificial land;2852

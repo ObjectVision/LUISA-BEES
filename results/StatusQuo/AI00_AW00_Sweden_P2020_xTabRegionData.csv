@@ -1,46 +1,51 @@
 Region;Code;Label;count
 SE01;FORFOR;Forest land remaining Forest land;393264
 SE01;FORART;Forest land converted to Artificial land;2720
-SE01;CRPCRP;Cropland remaining Cropland;120603
-SE01;CRPGRS;Cropland converted to Grassland;9530
-SE01;CRPART;Cropland converted to Artificial land;3369
+SE01;CRPCRP;Cropland remaining Cropland;129689
+SE01;CRPGRS;Cropland converted to Grassland;594
+SE01;CRPART;Cropland converted to Artificial land;3219
 SE01;CRPRES;Cropland converted to Residual land;166
-SE01;GRSGRS;Grassland remaining Grassland;6917
-SE01;GRSART;Grassland converted to Artificial land;7
+SE01;GRSGRS;Grassland remaining Grassland;6767
+SE01;GRSART;Grassland converted to Artificial land;157
 SE01;ARTART;Artificial land remaining Artificial land;77024
-SE02;FORFOR;Forest land remaining Forest land;2673795
-SE02;FORGRS;Forest land converted to Grassland;12
-SE02;FORART;Forest land converted to Artificial land;3108
-SE02;CRPCRP;Cropland remaining Cropland;967215
-SE02;CRPGRS;Cropland converted to Grassland;17864
-SE02;CRPART;Cropland converted to Artificial land;422
+SE02;FORFOR;Forest land remaining Forest land;2673890
+SE02;FORGRS;Forest land converted to Grassland;7
+SE02;FORART;Forest land converted to Artificial land;3018
+SE02;CRPCRP;Cropland remaining Cropland;984516
+SE02;CRPGRS;Cropland converted to Grassland;566
+SE02;CRPART;Cropland converted to Artificial land;419
 SE02;CRPRES;Cropland converted to Residual land;428
-SE02;GRSGRS;Grassland remaining Grassland;38020
-SE02;GRSART;Grassland converted to Artificial land;44
+SE02;GRSGRS;Grassland remaining Grassland;37855
+SE02;GRSART;Grassland converted to Artificial land;163
+SE02;GRSRES;Grassland converted to Residual land;46
 SE02;ARTART;Artificial land remaining Artificial land;88834
 SE02;RESRES;Residual land remaining Residual land;572
-SE04;FORFOR;Forest land remaining Forest land;653176
-SE04;FORART;Forest land converted to Artificial land;437
-SE04;CRPCRP;Cropland remaining Cropland;590160
-SE04;CRPART;Cropland converted to Artificial land;2203
-SE04;GRSGRS;Grassland remaining Grassland;58273
-SE04;GRSART;Grassland converted to Artificial land;1531
+SE04;FORFOR;Forest land remaining Forest land;653519
+SE04;FORART;Forest land converted to Artificial land;94
+SE04;CRPCRP;Cropland remaining Cropland;588780
+SE04;CRPGRS;Cropland converted to Grassland;149
+SE04;CRPART;Cropland converted to Artificial land;3434
+SE04;GRSGRS;Grassland remaining Grassland;59161
+SE04;GRSART;Grassland converted to Artificial land;643
 SE04;ARTART;Artificial land remaining Artificial land;66972
 SE04;RESRES;Residual land remaining Residual land;455
-SE06;FORFOR;Forest land remaining Forest land;5549319
-SE06;FORART;Forest land converted to Artificial land;714
-SE06;CRPCRP;Cropland remaining Cropland;352055
-SE06;CRPGRS;Cropland converted to Grassland;4799
+SE06;FORFOR;Forest land remaining Forest land;5549364
+SE06;FORART;Forest land converted to Artificial land;669
+SE06;CRPCRP;Cropland remaining Cropland;354535
+SE06;CRPGRS;Cropland converted to Grassland;2319
 SE06;CRPART;Cropland converted to Artificial land;269
 SE06;CRPRES;Cropland converted to Residual land;2
-SE06;GRSGRS;Grassland remaining Grassland;9272
-SE06;GRSART;Grassland converted to Artificial land;56
+SE06;GRSCRP;Grassland converted to Cropland;239
+SE06;GRSGRS;Grassland remaining Grassland;8971
+SE06;GRSART;Grassland converted to Artificial land;101
+SE06;GRSRES;Grassland converted to Residual land;17
 SE06;ARTART;Artificial land remaining Artificial land;72704
 SE06;RESRES;Residual land remaining Residual land;95863
-SE07;FORFOR;Forest land remaining Forest land;5554522
+SE07;FORFOR;Forest land remaining Forest land;5553861
+SE07;FORGRS;Forest land converted to Grassland;661
 SE07;FORART;Forest land converted to Artificial land;1628
-SE07;CRPCRP;Cropland remaining Cropland;163515
-SE07;CRPGRS;Cropland converted to Grassland;6075
+SE07;CRPCRP;Cropland remaining Cropland;167348
+SE07;CRPGRS;Cropland converted to Grassland;2242
 SE07;CRPART;Cropland converted to Artificial land;182
 SE07;CRPRES;Cropland converted to Residual land;195
 SE07;GRSGRS;Grassland remaining Grassland;9678
@@ -50,29 +55,28 @@ SE07;RESART;Residual land converted to Artificial land;44
 SE07;RESRES;Residual land remaining Residual land;729411
 SE08;FORFOR;Forest land remaining Forest land;10173186
 SE08;FORART;Forest land converted to Artificial land;7698
-SE08;CRPCRP;Cropland remaining Cropland;155149
-SE08;CRPGRS;Cropland converted to Grassland;6098
+SE08;CRPCRP;Cropland remaining Cropland;160337
+SE08;CRPGRS;Cropland converted to Grassland;910
 SE08;CRPART;Cropland converted to Artificial land;338
 SE08;CRPRES;Cropland converted to Residual land;182
 SE08;GRSGRS;Grassland remaining Grassland;23524
 SE08;ARTART;Artificial land remaining Artificial land;43027
 SE08;RESRES;Residual land remaining Residual land;2125430
-SE09;FORFOR;Forest land remaining Forest land;2587559
-SE09;FORGRS;Forest land converted to Grassland;19
-SE09;FORART;Forest land converted to Artificial land;451
-SE09;CRPCRP;Cropland remaining Cropland;488608
-SE09;CRPGRS;Cropland converted to Grassland;29965
-SE09;CRPART;Cropland converted to Artificial land;717
+SE09;FORFOR;Forest land remaining Forest land;2587716
+SE09;FORART;Forest land converted to Artificial land;313
+SE09;CRPCRP;Cropland remaining Cropland;518649
+SE09;CRPART;Cropland converted to Artificial land;641
 SE09;CRPRES;Cropland converted to Residual land;222
-SE09;GRSGRS;Grassland remaining Grassland;70373
-SE09;GRSART;Grassland converted to Artificial land;99
+SE09;GRSGRS;Grassland remaining Grassland;69412
+SE09;GRSART;Grassland converted to Artificial land;314
+SE09;GRSRES;Grassland converted to Residual land;746
 SE09;ARTART;Artificial land remaining Artificial land;58146
 SE09;RESRES;Residual land remaining Residual land;1049
 SE0A;FORFOR;Forest land remaining Forest land;1908748
 SE0A;FORART;Forest land converted to Artificial land;1
-SE0A;CRPCRP;Cropland remaining Cropland;767708
-SE0A;CRPGRS;Cropland converted to Grassland;27784
-SE0A;CRPART;Cropland converted to Artificial land;4290
+SE0A;CRPCRP;Cropland remaining Cropland;794894
+SE0A;CRPGRS;Cropland converted to Grassland;599
+SE0A;CRPART;Cropland converted to Artificial land;4289
 SE0A;CRPRES;Cropland converted to Residual land;1
 SE0A;GRSGRS;Grassland remaining Grassland;43954
 SE0A;GRSART;Grassland converted to Artificial land;52

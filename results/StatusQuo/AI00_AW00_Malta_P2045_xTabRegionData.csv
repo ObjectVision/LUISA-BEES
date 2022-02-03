@@ -1,0 +1,10 @@
+Region;Code;Label;count
+MT00;FORFOR;Forest land remaining Forest land;193
+MT00;FORART;Forest land converted to Artificial land;13
+MT00;CRPFOR;Cropland converted to Forest land;4468
+MT00;CRPCRP;Cropland remaining Cropland;9218
+MT00;CRPGRS;Cropland converted to Grassland;437
+MT00;CRPART;Cropland converted to Artificial land;2270
+MT00;ARTART;Artificial land remaining Artificial land;7870
+MT00;RESART;Residual land converted to Artificial land;262
+MT00;RESRES;Residual land remaining Residual land;4466

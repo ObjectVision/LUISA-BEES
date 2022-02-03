@@ -28,12 +28,11 @@ library(gdxrrw)
 
 ## Parameters
 ```{r}
+t_begin = 2010
+t_end   = 2070
 
-fldr_GAMS  <- "C:\\GAMS\\37"
-fn_CapriRegions <- "C:\\Users\\Cicada\\Documents\\GeoDMS\\luisabees_r\\data\\CapriRegions.csv"
-fldr_datapath <- "C:\\Users\\Cicada\\Documents\\GeoDMS\\luisabees_r\\data"                      # input
-fldr_nominmax <- "C:\\Users\\Cicada\\Documents\\GeoDMS\\luisabees_r\\nominmax"                  # output nominmax
-fldr_minmax <- "C:\\Users\\Cicada\\Documents\\GeoDMS\\luisabees_r\\enddata_july2019"            # output minmax
+fldr_datapath <- "C:\\SourceData\\FORBIO\\capri\\Luisa-BEES-Capri_interaction\\ECAMPA4" # input
+fldr_eqminmax <- "C:\\prj\\JRC\\luisa-BEES\\Demand\\StatusQuo\\Capri"
 
 ```
 
@@ -49,13 +48,13 @@ igdx(fldr_GAMS)
 gdxfiles <- list.files(fldr_datapath, ".gdx", full.names = TRUE)
 gdxfiles[1]
 ```
-## Create a function that reads many files
+## Create a function that reads many files dataout
 ```{r}
 
 #' @param gdxfile character name of a gdx file
 #' @return data frame 
-readcaprioutput <- function(gdxfile, symName = "dataout",
-                            names = c("RALL","EMPTY","COLS","ROWS","Y","VALUE")){
+readcaprioutput <- function(gdxfile, symName = "p_result",
+                            names = c("RALL","COLS","ROWS","Y","EMPTY","VALUE")){
     message("\nReading ", gdxfile)
     capriout <- rgdx.param(gdxfile, symName = symName, names = names)
     # Change factor to character variables
@@ -79,9 +78,6 @@ capriout <- Reduce(rbind, caprilist)
 
 
 ```
-```{r}
-capriRegions <- read.csv(file = fn_CapriRegions)
-```
 
 
 
@@ -92,32 +88,31 @@ capriRegions <- read.csv(file = fn_CapriRegions)
 #unwanted labels EU27yr19   #filter(nchar(RALL)==8) %>%
 
 arable<-capriout %>% 
-  select(-EMPTY) %>% 
   filter(COLS == "ARAB") %>%
   filter(ROWS == "LEVL") %>%
+  filter(EMPTY == "series")%>%
+  select(-EMPTY) %>%
   dplyr::arrange(RALL, Y)
 perm<-capriout %>% 
-  select(-EMPTY) %>% 
   filter(COLS == "PERM") %>% 
-  filter(ROWS == "LEVL") %>% 
-  dplyr::arrange(RALL, Y)
-necr<-capriout %>%            # new economic crops
-  select(-EMPTY) %>% 
-  filter(COLS == "NECR") %>% 
-  filter(ROWS == "LEVL") %>% 
+  filter(ROWS == "LEVL") %>%
+  filter(EMPTY=="series")%>%
+  select(-EMPTY) %>%
   dplyr::arrange(RALL, Y)
 grass<-capriout %>% 
-  select(-EMPTY) %>% 
   filter(grepl("GRAI|GRAE" ,COLS)) %>%
   filter(ROWS == "LEVL") %>% 
+  filter(EMPTY=="series")%>%
+  select(-EMPTY) %>%
   dplyr::arrange(RALL, Y) %>%
   group_by(RALL,ROWS,Y) %>%
   summarise(amount_1000ha = sum(VALUE)) 
 grass<-add_column(grass, COLS="GRASS", .after=1)
 heads<-capriout %>% 
-  select(-EMPTY) %>% 
   filter(grepl("HEIF|HEIL|BULL|BULF" ,COLS)) %>%
   filter(ROWS == "LEVL") %>%
+  filter(EMPTY=="series")%>%
+  select(-EMPTY) %>%
   dplyr::arrange(RALL, Y) %>%
   group_by(RALL,ROWS,Y) %>%
   summarise(amount_1000heads = sum(VALUE)) 
@@ -131,34 +126,47 @@ heads<-add_column(heads, COLS="COWS", .after=1)
   
 #}
 
-cleanLanduseClass <- function(rawLanduseClass, capriRegions) {
-  
-  unique_years = unique(rawLanduseClass[c("Y")])
-  print(length(capriRegions))
-  print(length(unique_years))
-  landuseClass <- data.frame(matrix(0, nrow(capriRegions)*nrow(unique_years), 3))
-  landuseClass[,1] = capriRegions #[,3]
-  landuseClass[,1] = slice(landuseClass, rep(1:n(), each = 3))
-  landuseClass[,2] = rep(unique_years, (nrow(capriRegions)))
+cleanLanduseClass <- function(rawLanduseClass, unique_regions, unique_years) {
+  landuseClass <- data.frame(matrix(0, nrow(unique_regions)*nrow(unique_years), 3))
+  landuseClass[,1] = unique_regions #[,3]
+  landuseClass[,1] = slice(landuseClass, rep(1:n(), each = nrow(unique_years)))
+  landuseClass[,2] = rep(unique_years, nrow(unique_regions))
   colnames(landuseClass) <- c("RALL", "Y", colnames(rawLanduseClass)[5])
   
-  key_org  <- paste(substr(rawLanduseClass$RALL, 0,4), rawLanduseClass$Y, sep="", collapse=NULL)
+  key_org  <- paste(substr(rawLanduseClass$RALL, 0, 4), rawLanduseClass$Y, sep="", collapse=NULL)
   key_dest <- paste(substr(landuseClass$RALL, 0, 4), landuseClass[,2], sep="", collapse=NULL)
   inds = match(key_org, key_dest)
   landuseClass[inds,3] = rawLanduseClass[,5]
-  
   colnames(landuseClass) <- c("RALL", "Y", colnames(rawLanduseClass)[5])
-  
+
   return(landuseClass)
 }
 
-#test_unique <- as.vector(array(unique(capriout$RALL)))
+nonan_grass<-na.omit(grass)
+nonan_perm<-na.omit(perm)
+nonan_arable<-na.omit(arable)
+ 
 unique_regions <- unique(capriout[c("RALL")])
+unique_years = data.frame(sort(unique(perm[c("Y")])$Y))
 
-cgrass <- cleanLanduseClass(grass, unique_regions)
-cnecr  <- cleanLanduseClass(necr, unique_regions)
-cperm <- cleanLanduseClass(perm, unique_regions)
-carable <- cleanLanduseClass(arable, unique_regions)
+landuseClass <- data.frame(matrix(0, nrow(unique_regions)*nrow(unique_years), 3))
+landuseClass[,1] = unique_regions #[,3]
+landuseClass[,1] = slice(landuseClass, rep(1:n(), each = nrow(unique_years)))
+landuseClass[,2] = rep(unique_years, nrow(unique_regions))
+colnames(landuseClass) <- c("RALL", "Y", colnames(perm)[5])
+ 
+key_org  <- paste(substr(perm$RALL, 0, 4), perm$Y, sep="", collapse=NULL)
+key_dest <- paste(substr(landuseClass$RALL, 0, 4), landuseClass[,2], sep="", collapse=NULL)
+inds = match(key_org, key_dest)
+landuseClass[inds,3] = perm[,5]
+colnames(landuseClass) <- c("RALL", "Y", colnames(perm)[5])
+
+
+
+
+cgrass <- cleanLanduseClass(grass, unique_regions, unique_years)
+cperm <- cleanLanduseClass(perm, unique_regions, unique_years)
+carable <- cleanLanduseClass(arable, unique_regions, unique_years)
 
 ```
 
@@ -174,21 +182,21 @@ carable <- cleanLanduseClass(arable, unique_regions)
 
 
 
-demandall<-bind_cols(carable, cperm[,3], cgrass[,3], cnecr[,3])
+demandall<-bind_cols(carable, cperm[,3], cgrass[,3])#, cnecr[,3])
 #demandall<-select(temp, -one_of("COLS...2", "ROWS...3","RALL...6", "COLS...7", "ROWS...8", "Y...9", "COLS...12", "RALL...11", "ROWS...13", "Y...14"))
-demandall <- rename(demandall, Region=RALL, Year=Y, OtherArableMax=VALUE, PermCropMax=...4, PastureMax=...5, NewEnergyMax=...6)
-demandall <- mutate(demandall, OtherArableMax=as.integer(OtherArableMax*1000.),PermCropMax=as.integer(PermCropMax*1000.),PastureMax=as.integer(PastureMax*1000.),NewEnergyMax=as.integer(NewEnergyMax*1000.))
-demandall <-  mutate_all(demandall, funs(replace(., is.na(.), 0)))
+demandall <- rename(demandall, Region=RALL, Year=Y, OtherArableMax=VALUE, PermCropMax=...4, PastureMax=...5)#, NewEnergyMax=...6)
+demandall <- mutate(demandall, OtherArableMax=as.integer(OtherArableMax*1000.),PermCropMax=as.integer(PermCropMax*1000.),PastureMax=as.integer(PastureMax*1000.))#,NewEnergyMax=as.integer(NewEnergyMax*1000.))
+#demandall <-  mutate_all(demandall, funs(replace(., is.na(.), 0)))
 
 ```
 
 ## expand to annual values (nomin, nomax)
 ```{r}
-cols <- c("Year", "OtherArableMax","PermCropMax","PastureMax","NewEnergyMax")
-temptointerpolate<-setDT(demandall)[, .SD[match(2010:2070, Year)], by = Region]
-year_range <- (2010:2070)
-temp<-temptointerpolate
-temp[,2] = rep(year_range,nrow(unique_regions))
+#cols <- c("Year", "OtherArableMax","PermCropMax","PastureMax") 
+#temptointerpolate<-setDT(demandall)[, .SD[match(2010:2070, Year)], by = Region]
+#year_range <- (2010:2070)
+#temp<-temptointerpolate
+#temp[,2] = rep(year_range,nrow(unique_regions))
 
 #temptointerpolate[, (cols) := lapply(.SD, na.approx, na.rm = FALSE), .SDcols = cols]
 #interpolated<-temptointerpolate%>%  
@@ -201,90 +209,66 @@ temp[,2] = rep(year_range,nrow(unique_regions))
 
 ```
 
+## function for interpolation
+```{r}
+tempLinearinterpolation <- function(t_begin, t_end) {
+  defaultW <- getOption("warn")
+  options(warn = -1)
+  
+  cols        <- c("Year", "OtherArableMax","PermCropMax","PastureMax")
+  temptointerpolate<-setDT(demandall)[, .SD[match(t_begin:t_end, Year)], by = Region] 
+  temptointerpolate[, (cols) := lapply(.SD, na.approx, na.rm = FALSE), .SDcols = cols, by=Region] # actual interpolation (na.approx)
+  year_range <- (2010:2070)
+  temptointerpolate[,2] = rep(year_range,nrow(unique_regions))
+  
+  # interpolate forwards
+  temptointerpolate[, (cols) := lapply(.SD, na.locf, na.rm = FALSE), .SDcols = cols, by=Region]
+  
+  # interpolate backwards
+  temptointerpolate <- setDT(map_df(temptointerpolate, rev))
+  temptointerpolate[, (cols) := lapply(.SD, na.locf, na.rm = FALSE), .SDcols = cols, by=Region]
+  temptointerpolate <- map_df(temptointerpolate, rev)
+  options(warn = defaultW)
+  
+  return(temptointerpolate)
+}
+  
+  
+```
 
 ## Temporal interpolation
 ```{r}
-cols        <- c("Year", "OtherArableMax","PermCropMax","PastureMax", "NewEnergyMax")
-temptointerpolate<-setDT(demandall)[, .SD[match(2010:2070, Year)], by = Region] 
-temptointerpolate[, (cols) := lapply(.SD, na.approx, na.rm = FALSE), .SDcols = cols, by=Region] # actual interpolation (na.approx)
-year_range <- (2010:2070)
-temptointerpolate[,2] = rep(year_range,nrow(unique_regions))
+temptointerpolate<-tempLinearinterpolation(t_begin, t_end)
 
-# interpolate forwards
-temptointerpolate[, (cols) := lapply(.SD, na.locf, na.rm = FALSE), .SDcols = cols, by=Region]
-
-# interpolate backwards
-temptointerpolate <- setDT(map_df(temptointerpolate, rev))
-temptointerpolate[, (cols) := lapply(.SD, na.locf, na.rm = FALSE), .SDcols = cols, by=Region]
-temptointerpolate <- map_df(temptointerpolate, rev)
-
-interpolated<-temptointerpolate%>%  
-  mutate(OtherArable=as.integer(OtherArableMax), PermCrop=as.integer(PermCropMax),Pasture=as.integer(PastureMax), NewEnergy=as.integer(NewEnergyMax)) %>%
+interpolated<-temptointerpolate%>% 
+  mutate(OtherArable=as.integer(OtherArableMax),PermCrop=as.integer(PermCropMax),Pasture=as.integer(PastureMax))%>%
   select(-OtherArableMax) %>%
   select(-PermCropMax) %>%
-  select(-PastureMax) %>%
-  select(-NewEnergyMax)
+  select(-PastureMax)
 interpolated$Region<-substr(interpolated$Region,0,4)
 
 ```
-## write to files 
+
+
+
+#countries<-unique(substr(arable$RALL,1,2))
+## expand to equal min max
 ```{r}
-
-
-
-dir.create(fldr_nominmax)
-
-
-interpolated %>% 
-  mutate(countryiso2 = substr(Region, 1,2)) %>% 
-  group_by(countryiso2) %>% 
-  nest() %>% 
-  walk2(
-    .x = .$countryiso2,
-    .y = .$data,
-    .f = ~ write_csv(.y, file.path(fldr_nominmax, str_c(.x, ".csv")))
-   #.f = ~ write_csv(.y, file.path(enddatanew, str_c(.x, ".csv")))
-  )
-
-
-```
-
-## expand to annual and min values
-```{r}
-cols <- c("Year", "OtherArableMax","PermCropMax","PastureMax","NewEnergyMax")
-
-temptointerpolate<-setDT(demandall)[, .SD[match(2010:2070, Year)], by = Region] 
-temptointerpolate[, (cols) := lapply(.SD, na.approx, na.rm = FALSE), .SDcols = cols, by=Region] # actual interpolation (na.approx)
-year_range <- (2010:2070)
-temptointerpolate[,2] = rep(year_range,nrow(unique_regions))
-
-# interpolate forwards
-temptointerpolate[, (cols) := lapply(.SD, na.locf0), .SDcols = cols, by=Region]
-
-# interpolate backwards
-temptointerpolate <- setDT(map_df(temptointerpolate, rev))
-temptointerpolate[, (cols) := lapply(.SD, na.locf0), .SDcols = cols, by=Region]
-temptointerpolate <- map_df(temptointerpolate, rev)
+temptointerpolate<-tempLinearinterpolation(t_begin, t_end)
 
 interpolated<-temptointerpolate %>%
 add_column(OtherArableMin = 0, .before = "OtherArableMax") %>%
 add_column(PermCropMin = 0, .before = "PermCropMax") %>%
-add_column(PastureMin = 0, .before = "PastureMax") %>%
-add_column(NewEnergyMin = 0, .before = "NewEnergyMax")
+add_column(PastureMin = 0, .before = "PastureMax")
 
 interpolated$Region<-substr(interpolated$Region,0,4)
-interpolated$OtherArableMin = as.integer(interpolated$OtherArableMax*0.7)
-interpolated$PermCropMin    = as.integer(interpolated$PermCropMax*0.7)
-interpolated$PastureMin     = as.integer(interpolated$PastureMax*0.7)
-interpolated$NewEnergyMin   = as.integer(interpolated$NewEnergyMax*0.7)
+interpolated$OtherArableMin = as.integer(interpolated$OtherArableMax)
+interpolated$PermCropMin    = as.integer(interpolated$PermCropMax)
+interpolated$PastureMin     = as.integer(interpolated$PastureMax)
 
 interpolated$OtherArableMax = as.integer(interpolated$OtherArableMax)
 interpolated$PermCropMax    = as.integer(interpolated$PermCropMax)
 interpolated$PastureMax     = as.integer(interpolated$PastureMax)
-interpolated$NewEnergyMax   = as.integer(interpolated$NewEnergyMax)
-
-#interpolated %>% mutate(OtherArableMax=as.integer(OtherArableMax), PermCropMax=as.integer(PermCropMax),PastureMax=as.integer(PastureMax),NewEnergyMax=as.integer(NewEnergyMax)) 
-
   
 ```
 
@@ -293,7 +277,7 @@ interpolated$NewEnergyMax   = as.integer(interpolated$NewEnergyMax)
 #countries<-unique(substr(arable$RALL,1,2))
 ## write to files 
 ```{r}
-dir.create(fldr_minmax)
+dir.create(fldr_eqminmax)
 
 interpolated %>% 
   mutate(countryiso2 = substr(Region, 1,2)) %>% 
@@ -302,8 +286,7 @@ interpolated %>%
   walk2(
     .x = .$countryiso2,
     .y = .$data,
-   .f = ~ write_csv(.y, file.path(fldr_minmax, str_c(.x, "_new.csv")))
-   #.f = ~ write_csv(.y, file.path(enddatanew, str_c(.x, ".csv")))
+   .f = ~ write_csv(.y, file.path(fldr_eqminmax, str_c(.x, ".csv")))
   )
 
 ```
