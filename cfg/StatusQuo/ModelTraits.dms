@@ -55,10 +55,6 @@ container ModelTraits
 				attribute<bool> NewEnergyCrops    (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/V/ForestsYoung);
 				attribute<bool> SHVA              (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/V/ForestsYoung) && not(PrevState/LandUse == ModelType/V/ForestsMature) && not(PrevState/LandUse == ModelType/V/TransWoodlandShrub);
 				attribute<bool> ForestsYoung      (domain):= not(BurntForest/NewlyBurnt) && ((PrevState/LandUse == ModelType/V/ForestsYoung && PrevState/Age < 20[YearDiffRange])	||	(PrevState/LandUse == ModelType/V/TransWoodlandShrub && PrevState/Age >= 10[YearDiffRange]));
-				attribute<bool> TreePlantation    (domain):= not(IsBuiltupArea) 
-					&& not(PrevState/LandUse == ModelType/V/ForestsYoung)
-					&& not(PrevState/LandUse == ModelType/V/TransWoodlandShrub)
-					&& not(PrevState/LandUse == ModelType/V/ForestsMature);
 			}
 			container TransPot := for_each_nedv(LUT/Name
 				, replace('iif(Allowed/@LUT, TotalSuitability/@LUT * 100[EUR_m2], -100000[EUR_m2])', '@LUT', LUT/Name)
@@ -177,54 +173,60 @@ container ModelTraits
 			// do transformation of min/max separately, then integrate in final demand containers.
 			attribute<float32> AllowedSuitableUrban 	(UrbanClaimZones): expr = "= 'sum(float32(DynamicComponent/TransPot/Urban > float32(0) && !DynamicComponent/Allowed/ForestsMature), CaseData/RegionData/'+ ClaimTableName[uint8(0)] +')'";
 			
+			container ClaimTableL := for_each_nednv(ID(ModelType) == ModelType/V/Urban ? '' : ModelType/Name,
+				'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MinClaimColumn, 'ZeroClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'
+				, ClaimTableSelections, ClaimTableName+'/sel', float32);
+				
+			container ClaimTableR := for_each_nednv(ID(ModelType) == ModelType/V/Urban ? '' : ModelType/Name,
+				'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MaxClaimColumn, 'HighClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'
+				, ClaimTableSelections, ClaimTableName+'/sel', float32);
+					
 			container CollectMinDemandFromClaimTables := for_each_nednv(ID(ModelType) == ModelType/V/Urban ? '' : ModelType/Name,
 				'MakeDefined('+
 					'rjoin('+
 						'RunRegions/UnitSets/'+ClaimTableName+'/ZoneId, '+
 						'CaseData/ClaimTables/'+ClaimTableName+'/Data/RegionUp[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity], '+
-						'min_elem('+
-							'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MinClaimColumn, 'ZeroClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity]),'+
-							'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MaxClaimColumn, 'HighClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'+
-							')'+
+						'min_elem('+'ClaimTableL/' + ModelType/Name+', ClaimTableR/'+ModelType/Name+')'+
 					') - CaseData/adapt_claim/' + ModelType/Name + 
 				', float32(0))'
 				, CaseData/RegionNumbers, ClaimTableName, float32) 
 			{
 				attribute<float32> Urban (UrbanClaimZones) := min_elem(ClaimTableSelections/MinUrban/Claim, ClaimTableSelections/MaxUrban/Claim, AllowedSuitableUrban) * float32(0.9);
 			}
-					
+			
 			container CollectMaxDemandFromClaimTables := for_each_nednv(ID(ModelType) == ModelType/V/Urban ? '' : ModelType/Name,
 				'MakeDefined('+
 					'rjoin('+
 						'RunRegions/UnitSets/'+ClaimTableName+'/ZoneId, '+
 						'CaseData/ClaimTables/'+ClaimTableName+'/Data/RegionUp[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity], '+
-						'max_elem('+
-							'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MinClaimColumn, 'ZeroClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity]),'+
-							'float32(CaseData/ClaimTables/'+ClaimTableName+'/Data/'+MakeDefined(ModelType/MaxClaimColumn, 'HighClaim')+'[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity])'+
-							')'+
+						'max_elem('+'ClaimTableL/' + ModelType/Name+', ClaimTableR/'+ModelType/Name+')'+
 					') - CaseData/adapt_claim/' + ModelType/Name + 
 				', float32(0))'
 				, CaseData/RegionNumbers, ClaimTableName, float32) 
 			{
 				attribute<float32> Urban (UrbanClaimZones) := max_elem(ClaimTableSelections/MinUrban/Claim, ClaimTableSelections/MaxUrban/Claim) * float32(1.1111);
 			}
+			
+			
 	// demand containers below aggregate the demands to the wanted aggregation level
-			Container DemandMin: expr = "for_each_nednv(ModelType/Name, "
-					"IsDefined(ModelType/DemandCharacteristics) ? "
-						"'(MakeDefined(uint32((sum(CollectMinDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * "
-						"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, "
-							"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)"
-								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')) * float32(0.8)), 0))' "
-					" : 'uint32(CollectMinDemandFromClaimTables/'+ModelType/Name+')', "
-				 	" CaseData/RegionNumbers, DestClaimTableName, uint32)";
-			Container DemandMax: expr = "for_each_nednv(ModelType/Name, "
-				"IsDefined(ModelType/DemandCharacteristics) ? "
-						"'(MakeDefined(uint32((sum(CollectMaxDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * "
-						"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, "
-							"Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)"
-								"+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +'))* float32(1.25)), 0))' "
-					" : 'uint32(CollectMaxDemandFromClaimTables/'+ModelType/Name+')', "
-				 	" CaseData/RegionNumbers, DestClaimTableName, uint32)";				
+			Container DemandMin := for_each_nednv(ModelType/Name
+				,	IsDefined(ModelType/DemandCharacteristics) 
+					? '(MakeDefined(uint32((sum(CollectMinDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * 
+						Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, 
+							Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)
+								+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')) * float32(0.99)), 0))' 
+					: 'uint32(CollectMinDemandFromClaimTables/'+ModelType/Name+')'
+				, 	CaseData/RegionNumbers, DestClaimTableName, uint32
+				);
+					 
+			Container DemandMax := for_each_nednv(ModelType/Name, 
+				IsDefined(ModelType/DemandCharacteristics) ? 
+						'(MakeDefined(uint32((sum(CollectMaxDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * 
+						Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, 
+							Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)
+								+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +'))* float32(1.01)), 0))' 
+					 : 'uint32(CollectMaxDemandFromClaimTables/'+ModelType/Name+')', 
+				 	 CaseData/RegionNumbers, DestClaimTableName, uint32);				
 		}
 	}
 	container TestSumsAlloc                                                       //
@@ -803,24 +805,51 @@ container ModelTraits
 				attribute<Classifications/LU/ModelType> changed_to  (domain) := LuDiff ? CurrentLandUse  : value(255, Classifications/LU/ModelType );
 			}
 			
-			unit<WPoint> xTabData: Expr = "Range(WPoint, Point(UInt16(0),UInt16(0)), Point(UInt16(#Classifications/LU/ModelType), UInt16(#Classifications/LU/ModelType)))", IsHidden = "True"
+			unit<WPoint> xTabData := Range(WPoint, Point(UInt16(0),UInt16(0)), Point(UInt16(#Classifications/LU/ModelType), UInt16(#Classifications/LU/ModelType)))
 			{
-				attribute<UInt32> Count: Expr = "PCount(Point(UInt16(StartingLandUse), UInt16(CurrentLandUse), xTabData))";
+				attribute<.> ID := ID(.);
+				attribute<string> From_name := Classifications/LU/ModelType/name[PointCol(ID(.))[Classifications/LU/ModelType]];
+				attribute<string> to_name   := Classifications/LU/ModelType/name[PointRow(ID(.))[Classifications/LU/ModelType]];
+				attribute<string> Label := from_name+to_name;
+				attribute<.> per_domain(domain) := Point(UInt16(StartingLandUse), UInt16(CurrentLandUse), xTabData);
+				attribute<UInt32> Count := PCount(per_domain);
 				//attribute<UInt32> Count: Expr = "PCount(Point(UInt16(PrevState/LandUse), UInt16(CurrentLandUse), xTabData))";
 			}
-			container xTab: Expr =  
-				"for_each_nedv("
-					"Classifications/LU/ModelType/Name, "
-					"'xTabData/Count["
-						"Point("
-							"UInt16(ID(Classifications/LU/ModelType)), "
-							"const('+String(ID(Classifications/LU/ModelType))+', Classifications/LU/ModelType, UInt16), "
-							"xTabData"
-						")"
-					"]', "
-					"Classifications/LU/ModelType, UInt32"
-					")",
-						StorageName = "=DirName + '_xTabMT.dbf'";
+			
+			container xTab := for_each_nedv(Classifications/LU/ModelType/Name
+				,	'xTabData/Count['
+						'Point('
+							'UInt16(ID(Classifications/LU/ModelType)), '
+							'const('+String(ID(Classifications/LU/ModelType))+', Classifications/LU/ModelType, UInt16), '
+							'xTabData'
+						')'
+					']' 
+				,	Classifications/LU/ModelType, UInt32
+				)
+			,	StorageName = "=DirName + '_xTabMT.dbf'";
+						
+			// RegionData/Capri
+			// RegionNumbers/Capri
+			container PerCapriRegion := for_each_nea(CaseData/RegionNumbers/Capri/ZoneID
+				,	'for_each_nedv(Classifications/LU/ModelType/Name'
+					',replace('
+						'''PCount(Point(UInt16(StartingLandUse), UInt16(CurrentLandUse) / UInt16(CaseData/RegionData/Capri == '+String(ID(CaseData/RegionNumbers/Capri))+'[CaseData/RegionNumbers/Capri])'
+							', xTabData)'
+							')'
+							'['
+								'Point('
+								'  UInt16(ID(Classifications/LU/ModelType))'
+								', const(UInt16(Classifications/LU/ModelType/V/@MT), Classifications/LU/ModelType)'
+								', xTabData'
+								')'
+							']'''
+						', ''@MT'', Classifications/LU/ModelType/Name)'
+				', Classifications/LU/ModelType, UInt32'
+				')'
+			,	DirName+'_'+CaseData/RegionNumbers/Capri/ZoneID+'_xTabMT.dbf'
+			);
+			
+			parameter<string> ExportXTabs := 'Ready', ExplicitSuppliers = "='ExportXTabData;xTab;'+AsList('PerCapriRegion/'+CaseData/RegionNumbers/Capri/ZoneID, ';')";
 			container Spatial
 			{
 				container NoFilter := Templates/SpatialIndicator(domain, JrcFactorData, const(True, domain), Regions, RegionGrid, DirName + 'All');
@@ -919,12 +948,114 @@ container ModelTraits
 					//"TotalSuitability";
 			container ResultsFathomYears: ExplicitSuppliers = "ClippedLandUseVT"; // required for generating the data for the ReadOnly mozaiking
 
-			container Results: 
-				ExplicitSuppliers = 
-					"= 'Results1'"
+			container ArableLandSupply {
+				attribute<int32>       SupplyPrice_Org(domain) := d_alloc/bid_price - (ScaledTransPot/Arable + d_alloc/shadow_prices/Arable[CaseData/RegionData/Capri]);
+				attribute<int32>       SupplyPrice    (domain) := iif(ScaledTransPot/Arable > -1000000000, SupplyPrice_Org, int32(0 / 0));
+				attribute<UniquePrice> UniquePrice_rel(domain) := rlookup(SupplyPrice, UniquePrice/values);
+				
+				unit<uint32> UniquePrice := unique(SupplyPrice) {
+					attribute<int32>  values;
+					attribute<uint32> count := pcount(UniquePrice_rel);
+					attribute<uint32> cumulative := cumulate(count);
+				}
+				parameter<string> Export := 'CumulHa;Price\n'+AsList(string(UniquePrice/cumulative)+';'+string(UniquePrice/values), '\n')
+				,	StorageName = "=OutputDirName+'_ArableLandSupply.csv'"
+				,	StorageType = "str";
+			}
+			
+			unit<uint16> Capri := CaseData/RegionNumbers/Capri {
+				attribute<uint32> Arable_Min   := Claims/DemandMin/Arable;
+				attribute<uint32> Arable_Max   := Claims/DemandMax/Arable;
+				attribute<string> Arable_slack := MakeDefined(string((float32(Arable_Max) - float32(Arable_Min)) / (float32(Arable_Max) + float32(Arable_Min))), '');
+				attribute<uint32> Arable_Alloc := sum_uint32(uint8(d_alloc/landuse == ModelType/V/Arable), CaseData/RegionData/Capri);
+				attribute<int32>  Arable_Price := d_alloc/shadow_prices/Arable;
+				attribute<string> Arable_String := string(Arable_Min) + ';' + string(Arable_Max) + ';' + string(Arable_slack) + ';' + string(Arable_Alloc) + ';' + MakeDefined(string(Arable_Price), '');
+				
+				attribute<uint32> Pastures_Min   := Claims/DemandMin/Pastures;
+				attribute<uint32> Pastures_Max   := Claims/DemandMax/Pastures;
+				attribute<string> Pastures_slack := MakeDefined(string((float32(Pastures_Max) - float32(Pastures_Min)) / (float32(Pastures_Max) + float32(Pastures_Min))), '');
+				attribute<uint32> Pastures_Alloc := sum_uint32(uint8(d_alloc/landuse == ModelType/V/Pastures), CaseData/RegionData/Capri);
+				attribute<int32>  Pastures_Price := d_alloc/shadow_prices/Pastures;
+				attribute<string> Pastures_String := string(Pastures_Min) + ';' + string(Pastures_Max) + ';' + string(Pastures_slack) + ';' + string(Pastures_Alloc) + ';' + MakeDefined(string(Pastures_Price), '');
+				
+				attribute<uint32> PermanentCrops_Min   := Claims/DemandMin/PermanentCrops;
+				attribute<uint32> PermanentCrops_Max   := Claims/DemandMax/PermanentCrops;
+				attribute<string> PermanentCrops_slack := MakeDefined(string((float32(PermanentCrops_Max) - float32(PermanentCrops_Min)) / (float32(PermanentCrops_Max) + float32(PermanentCrops_Min))), '');
+				attribute<uint32> PermanentCrops_Alloc := sum_uint32(uint8(d_alloc/landuse == ModelType/V/PermanentCrops), CaseData/RegionData/Capri);
+				attribute<int32>  PermanentCrops_Price := d_alloc/shadow_prices/PermanentCrops;
+				attribute<string> PermanentCrops_String := string(PermanentCrops_Min) + ';' + string(PermanentCrops_Max) + ';' + string(PermanentCrops_slack) + ';' + string(PermanentCrops_Alloc) + ';' + MakeDefined(string(PermanentCrops_Price), '');
+				
+				attribute<uint32> NewEnergyCrops_Min   := Claims/DemandMin/NewEnergyCrops;
+				attribute<uint32> NewEnergyCrops_Max   := Claims/DemandMax/NewEnergyCrops;
+				attribute<string> NewEnergyCrops_slack := MakeDefined(string((float32(NewEnergyCrops_Max) - float32(NewEnergyCrops_Min)) / (float32(NewEnergyCrops_Max) + float32(NewEnergyCrops_Min))), '');
+				attribute<uint32> NewEnergyCrops_Alloc := sum_uint32(uint8(d_alloc/landuse == ModelType/V/NewEnergyCrops), CaseData/RegionData/Capri);
+				attribute<int32>  NewEnergyCrops_Price := d_alloc/shadow_prices/NewEnergyCrops;
+				attribute<string> NewEnergyCrops_String := string(NewEnergyCrops_Min) + ';' + string(NewEnergyCrops_Max) + ';' + string(NewEnergyCrops_slack) + ';' + string(NewEnergyCrops_Alloc) + ';' + MakeDefined(string(NewEnergyCrops_Price), '');
+				
+				attribute<string> Line := CaseData/RegionNumbers/Capri/ZoneID + ';' + Arable_string + ';' + Pastures_string + ';' + PermanentCrops_string + ';' + NewEnergyCrops_string;
+			}
+			parameter<string> CapriShadowPriceExport := 'ZoneID;'
+				+'Arable_Min;Arable_Max;Arable_slack;Arable_alloc;Arable_Price;' +
+				+'Pastures_Min;Pastures_Max;Pastures_slack;Pastures_alloc;Pastures_Price;' +
+				+'PermanentCrops_Min;PermanentCrops_Max;PermanentCrops_slack;PermanentCrops_alloc;PermanentCrops_Price;' +
+				+'NewEnergyCrops_Min;NewEnergyCrops_Max;NewEnergyCrops_slack;NewEnergyCrops_alloc;NewEnergyCrops_Price;' +
+				+'\n'
+				+ AsList(Capri/Line, '\n')
+				+ '\n\n' + '"'+replace(d_alloc/status,'};','}"\n"')+'"'
+			,	StorageName = "=OutputDirName+'_ShadowPrices.csv'"
+			,	StorageType = "str";
+			
+			unit<uint8> xTabCapri := Classifications/LU/Capri/xCapri
+			{
+				attribute<.> per_domain(domain) := combine_data(., Classifications/LU/Capri/per_ModelType[Indicators/StartingLandUse], Classifications/LU/Capri/per_ModelType[Indicators/CurrentLandUse]);
+				attribute<UInt32> Count := pcount(per_domain);
+				attribute<string> Label := Classifications/LU/Capri/xCapri/Label;
+			}
+			unit<uint8> xTabCapriNonNull := subset(xTabCapri/Count > 0)
+			{
+				attribute<UInt32> Count := xTabCapri/Count[nr_OrgEntity];
+				attribute<string> Label := xTabCapri/Label[nr_OrgEntity];
+			}
+			
+			parameter<string> xTabCapriExport := 'Label;count\n'+AsList(xTabCapriNonNull/Label+';'+string(xTabCapriNonNull/Count),'\n')
+			,	StorageName = "=Indicators/DirName + '_xTabData.csv'", StorageType = 'str';
+			
+			unit<uint32> CapriRegionxTab := combine(CaseData/RegionNumbers/Capri, xTabCapri)
+			{
+				attribute<String> ZoneID := CaseData/RegionNumbers/Capri/ZoneID[nr_1];
+				attribute<.> per_domain(domain) := combine_data(., CaseData/RegionData/Capri, xTabCapri/per_domain);
+				
+				attribute<UInt32> Count := pcount(per_domain);
+				attribute<string> xTabCode  := Classifications/LU/Capri/xCapri/Code [nr_2];
+				attribute<string> xTabLabel := Classifications/LU/Capri/xCapri/Label[nr_2];
+			}
+			
+			unit<uint32> CapriRegionxTabNonNull := subset(CapriRegionxTab/Count > 0)
+			{
+				attribute<string> ZoneID:= CapriRegionxTab/ZoneID[nr_OrgEntity];
+				attribute<string> xTabCode  := CapriRegionxTab/xTabCode[nr_OrgEntity];
+				attribute<string> xTabLabel := CapriRegionxTab/xTabLabel[nr_OrgEntity];
+				attribute<UInt32> Count := CapriRegionxTab/Count[nr_OrgEntity];
+			}
+			
+			parameter<string> CapriRegionxTabExport := 'Region;Code;Label;count\n'
+					+AsList(
+						CapriRegionxTabNonNull/ZoneID
+					+';'+string(CapriRegionxTabNonNull/xTabCode)
+					+';'+string(CapriRegionxTabNonNull/xTabLabel)
+					+';'+string(CapriRegionxTabNonNull/Count)
+					,'\n'
+					)
+			,	StorageName = "=Indicators/DirName + '_xTabRegionData.csv'", StorageType = 'str';
+			
+
+			container CapriResults: ExplicitSuppliers = "CapriShadowPriceExport;xTabCapriExport;CapriRegionxTabExport;ArableLandSupply/Export";
+			container Results: ExplicitSuppliers = 
+					"= 'Results1;CapriResults'"
 					"+ (IsDefined(rlookup(UInt16(CurrYear), Parameters/PeriodSet/Lustrum/Year)) ? ';ResultsFathomYears' : '')"
 					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results2' : '')"
-					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results5' : '')";
+					"+ ((UInt32(CurrYear) % 5 == 0) ? ';Results5' : '')"
+			;
 		}
 	}
 }

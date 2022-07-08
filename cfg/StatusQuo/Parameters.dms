@@ -1,4 +1,4 @@
-container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", Using = "Units"
+container Parameters: KeepData = "True", Using = "Units"
 {
 	unit<Float32> YearRange: Expr = "Units/YearRange";
 	unit<Float32> YearDiffRange: Expr = "Units/YearDiffRange";
@@ -1198,7 +1198,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				")"
 			{
 				attribute<String> RegionUp_Raw (Domain): Expr = "UpperCase(Region)",               StoreData = "False", FreeData = "True";
-				attribute<String> RegionUp     (Domain): Expr = "RegionUp_Raw",                    IntegrityCheck = "all(region_allowed)";
+				attribute<String> RegionUp     (Domain): Expr = "RegionUp_Raw"; //,                    IntegrityCheck = "all(region_allowed)";
 				attribute<UInt32> ZeroClaim    (Domain): Expr = "const(0,Domain)",           StoreData = "False", FreeData = "True";
 				attribute<UInt32> HighClaim    (Domain): Expr = "const(2000000000,Domain)",  StoreData = "False", FreeData = "True";
 				
@@ -1213,7 +1213,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				attribute<bool> region_exception1  (Domain):  Expr = "(strlen(RegionUp_Raw) == 4) && region_prefixKnown && (substr(RegionUp_Raw, 2, 2) == '00')";
 				attribute<bool> region_allowed     (Domain):  Expr = "isDefined(region_nr) || (region_exception1)";
 				
-				attribute<Domain> rel_curr_years		(PeriodSet/result): expr = "rlookup(PeriodSet/result/CurrYear, value(year, float32))";
+				attribute<Domain> rel_curr_years	(PeriodSet/result): expr = "rlookup(PeriodSet/result/CurrYear, value(year, float32))";
 				attribute<bool> check_rel			(PeriodSet/result): expr = "IsDefined(rel_curr_years)";
 				
 			}
@@ -1261,9 +1261,30 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 								
 			parameter<Bool> ClaimTablesOK: Expr = "='and('+asItemList('all(ClaimTablesOrg/'+RunRegion_Specific_RegionRefs/Values+'/Data/region_allowed), all(ClaimTablesOrg/'+RunRegion_Specific_RegionRefs/Values+'/Data/check_rel)')+')'";
 						
-			container ClaimTables: Expr = "ClaimTablesOrg", IntegrityCheck = "ClaimTablesOK";
+					
+			// ============ claims; overrule Capri/data: ArableMin and ArableMax
+			container ClaimTables := ClaimTablesOrg, IntegrityCheck = "ClaimTablesOK"
+			{
+				container Capri := ClaimTablesOrg/Capri {
+					unit<uint32> Domain := ClaimTablesOrg/Capri/Domain;
+					
+					parameter<float32> Arable_Width_factor := float32(replace_value(Expand(., '%env:ARABLE_WIDTH%'), 'env:ARABLE_WIDTH', '0.20'));
+					parameter<float32> Arable_Inc_factor   := float32(replace_value(Expand(., '%env:ARABLE_INC%'  ), 'env:ARABLE_INC'  , '0.00'));
+					
+					container data := ClaimTablesOrg/Capri/data {
+						attribute<float32> ArableMin_org(Domain) := float32(ClaimTablesOrg/Capri/data/OtherArableMin);
+						attribute<float32> ArableMax_org(Domain) := float32(ClaimTablesOrg/Capri/data/OtherArableMax);
+						attribute<float32> ArableMid_org(Domain) := 0.5f * (ArableMin_org+ArableMax_org);
+						attribute<float32> ArableMid    (Domain) := ArableMid_org * (1f+iif(Uint32(Data/year) < 2019, 0f, Arable_Inc_factor));
+						
+						attribute<float32> ArableMin(Domain) := ArableMid * (1f - Arable_Width_factor);
+						attribute<float32> ArableMax(Domain) := ArableMid * (1f + Arable_Width_factor);
+						attribute<float32> NewEnergyMin(Domain) := const(0f, Domain);
+						attribute<float32> NewEnergyMax(Domain) := const(0f, Domain);
+					}
+				}
+			}
 		}
-		
 		container Run : IsTemplate = "True"
 		{
 			parameter<String> Name;
@@ -1291,7 +1312,7 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 	container ParamSets 
 	{
 		container StatusQuo {
-			parameter<String> ParamName:   Expr = "'StatusQuo'";  	// @USERINPUT
+			parameter<String> ParamName := 'StatusQuo';  	// @USERINPUT
 			
 			parameter<String> ParamPath:   Expr = "'%projdir%/ParamSets/'+ ParamName";
 			parameter<String> LocSpecPath: Expr = "'%LuisettaDataDir%/LocSpec/' + ParamName";
@@ -1313,13 +1334,23 @@ container Parameters: KeepData = "True", FreeData = "False", IsHidden = "True", 
 				1, 1, 1,  // arabl, permacrops, pastures
 				1, 1,     // forestmat, transwoodland
 				0, 0, 0, 0, 0,     // Abandoned Arable, PC, Pasture, Urban, Industry 
-				1, 1, 1, 1	  //NewEnergyCrops, SHVA, ForestsYoung, TreePlantations
+				1, 1, 1	  //NewEnergyCrops, SHVA, ForestsYoung
 			];
 			parameter<String> LocSpecContainerName: Expr = "'ReferenceLocSpecs'";
 			
+//			parameter<String> AllowedFile:StorageName = "=ParamPath+'/allow.txt'",    StorageType = "str", KeepData = "True";
+			parameter<String> TransitionCostsFile:  StorageName = "=ParamPath+'/TransitionCosts.txt'", StorageType = "str", KeepData = "True";
+//			parameter<String> GrossRevenuesFile:  StorageName = "=ParamPath+'/GrossRevenues.txt'", StorageType = "str", KeepData = "True";			
+			parameter<String> NeighbFile: expr = "= quote(ParamPath+'/neighmat.txt')"; //, StorageType = "str", KeepData = "True";
+			container TransitionCosts:   Expr = "Templ/TransitionCostsTempl(TransitionCostsFile)";
+//			container GrossRevenues:   Expr = "Templ/GrossRevenuesTempl(GrossRevenuesFile)";			
+			container Neighbourhood: Expr = "Templ/NeighbTempl(NeighbFile)";
+			
 			parameter<bool>	PopulationSpillovers: expr = "False";
 		}
-		container ActiveSet := StatusQuo;   // @USERINPUT, use these lines to switch between StatusQuo and Integration
+		container ActiveSet: Expr = "StatusQuo";   // @USERINPUT, use these lines to switch between StatusQuo and Integration
+		//container ActiveSet: Expr = "NoCAP";   // @USERINPUT, use these lines to switch between StatusQuo and Integration
+//		container ActiveSet: Expr = "Integration"; // @USERINPUT, use these lines to switch between StatusQuo and Integration
 	}
 	
 	// ==== Copied from EuClueScanner100m.dms

@@ -9,7 +9,8 @@ REM Shortcut
 
 set ARABLE_INC=0.00
 set DIR_OUTPUT=AI00_AW%AW%
-call RunAFew-Impl.cmd
+call RunAFew-Impl.cmd Generate2050
+call RunAFew-Impl.cmd GeneratedCapriFiles
 
 set ARABLE_INC=0.01
 set DIR_OUTPUT=AI01_AW%AW%

@@ -1,0 +1,16 @@
+Label;count
+Forest land remaining Forest land;3045059
+Forest land converted to Cropland;282420
+Forest land converted to Grassland;3484
+Forest land converted to Artificial land;2591
+Cropland remaining Cropland;3257117
+Cropland converted to Grassland;415
+Cropland converted to Artificial land;1051
+Grassland converted to Cropland;12595
+Grassland remaining Grassland;982216
+Grassland converted to Artificial land;14208
+Artificial land remaining Artificial land;284149
+Residual land converted to Cropland;67296
+Residual land converted to Grassland;1067
+Residual land converted to Artificial land;157
+Residual land remaining Residual land;695885

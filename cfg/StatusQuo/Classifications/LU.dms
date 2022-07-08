@@ -54,6 +54,20 @@ container LU
 		attribute<bool> IsForest      := ID(.) == V/ForestsMature || ID(.) == V/ForestsYoung;
 		attribute<bool> IsAbandoned   := ID(.) == V/AbanArable || ID(.) == V/AbanPermanentCrops || ID(.) == V/AbanPastures || ID(.) == V/AbanUrban  || ID(.) == V/AbanIndustry;
 	}
+	unit<uint8> CAPRI := range(uint8, 0b, 6b) {
+		attribute<string> code_per_ModelType(ModelType) : ['ART', 'ART', 'CRP', 'CRP', 'GRS', 'FOR', 'FOR', 'CRP', 'CRP', 'GRS', 'ART', 'ART', 'CRP', 'RES', 'FOR'];
+		attribute<.> per_ModelType(ModelType) := rlookup(code_per_ModelType, code);
+		attribute<string> Label : [ 'Forest land', 'Cropland', 'Grassland', 'Wetlands', 'Artificial land', 'Residual land' ];
+		attribute<string> code  : [ 'FOR', 'CRP', 'GRS', 'WET', 'ART', 'RES'];
+		attribute<uint32> Color: [ rgb(0,128,0), rgb(255,128,0), rgb(128,255,128), rgb(128, 128, 255), rgb(128,0,0), rgb(128, 128, 128)], DialogType = "BrushColor";
+		
+		unit<uint8> xCAPRI := combine_uint8(., .)
+		{
+			attribute<string> Code  := ../Code [nr_1] + ../Code[nr_2];
+			attribute<string> label := ../Label[nr_1] + (nr_1 == nr_2 ? ' remaining ': ' converted to ') + ../Label[nr_2];
+		}
+	}
+	
 	unit<uint8> ForestTransitionState := range(uint8, 0b, 5b) {
 		attribute<string> Label: DialogType = "LabelText",
 		[ 'Agri', 'Abandoned', 'TWLS', 'Young', 'Mature'];
