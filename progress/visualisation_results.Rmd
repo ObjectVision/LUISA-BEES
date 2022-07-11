@@ -1,0 +1,55 @@
+---
+title: "results"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+install.packages("sf")
+library("sf")
+library("dplyr")
+library("ggplot2")
+library("magrittr")
+install.packages("ggalluvial")
+library("ggalluvial")
+install.packages("Gmisc")
+library("Gmisc")
+```
+
+```{r}
+PL.tidy <-   data_for_sarah %>% 
+  tidyr::gather(key = "PL_year", value = "PL_recode") %>% 
+  table() %>% 
+  as.data.frame() %>% 
+  dplyr::mutate(PL_year = as.numeric(substr(PL_year, start=3, stop=4))) %>% 
+  dplyr::mutate( PL_year = case_when( PL_year >= 90 ~ PL_year + 1900, PL_year <= 90 ~ PL_year + 2000))
+
+cols = c( "PDF" = "springgreen", "PSF" = "black",    "SDF" = "plum", "SSF" = "forestgreen", "PLT" = "chocolate4",  "SRB" = "chocolate1",  "WTR" = "cyan",  "AGR" = "greenyellow", "URB" = "gold" )
+
+s <-  ggplot() + geom_line(data = PL.tidy , aes(x = PL_year, y = Freq, color= PL_recode), size = 2) + theme_light()+ xlab("Year") + ylab(bquote('Area ('*km^2*')')) + scale_colour_manual(name="Land Cover", values = cols, labels= c("Agriculture (AGR)", "Primary Dryland Forest (PDF)", "Plantation (PLT)", "Primary Peat Swamp Forest (PSF)", "Secondary Dryland Forest (SDF)", "Shrub (SRB)","Secondary Peat Swamp Forest (SSF) ", "Urban (URB)", "Water (WTR)") ) +   theme(legend.text=element_text(size=14) , legend.title = element_text(size = 14), axis.text.x = element_text(size = 14, angle = 90), axis.text.y = element_text(size = 14) , axis.title.x = (element_text(size = 18)), axis.title.y = (element_text(size = 18)), legend.position = "right") + scale_y_continuous(limits = c(0,NA), expand = c(0,0)) + scale_x_continuous(breaks = c(1990, 1996, 2000, 2003, 2006, 2009, 2011, 2012, 2013, 2014, 2015, 2016, 2017))
+
+```
+
+## Flow plot
+
+Land conversion to flow plots
+
+```{r pressure, echo=FALSE}
+LU_trans.df <- data_for_sarah %>%dplyr::select("PL90_recode", "PL96_recode", "PL00_recode", "PL06_recode", "PL12_recode", "PL17_recode")  %>% table() %>% as.data.frame() %>% dplyr::filter(Freq > 1000) %>% dplyr::mutate(LU_trans = paste(PL90_recode, PL96_recode, PL00_recode, PL06_recode, PL12_recode, PL17_recode, sep="*") )  %>% `colnames<-`(c("1990","1996","2000","2006","2012","2017","Freq", "LU_trans"))
+
+LU_trans.tidy <- LU_trans.df  %>% tidyr::gather(key = "Year", value= "Landcover", -c("Freq", "LU_trans"))
+
+g <- ggplot(LU_trans.tidy , aes(x = Year, y=Freq, stratum = Landcover, alluvium = LU_trans, fill = Landcover, label = Landcover)) + scale_fill_manual(values = cols, labels= c("Agriculture (AGR)", "Primary Dryland Forest (PDF)", "Plantation (PLT)",  "Secondary Dryland Forest (SDF)", "Shrub (SRB)","Secondary Peat Swamp Forest (SSF) ", "Urban (URB)", "Water (WTR)")) + geom_flow(stat = "alluvium", lode.guidance = "leftright", color = "darkgray") + geom_stratum() + scale_y_continuous(expand = c(0,0))+ ylab(bquote('Area ('*km^2*')')) + theme(legend.title = element_text(size = 14),legend.text=element_text(size=14) , axis.text.x = element_text(size = 14, angle = 0), axis.text.y = element_text(size = 14) , axis.title.x = (element_text(size = 18)), axis.title.y = (element_text(size = 18)), legend.position = "right")
+
+print(g)
+```
+
