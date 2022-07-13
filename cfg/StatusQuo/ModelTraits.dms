@@ -728,9 +728,8 @@ container ModelTraits
 						attribute<string> transition_name := transition/name[transition_rel];
 						attribute<string> factor_lookup_expr := replace('rjoin(PartyCode, @TT/Party, value(@TT/EF, tonne_ha))', '@TT', '/Parameters/GHG_Factors/transitions/'+transition_name);
 						// tonnes CO2 per ha.
-						attribute<tonne_ha> BiomassSequestrationFactor := ='union_data(., '+AsItemList(MakeDefined(factor_lookup_expr, 'value(0/0, tonne_ha)'))+')' ;
-						attribute<tonne_ha> CarbonEmissionFactor := -BiomassSequestrationFactor;
-						attribute<tonne_ha> CO2_EmissionFactor := CarbonEmissionFactor * 44f/12f;
+						attribute<tonne_ha> CO2_EmissionFactor := ='union_data(., '+AsItemList(MakeDefined(factor_lookup_expr, 'value(0/0, tonne_ha)'))+')' ; //Co2 equivalent of implied emission factors, negative emissions : negative means sequestration, positive means emissions
+						attribute<tonne_ha> CarbonEmissionFactor := CO2_EmissionFactor / (-44f/12f); //Implied emission factors declared by countries
 					}
 					
 					container year
