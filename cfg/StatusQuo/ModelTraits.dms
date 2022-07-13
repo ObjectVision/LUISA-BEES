@@ -749,19 +749,24 @@ container ModelTraits
 						attribute<string> Label(Regions) := Regions/Label;
 						attribute<tonne> Total(Regions) := ='add('+AsItemList(transition/name)+')';
 					}
-							   
-					container written_RegionData: 
-						Expr = 
-							"for_each_nedv(transition/name"
-							", 'RegionData/'+transition/name"
-						    ",  Regions"
-						    ",  tonne"
-						    ")",
-						StorageName = "=DirName + '_GHG.dbf'"
+					container NationalData := for_each_nedv(transition/name
+						       , 'sum(RegionData/'+transition/name+')'
+						       ,  void, tonne
+						       )
+					{
+						parameter<tonne> Total := ='add('+AsItemList(transition/name)+')';
+					}
+					container written_RegionData := for_each_nedv(transition/name, 'RegionData/'+transition/name, Regions, tonne)
+					,	StorageName = "=DirName + '_GHG_reg.dbf'"
 					{
 						attribute<string> Label(Regions) := RegionData/Label;
 						attribute<tonne> Total(Regions) := RegionData/Total;
 					}
+					container written_NationalData := for_each_nedv(transition/name, 'NationalData/'+transition/name, void, tonne)
+					,	StorageName = "=DirName + '_GHG_nat.dbf'"
+					{
+						parameter<tonne>  Total := NationalData/Total;
+					}	
 				}
 				container ESS {
 					unit<uint8> LUC := /Parameters/CapMod/LUC;
