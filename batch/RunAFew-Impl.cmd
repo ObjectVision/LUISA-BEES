@@ -1,4 +1,3 @@
-echo on
 set geodmsversion=GeoDms7407
 set LocalDataDir=D:\LocalData
 set LOCALDATA_PROJDIR=%LocalDataDir%\CalcCachex64.v7.708

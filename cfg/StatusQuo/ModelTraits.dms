@@ -726,7 +726,7 @@ container ModelTraits
 						attribute<transition> transition_rel := invert(per_transition);
 						attribute<.> per_transition(transition) := combine_data(	., transition/from, transition/to);
 						attribute<string> transition_name := transition/name[transition_rel];
-						attribute<string> factor_lookup_expr := replace('rjoin(PartyCode, @TT/Party, value(@TT/EF, tonne_ha))', '@TT', '/Parameters/GHG_Factors/transitions/'+transition_name);
+						attribute<string> factor_lookup_expr := replace('rjoin(PartyCode, @TT/Party, value(@TT/EF, tonne_ha))', '@TT', '/Parameters/GHG_Factors/transitions/'+transition_name); //For IEF based on average 1990-2020, bring files out from subfolder. 
 						// tonnes CO2 per ha.
 						attribute<tonne_ha> CO2_EmissionFactor := ='union_data(., '+AsItemList(MakeDefined(factor_lookup_expr, 'value(0/0, tonne_ha)'))+')' ; //Co2 equivalent of implied emission factors, negative emissions : negative means sequestration, positive means emissions
 						attribute<tonne_ha> CarbonEmissionFactor := CO2_EmissionFactor / (-44f/12f); //Implied emission factors declared by countries
