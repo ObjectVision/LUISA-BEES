@@ -19,7 +19,9 @@ REM "%ProgramFolder%\GeoDmsGui.exe"
 REM  pause
 echo on
 
+
 "%ProgramPath%" /L%LocalDataDir%/batchtraceEE.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Estonia/TimeSteps/P2020/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceDK.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Denmark/TimeSteps/P2020/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
 
 
 REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceALL.log "%luisetta%\cfg\StatusQuo.dms"  /GenerateContainer/MozaikLandUse/impl/AllPeriods/P2050/result
