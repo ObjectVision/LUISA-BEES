@@ -1461,6 +1461,7 @@ container Parameters: KeepData = "True", Using = "Units"
 				2, 2,  // Arable, PermanentCrops
 				1,     // Pastures
 				0, 0,  // ForestsMature, TransWoodlandShrub
+				2, 2, 1, 3, 3, // Abandoned xxx
 				2,     // NewEnergyCrops
 				null,  // SHVA
 				0      // ForestsYoung
