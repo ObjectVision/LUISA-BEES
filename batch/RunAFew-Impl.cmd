@@ -19,33 +19,31 @@ REM "%ProgramFolder%\GeoDmsGui.exe"
 REM  pause
 echo on
 
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceAT.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Austria/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceBL.log "%luisetta%\cfg\StatusQuo.dms" /Runs/BelgLux/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceBG.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Bulgaria/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceHR.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Croatia/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceCY.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Cyprus/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceCZ.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Czechia/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM "%ProgramPath%" /L%LocalDataDir%/batchtraceDK.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Denmark/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceEE.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Estonia/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceFI.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Finland/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceFR.log "%luisetta%\cfg\StatusQuo.dms" /Runs/France/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceDE.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Germany/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceGR.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Greece/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceHU.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Hungary/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceIE.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Ireland/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceIT.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Italy/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceLV.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Latvia/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceLT.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Lithuania/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Malta/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceNL.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Netherlands/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtracePL.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Poland/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtracePT.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Portugal/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceRO.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Romania/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceSK.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Slovakia/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM "%ProgramPath%" /L%LocalDataDir%/batchtraceSI.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Slovenia/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceSE.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Sweden/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-"%ProgramPath%" /L%LocalDataDir%/batchtraceES.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Spain/TimeSteps/2030/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-"%ProgramPath%" /L%LocalDataDir%/batchtraceES.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Spain/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-"%ProgramPath%" /L%LocalDataDir%/batchtraceES.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Spain/TimeSteps/2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
-REM  "%ProgramPath%" /L%LocalDataDir%/batchtraceUK.log "%luisetta%\cfg\StatusQuo.dms" /Runs/United_Kingdom/TimeSteps/2040/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceAT.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Austria/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceBL.log "%luisetta%\cfg\StatusQuo.dms" /Runs/BelgLux/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceBG.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Bulgaria/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceHR.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Croatia/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceCY.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Cyprus/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceCZ.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Czechia/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceDK.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Denmark/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceEE.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Estonia/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceFI.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Finland/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceFR.log "%luisetta%\cfg\StatusQuo.dms" /Runs/France/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceDE.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Germany/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceGR.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Greece/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceHU.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Hungary/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceIE.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Ireland/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceIT.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Italy/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceLV.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Latvia/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceLT.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Lithuania/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceMT.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Malta/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceNL.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Netherlands/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtracePL.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Poland/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtracePT.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Portugal/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceRO.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Romania/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceSK.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Slovakia/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceSI.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Slovenia/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceSE.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Sweden/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+REM "%ProgramPath%" /L%LocalDataDir%/batchtraceES.log "%luisetta%\cfg\StatusQuo.dms" /Runs/Spain/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
+"%ProgramPath%" /L%LocalDataDir%/batchtraceUK.log "%luisetta%\cfg\StatusQuo.dms" /Runs/United_Kingdom/TimeSteps/P2050/ResultingState/OutputGeneration/Indicators/Spatial/NoFilter/GHG/written_NationalData
 
