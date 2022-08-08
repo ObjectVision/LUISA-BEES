@@ -734,7 +734,7 @@ container ModelTraits
 						attribute<tonne_ha> CarbonEmissionFactor := CO2_EmissionFactor / (-44f/12f); //Implied emission factors declared by countries, units in tonnes CO2/ha
 					}
 					
-					container year : KeepData = "True"
+					container year
 					{
 						attribute<LUC> CurrentIT (domain) := SpatialFilter ? LUC/per_ModelType[CurrentLanduse ] : value(0 / 0, LUC);
 						attribute<LUC> StartingIT(domain) := SpatialFilter ? LUC/per_ModelType[StartingLanduse] : value(0 / 0, LUC);
