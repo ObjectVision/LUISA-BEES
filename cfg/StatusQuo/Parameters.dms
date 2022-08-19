@@ -842,7 +842,7 @@ container Parameters: KeepData = "True", Using = "Units"
 			container Results: StoreData = "True"
 			{
 				attribute<Float32> ConstWeight(ModelType): Expr = "rjoin(id(ModelType), ConstWeightsOrg/LandUseType, ConstWeightsOrg/Weight)";
-				unit<UInt32> FactorWeights: Expr = "Subset(FactorWeightsOrg/Weight <> Float32(0))"
+				unit<UInt32> FactorWeights: Expr = "Subset(FactorWeightsOrg/Weight <> Float32(0) && FactorWeightsOrg/Weight <> -99f)"
 				{
 					attribute<ModelType> LandUseType: Expr = "FactorWeightsOrg/LandUseType[nr_OrgEntity]";
 					attribute<Float32>   Weight:      Expr = "FactorWeightsOrg/Weight     [nr_OrgEntity]";
