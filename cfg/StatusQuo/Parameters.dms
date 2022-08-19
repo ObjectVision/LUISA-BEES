@@ -226,15 +226,26 @@ container Parameters: KeepData = "True", Using = "Units"
 			   parameter<string> multiple_unit_ref: expr = "repeat('Domain,', #FactorList)";
 			   parameter<string> multiple_zone_ref: expr = "repeat('Data/ZoneName,', #FactorList)";
 			   
-			   unit<uint32> UnitsFactors: expr = "= 'union_unit('+ substr(multiple_unit_ref, 0, strlen(multiple_unit_ref)-1) +')'"
+			   unit<uint32> UnitsFactorBase: expr = "= 'union_unit('+ substr(multiple_unit_ref, 0, strlen(multiple_unit_ref)-1) +')'"
 			   {
 			   		attribute<RunsRef>		UnitId:						expr = "rlookup(ZoneName, RunsRef/ICC)";
 			   		attribute<FactorList> 	FactorId:					expr = "(id(.) / #UnitRef)[FactorList]";
 			   		attribute<Classifications/LU/ModelType> LandUseType:expr = "const(LandUseNr, ., Classifications/LU/ModelType)";
-			   		attribute<string> 		ZoneName: 					expr = "= 'union_data(UnitsFactors,'+ substr(multiple_zone_ref, 0, strlen(multiple_zone_ref)-1) +')'";
-			   		attribute<string> 		Weight: 					expr = "= 'union_data(UnitsFactors,'+ AsItemList('Data/' + FactorList/Name) +')'";
+			   		attribute<string> 		ZoneName: 					expr = "= 'union_data(UnitsFactorBase,'+ substr(multiple_zone_ref, 0, strlen(multiple_zone_ref)-1) +')'";
+			   		attribute<string> 		Weight: 					expr = "= 'union_data(UnitsFactorBase,'+ AsItemList('Data/' + FactorList/Name) +')'";
 			   		attribute<Factors> 		FactorRef:					expr = "FactorList/FactorRef[FactorId]";
 			   }
+			   unit<uint32> UnitsFactors := subset(IsDefined(UnitsFactorBase/UnitID) && Int32(UnitsFactorBase/Weight) > -99 && Float32(UnitsFactorBase/Weight) <> 0f)
+			   {
+					attribute<UnitsFactorBase> UnitsFactorBase_rel   := nr_OrgEntity;
+			   		attribute<RunsRef>		UnitId                     := UnitsFactorBase_rel->UnitID;					
+			   		attribute<FactorList> 	FactorId                   := UnitsFactorBase_rel->FactorId;					
+			   		attribute<Classifications/LU/ModelType> LandUseType:= UnitsFactorBase_rel->LandUseType;					
+			   		attribute<string> 		ZoneName                   := UnitsFactorBase_rel->ZoneName;					
+			   		attribute<string> 		Weight                     := UnitsFactorBase_rel->Weight;					
+			   		attribute<Factors> 		FactorRef                  := UnitsFactorBase_rel->FactorRef;					
+			   }
+			   
 			   attribute<Domain> ZoneId 		(RunsRef): expr = "rlookup(RunsRef/ICC, Data/ZoneName)";
 			   attribute<float32> Constant 		(RunsRef): expr = "value(Data/Constant, float32)[ZoneId]"; 
 			   attribute<Classifications/LU/ModelType> LandUseType (Meta/Run): expr = "const(LandUseNr,Meta/Run,Classifications/LU/ModelType)";
