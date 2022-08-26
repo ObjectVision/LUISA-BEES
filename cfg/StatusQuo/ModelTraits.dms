@@ -726,11 +726,12 @@ container ModelTraits
 						attribute<transition> transition_rel := invert(per_transition);
 						attribute<.> per_transition(transition) := combine_data(	., transition/from, transition/to);
 						attribute<string> transition_name := transition/name[transition_rel];
-						attribute<string> factor_lookup_expr := replace('rjoin(PartyCode, @TT/Party, value(@TT/EF, tonne_ha))', '@TT', '/Parameters/GHG_Factors/transitions/'+transition_name);
+						attribute<bool> is_annual := (nr_1 == nr_2);
+						attribute<string> factor_lookup_expr := replace('rjoin(PartyCode, @TT/Party, value(@TT/EF, tonne_ha))', '@TT', '/Parameters/GHG_Factors/transitions/'+transition_name); //For IEF based on average 1990-2020, bring files out from subfolder. 
 						// tonnes CO2 per ha.
-						attribute<tonne_ha> BiomassSequestrationFactor := ='union_data(., '+AsItemList(MakeDefined(factor_lookup_expr, 'value(0/0, tonne_ha)'))+')' ;
-						attribute<tonne_ha> CarbonEmissionFactor := -BiomassSequestrationFactor;
-						attribute<tonne_ha> CO2_EmissionFactor := CarbonEmissionFactor * 44f/12f;
+						attribute<tonne_ha> CO2_EmissionFactor_Src := ='union_data(., '+AsItemList(MakeDefined(factor_lookup_expr, 'value(0/0, tonne_ha)'))+')' ; //Co2 equivalent of implied emission factors, negative emissions : negative means sequestration, positive means emissions
+						attribute<tonne_ha> CO2_EmissionFactor := CO2_EmissionFactor_Src * (is_annual ? Periods/PeriodLength[PeriodID] : 1f);
+						attribute<tonne_ha> CarbonEmissionFactor := CO2_EmissionFactor / (-44f/12f); //Implied emission factors declared by countries, units in tonnes CO2/ha
 					}
 					
 					container year
@@ -757,18 +758,17 @@ container ModelTraits
 					{
 						parameter<tonne> Total := ='add('+AsItemList(transition/name)+')';
 					}
-							   
 					container written_RegionData := for_each_nedv(transition/name, 'RegionData/'+transition/name, Regions, tonne)
 					,	StorageName = "=DirName + '_GHG_reg.dbf'"
 					{
 						attribute<string> Label(Regions) := RegionData/Label;
-						attribute<tonne>  Total(Regions) := RegionData/Total;
+						attribute<tonne> Total(Regions) := RegionData/Total;
 					}
 					container written_NationalData := for_each_nedv(transition/name, 'NationalData/'+transition/name, void, tonne)
 					,	StorageName = "=DirName + '_GHG_nat.dbf'"
 					{
 						parameter<tonne>  Total := NationalData/Total;
-					}
+					}	
 				}
 				container ESS {
 					unit<uint8> LUC := /Parameters/CapMod/LUC;
@@ -855,7 +855,7 @@ container ModelTraits
 			,	DirName+'_'+CaseData/RegionNumbers/Capri/ZoneID+'_xTabMT.dbf'
 			);
 			
-			parameter<string> ExportXTabs := 'Ready', ExplicitSuppliers = "='xTab;'+AsList('PerCapriRegion/'+CaseData/RegionNumbers/Capri/ZoneID, ';')";
+			parameter<string> ExportXTabs := 'Ready', ExplicitSuppliers = "='ExportXTabData;xTab;'+AsList('PerCapriRegion/'+CaseData/RegionNumbers/Capri/ZoneID, ';')";
 			container Spatial
 			{
 				container NoFilter := Templates/SpatialIndicator(domain, JrcFactorData, const(True, domain), Regions, RegionGrid, DirName + 'All');
