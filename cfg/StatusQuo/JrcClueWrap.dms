@@ -45,9 +45,10 @@ template JrcClueWrap:
 	
 		// ============ factor data
 		container PrepareVariables {
-			attribute<Classifications/LU/Corine> CorineGrid_2012(domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2012/inFile/ReadData];
-			attribute<Classifications/LU/Corine> CorineGrid_2018(domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2018/inFile/ReadData];
-			attribute<Classifications/LU/Corine> CorineGrid     (domain_grid) := MakeDefined(CorineGrid_2012, CorineGrid_2018);
+			attribute<Classifications/LU/Corine> CorineGrid_2012    (domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2012/inFile/ReadData];
+			attribute<Classifications/LU/Corine> CorineGrid_2018    (domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2018/inFile/ReadData];
+			attribute<Classifications/LU/Corine> CorineGrid_2018_Org(domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2018_Org/inFile/ReadData];
+			attribute<Classifications/LU/Corine> CorineGrid         (domain_grid) := MakeDefined(CorineGrid_2012, CorineGrid_2018, CorineGrid_2018_org);
 			
 			attribute<Classifications/LU/ModelType> LandUse2012Grid (domain_grid) := Classifications/LU/Corine/MT[CorineGrid_2012];
 			attribute<Classifications/LU/ModelType> LandUse2018Grid (domain_grid) := Classifications/LU/Corine/MT[CorineGrid_2018];
