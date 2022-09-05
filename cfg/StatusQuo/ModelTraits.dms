@@ -817,7 +817,7 @@ container ModelTraits
 				attribute<string> From_name := Classifications/LU/ModelType/name[PointCol(ID(.))[Classifications/LU/ModelType]];
 				attribute<string> to_name   := Classifications/LU/ModelType/name[PointRow(ID(.))[Classifications/LU/ModelType]];
 				attribute<string> Label := from_name+to_name;
-				attribute<.> per_domain(domain) := Point(UInt16(StartingLandUse), UInt16(CurrentLandUse), xTabData);
+				attribute<.> per_domain(domain) := Point(UInt16(PrevState/LandUse), UInt16(CurrentLandUse), xTabData);
 				attribute<UInt32> Count := PCount(per_domain);
 				//attribute<UInt32> Count: Expr = "PCount(Point(UInt16(PrevState/LandUse), UInt16(CurrentLandUse), xTabData))";
 			}
