@@ -1253,9 +1253,9 @@ container Parameters: KeepData = "True", Using = "Units"
 			unit<UInt8> RunRegion_Specific_RegionRefs: expr = "unique(RunRegionDemands/Regions)";
 			unit<UInt8>	UnionedRegionRefs: 		Expr = "range(uint8, uint8(0), uint8(#UniqueRegionRefs + #UniqueDestRegionRefs))" 
 			{
-				attribute<string> Values: expr = "id(.) < uint8(#UniqueRegionRefs) ? " 
-					"UniqueRegionRefs/Values[rlookup(id(.), id(UniqueRegionRefs))] : " 
-						" UniqueDestRegionRefs/Values[rlookup(id(.) - uint8(#UniqueRegionRefs), id(UniqueDestRegionRefs))]";
+				attribute<string> Values := id(.) < uint8(#UniqueRegionRefs) 
+				?	UniqueRegionRefs/Values[rlookup(value(id(.), UniqueRegionRefs), id(UniqueRegionRefs))] 
+				:	UniqueDestRegionRefs/Values[rlookup(value(id(.) - uint8(#UniqueRegionRefs), UniqueDestRegionRefs), id(UniqueDestRegionRefs))];
 			}
 			unit<uint8> AllRegionRefs:			Expr = "unique(UnionedRegionRefs/Values)" {attribute<string> Values;}
 			
