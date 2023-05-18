@@ -993,12 +993,13 @@ container ModelTraits
 						attribute<uint32> cumulative := cumulate(count);
 					}
 					parameter<string> Export := 'CumulHa;Price\n'+AsList(string(UniquePrice/cumulative)+';'+string(UniquePrice/values), '\n')
-					,	StorageName = "=OutputDirName+'_CrossLandSupply'+from->name+'_'+to->name+'.csv'"
+					,	StorageName = "=OutputDirName+'/CrossLandSupply'+from->name+'_'+to->name+'.csv'"
 					,	StorageType = "str";
 				}
 				container LandSupplyCurves := for_each_ne(MT_pair/name
 					, replace('LandSupplyCurve(MT/V/@F, MT/V/@T, @N)', '@F', MT_pair/from->name, '@T', MT_pair/to->name, '@N', Quote(MT_pair/name))
 					);
+				parameter<string> GenerateAllCurves := 'Ready', ExplicitSuppliers = "=AsList('LandSupplyCurves/'+MT_pair/name+'/Export' , ';')";
 			}
 			
 			unit<uint16> Capri := CaseData/RegionNumbers/Capri {
