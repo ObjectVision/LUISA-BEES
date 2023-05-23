@@ -117,14 +117,15 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 			attribute<bool> is_selected := rnd_score < max_score;
 			unit<uint32> selected := subset(is_selected);
 		}
+		container SuitFactorData := for_each_nedv(ActualFactors/Factor_rel->name, ActualFactors/VariableRef, domain, float32);
 		unit<uint32> observation := union_unit(allocated/selected, nonallocated/selected)
 		{
 			attribute<domain>      domain_rel := union_data(., collect_by_cond(allocated/selected, allocated/is_selected, allocated/domain_rel), collect_by_cond(nonallocated/selected, nonallocated/is_selected, nonallocated/domain_rel));
 			attribute<domain_grid> geometry := domain_rel->grid_rel;
 			attribute<bool>        wasAllocated := union_data(., const(true, allocated/selected), const(false, nonallocated/selected));
-			container SuitFactors := for_each_nedv(ActualFactors/Factor_rel->name, ActualFactors/VariableRef+'[domain_rel]', ., float32);
-			attribute<string> TableRow := ='String(uint8(wasAllocated))+'';''+'+AsList('String(SuitFactors/'+ActualFactors/Factor_rel->name+')', '+'';''+');
-			parameter<string> TableHeader := Quote('WasAllocated')+';'+AsList(Quote(ActualFactors/Factor_rel->name), ';');
+			container SuitFactors := for_each_nedv(ActualFactors/Factor_rel->name, 'SuitFactorData/'+ActualFactors/Factor_rel->name+'[domain_rel]', ., float32);
+			attribute<string> TableRow := ='String(geometry)+'';''+String(uint8(wasAllocated))+'';''+'+AsList('String(SuitFactors/'+ActualFactors/Factor_rel->name+')', '+'';''+');
+			parameter<string> TableHeader := Quote('Point') +';' + Quote('WasAllocated')+';'+AsList(Quote(ActualFactors/Factor_rel->name), ';');
 			parameter<string> TableData := AsList(TableRow, '\n');
 			parameter<string> TableExport := TableHeader + '\n' + TableData, StorageName = "=ResultingState/OutputGeneration/OutputDirName+'/Sample'+MT_Name+'.txt'", StorageType = "str";
 		}

@@ -2,7 +2,7 @@ container ModelTraits
 {
 	container MNL100
 	{
-		container CalcSuitability: IsTemplate = "True"
+		template CalcSuitability
 		{
 			unit<UInt32> domain;
 			
