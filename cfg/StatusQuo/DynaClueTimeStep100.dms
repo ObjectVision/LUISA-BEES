@@ -72,6 +72,56 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 
 	container DynamicComponent: Expr = "SuitabilityGenerator/CalcSuitability(domain)";
 
+	parameter<uint32> nrUseCases := 10000;
+	parameter<uint32> nrNonUsers := 10000;
+	
+	template Sample {
+	
+		parameter<ModelType> MT_rel;
+		parameter<string> MT_name := MT_rel->name;
+		attribute<bool> is_Allowed     (Domain) := ='DynamicComponent/Allowed/'+MT_name;
+		attribute<bool> is_Allocated   (Domain) := is_Allowed && PrevState/landuse == MT_Rel;
+		attribute<bool> is_NotAllocated(Domain) := is_Allowed && PrevState/landuse != MT_Rel;
+//		unit<uint32> AllowedLandUnits := select(Allowed);
+		unit<uint32> SuitFactorWeight := select_with_org_rel(Rules/CurrFactorWeights/LandUseType == MT_Rel)
+		{
+			attribute</MetaData/FactorDefinitions/Factors> Factor_rel := org_rel->FactorNr;
+		}
+		unit<uint32> allocated    := select_with_org_rel(is_Allocated)
+		{
+			attribute<domain>  domain_rel := org_rel;
+			attribute<domain_grid> geometry := domain_rel->grid_rel;
+			
+			attribute<.> rnd_score := rnd_permutation(uint32(MT_Rel), .);
+			parameter<uint32> max_score := nth_element(rnd_score, nrUseCases);
+			attribute<bool> is_selected := rnd_score < max_score;
+			unit<uint32> selected := subset(is_selected);
+		}
+		unit<uint32> nonallocated:= select_with_org_rel(is_NotAllocated)
+		{
+			attribute<domain>  domain_rel := org_rel;
+			attribute<domain_grid> geometry := domain_rel->grid_rel;
+			
+			attribute<.> rnd_score := rnd_permutation(uint32(MT_Rel), .);
+			parameter<uint32> max_score := nth_element(rnd_score, nrNonUsers);
+			attribute<bool> is_selected := rnd_score < max_score;
+			unit<uint32> selected := subset(is_selected);
+		}
+		unit<uint32> observation := union_unit(allocated/selected, nonallocated/selected)
+		{
+			attribute<domain>      domain_rel := union_data(., collect_by_cond(allocated/selected, allocated/is_selected, allocated/domain_rel), collect_by_cond(nonallocated/selected, nonallocated/is_selected, nonallocated/domain_rel));
+			attribute<domain_grid> geometry := domain_rel->grid_rel;
+			attribute<bool>        wasAllocatd := union_data(., const(true, allocated/selected), const(false, nonallocated/selected));
+			container SuitFactors := for_each_nedv(SuitFactorWeight/Factor_rel->name, SuitFactorWeight/org_rel->VariableRef+'[domain_rel]', ., float32);
+			attribute<string> TableRow := =AsList('String(SuitFactors/'+SuitFactorWeight/Factor_rel->name+')', '+'';''+');
+			parameter<string> TableHeader := AsList(Quote(SuitFactorWeight/Factor_rel->name), ';');
+			parameter<string> TableData := AsList(TableRow, '\n');
+			parameter<string> TableExport := TableHeader + '\n' + TableData, StorageName = "=ResultingState/OutputGeneration/OutputDirName+'/Sample'+MT_Name+'.txt'", StorageType = "str";
+		}
+	}
+	container SampleObservations := for_each_ne(ModelType/Name, replace('Sample(ModelType/V/@N)', '@N', ModelType/Name));
+	
+
 	container FeasibleSolution; // NYI, Reserved for future use
 	container ScaledTransPot := for_each_nedv(ModelType/Name, 'convert(DynamicComponent/TransPot/'+ModelType/Name+' * CaseData/SuitScaleFactor, Int32)', domain, Int32);
 	parameter<Int32> Threshold := Int32(value(-9999, EUR_ha) * CaseData/SuitScaleFactor);
