@@ -83,10 +83,20 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 		attribute<bool> is_Allocated   (Domain) := is_Allowed && PrevState/landuse == MT_Rel;
 		attribute<bool> is_NotAllocated(Domain) := is_Allowed && PrevState/landuse != MT_Rel;
 //		unit<uint32> AllowedLandUnits := select(Allowed);
-		unit<uint32> SuitFactorWeight := select_with_org_rel(Rules/CurrFactorWeights/LandUseType == MT_Rel)
+
+		unit<uint32> CurrFactors := select_with_org_rel(Rules/CurrFactorWeights/LandUseType == MT_Rel)
 		{
 			attribute</MetaData/FactorDefinitions/Factors> Factor_rel := org_rel->FactorNr;
+			attribute<string> VariableRef := org_rel->VariableRef;
 		}
+		
+		unit<uint32> SpecifiedFactor := range(uint32, 0 ,8)
+		{
+			attribute</MetaData/FactorDefinitions/Factors> Factor_rel : [38, 39, 11, 7, 44, 45, 54, 67];
+			attribute<string> VariableRef := /MetaData/FactorID/VariableRef[Factor_rel];
+		}
+		unit<uint32> ActualFactors := SpecifiedFactor; //SpecifiedFactor; // CurrFactors;
+		
 		unit<uint32> allocated    := select_with_org_rel(is_Allocated)
 		{
 			attribute<domain>  domain_rel := org_rel;
@@ -112,9 +122,9 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 			attribute<domain>      domain_rel := union_data(., collect_by_cond(allocated/selected, allocated/is_selected, allocated/domain_rel), collect_by_cond(nonallocated/selected, nonallocated/is_selected, nonallocated/domain_rel));
 			attribute<domain_grid> geometry := domain_rel->grid_rel;
 			attribute<bool>        wasAllocated := union_data(., const(true, allocated/selected), const(false, nonallocated/selected));
-			container SuitFactors := for_each_nedv(SuitFactorWeight/Factor_rel->name, SuitFactorWeight/org_rel->VariableRef+'[domain_rel]', ., float32);
-			attribute<string> TableRow := ='String(uint8(wasAllocated))+'';''+'+AsList('String(SuitFactors/'+SuitFactorWeight/Factor_rel->name+')', '+'';''+');
-			parameter<string> TableHeader := Quote('WasAllocated')+';'+AsList(Quote(SuitFactorWeight/Factor_rel->name), ';');
+			container SuitFactors := for_each_nedv(ActualFactors/Factor_rel->name, ActualFactors/VariableRef+'[domain_rel]', ., float32);
+			attribute<string> TableRow := ='String(uint8(wasAllocated))+'';''+'+AsList('String(SuitFactors/'+ActualFactors/Factor_rel->name+')', '+'';''+');
+			parameter<string> TableHeader := Quote('WasAllocated')+';'+AsList(Quote(ActualFactors/Factor_rel->name), ';');
 			parameter<string> TableData := AsList(TableRow, '\n');
 			parameter<string> TableExport := TableHeader + '\n' + TableData, StorageName = "=ResultingState/OutputGeneration/OutputDirName+'/Sample'+MT_Name+'.txt'", StorageType = "str";
 		}
