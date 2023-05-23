@@ -1317,7 +1317,7 @@ container Parameters: KeepData = "True", Using = "Units"
 // 			unit<UInt16> Lustrum:   Expr = "PeriodSet/Lustrum";
 
 			parameter<String> FolderName := replace_value(Expand(., '%env:DIR_OUTPUT%'), 'env:DIR_OUTPUT', 'GUI');
-			parameter<String> OutputDir := '%ProjDir%/results/' + ParamSets/ActiveSet/ParamName +'/' + replace(FolderName + '/' + Name, '/', '_');
+			parameter<String> OutputDir := '%ProjDir%/results/' + ParamSets/ActiveSet/ParamName +'/' + replace(FolderName, '/', '_') + '/' + replace(Name, '/', '_');
 		}
 	}
 	container ParamSets 

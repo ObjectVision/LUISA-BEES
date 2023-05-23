@@ -111,10 +111,10 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 		{
 			attribute<domain>      domain_rel := union_data(., collect_by_cond(allocated/selected, allocated/is_selected, allocated/domain_rel), collect_by_cond(nonallocated/selected, nonallocated/is_selected, nonallocated/domain_rel));
 			attribute<domain_grid> geometry := domain_rel->grid_rel;
-			attribute<bool>        wasAllocatd := union_data(., const(true, allocated/selected), const(false, nonallocated/selected));
+			attribute<bool>        wasAllocated := union_data(., const(true, allocated/selected), const(false, nonallocated/selected));
 			container SuitFactors := for_each_nedv(SuitFactorWeight/Factor_rel->name, SuitFactorWeight/org_rel->VariableRef+'[domain_rel]', ., float32);
-			attribute<string> TableRow := =AsList('String(SuitFactors/'+SuitFactorWeight/Factor_rel->name+')', '+'';''+');
-			parameter<string> TableHeader := AsList(Quote(SuitFactorWeight/Factor_rel->name), ';');
+			attribute<string> TableRow := ='String(uint8(wasAllocated))+'';''+'+AsList('String(SuitFactors/'+SuitFactorWeight/Factor_rel->name+')', '+'';''+');
+			parameter<string> TableHeader := Quote('WasAllocated')+';'+AsList(Quote(SuitFactorWeight/Factor_rel->name), ';');
 			parameter<string> TableData := AsList(TableRow, '\n');
 			parameter<string> TableExport := TableHeader + '\n' + TableData, StorageName = "=ResultingState/OutputGeneration/OutputDirName+'/Sample'+MT_Name+'.txt'", StorageType = "str";
 		}
@@ -150,7 +150,7 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 	
 	container PopulationDistribution: expr = "ModelTraits/PopulationDistribution(domain, DestPopClaimRegion, CaseData/DestPopRasterLink[domain/grid_rel])";
 	
-	parameter<String> TimeStepDirName := simulation_results/metadata/DirName + '_'+Periods/Name[PeriodID];
+	parameter<String> TimeStepDirName := simulation_results/metadata/DirName + '\'+Periods/Name[PeriodID];
 	
 	container ResultingState
 	{	
