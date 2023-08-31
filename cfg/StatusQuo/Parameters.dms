@@ -1251,13 +1251,12 @@ container Parameters: KeepData = "True", Using = "Units"
 			unit<UInt8> UniqueRegionRefs: Expr = "unique(RegionRefs)";
 			unit<UInt8> UniqueDestRegionRefs: Expr = "unique(DestRegionRefs)";
 			unit<UInt8> RunRegion_Specific_RegionRefs: expr = "unique(RunRegionDemands/Regions)";
-			unit<UInt8>	UnionedRegionRefs: 		Expr = "range(uint8, uint8(0), uint8(#UniqueRegionRefs + #UniqueDestRegionRefs))" 
+			unit<UInt8>	UnionedRegionRefs := union_unit_uint8(UniqueRegionRefs, UniqueDestRegionRefs) 
 			{
-				attribute<string> Values := id(.) < uint8(#UniqueRegionRefs) 
-				?	UniqueRegionRefs/Values[rlookup(value(id(.), UniqueRegionRefs), id(UniqueRegionRefs))] 
-				:	UniqueDestRegionRefs/Values[rlookup(value(id(.) - uint8(#UniqueRegionRefs), UniqueDestRegionRefs), id(UniqueDestRegionRefs))];
+				attribute<string> Values := union_data(., UniqueRegionRefs/Values, UniqueDestRegionRefs/Values);
 			}
-			unit<uint8> AllRegionRefs:			Expr = "unique(UnionedRegionRefs/Values)" {attribute<string> Values;}
+			
+			unit<uint8> AllRegionRefs := unique(UnionedRegionRefs/Values);
 			
 			container ClaimTablesOrg: FreeData = "False", StoreData = "True", Using = "Parameters/DemandSets/Global", Expr = 
 				"for_each_ne("
