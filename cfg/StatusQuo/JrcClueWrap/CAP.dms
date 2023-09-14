@@ -5,10 +5,25 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 		container DataContainer    := CaseData/PrepareVariables/LoadSpatialData;
 		container VariableContainer:= CaseData/PrepareVariables/Variables;
 		
-		unit<uint32> lfaRef: expr = "DataContainer/lfa/inFile" {
-		//
-		//unit<uint32> lfa: Expr = "= lfaRef" {
-			//attribute<string> LFA_comb2: expr = "PrepareVariables/LoadSpatialData/lfa/inFile/LFA_comb2";
+		
+		//unit<uint32> lfaRef: expr = "DataContainer/lfa/inFile" {
+
+			////attribute<string> LFA_comb2: expr = "PrepareVariables/LoadSpatialData/lfa/inFile/LFA_comb2";
+			//attribute<bool> art18_all: Expr = "LFA_comb2 = 'TNN' ||LFA_comb2 = 'PNN' || LFA_comb2 ='PNP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
+			//attribute<bool> art18_totally: Expr = "LFA_comb2 = 'TNN'";
+			//attribute<bool> art18_partially: Expr = "LFA_comb2 = 'PNN' || LFA_comb2 ='PNP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
+			//attribute<bool> art19_all: Expr = "LFA_comb2 = 'NTN' || LFA_comb2 = 'NPN' || LFA_comb2 ='NPP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
+			//attribute<bool> art19_totally: Expr = "LFA_comb2 = 'NTN'";
+			//attribute<bool> art19_partially: Expr = "LFA_comb2 = 'NPN' || LFA_comb2 ='NPP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
+			//attribute<bool> art20_all: Expr = "LFA_comb2 = 'NNT' || LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP'";
+			//attribute<bool> art20_totally: Expr = "LFA_comb2 = 'NNT'";
+			//attribute<bool> art20_partially: Expr = "LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP'";
+		//}
+		
+
+		unit<uint32> lfaRefsel: expr = "DataContainer/lfa_sel/inFile" {
+		//unit<uint32> lfa_sel: Expr = "= lfaRefsel" {
+			//attribute<string> LFA_comb2: expr = "PrepareVariables/LoadSpatialData/lfa_sel/inFile/LFA_comb2";
 			attribute<bool> art18_all: Expr = "LFA_comb2 = 'TNN' ||LFA_comb2 = 'PNN' || LFA_comb2 ='PNP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
 			attribute<bool> art18_totally: Expr = "LFA_comb2 = 'TNN'";
 			attribute<bool> art18_partially: Expr = "LFA_comb2 = 'PNN' || LFA_comb2 ='PNP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
@@ -17,18 +32,42 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 			attribute<bool> art19_partially: Expr = "LFA_comb2 = 'NPN' || LFA_comb2 ='NPP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
 			attribute<bool> art20_all: Expr = "LFA_comb2 = 'NNT' || LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP'";
 			attribute<bool> art20_totally: Expr = "LFA_comb2 = 'NNT'";
-			attribute<bool> art20_partially: Expr = "LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP'";
+		}	attribute<bool> art20_partially: Expr = "LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP'";
+		
+		 
+		unit<uint32> ancRef2016: expr = "DataContainer/anc_2016/inFile" {
+			attribute<bool> art32_1a_all: Expr = "ANC = 'TNN' ||ANC = 'PNN' || ANC ='PNP' || ANC ='PPN' || ANC ='PPP'";
+			attribute<bool> art32_1a_totally: Expr = "ANC = 'TNN'";
+			attribute<bool> art32_1a_partially: Expr = "ANC = 'PNN' || ANC ='PNP' || ANC ='PPN' || ANC ='PPP'";
+			attribute<bool> art32_1c_all: Expr = "ANC = 'NTN' || ANC = 'NPN' || ANC ='NPP' || ANC ='PPN' || ANC ='PPP'";
+			attribute<bool> art32_1c_totally: Expr = "ANC = 'NTN'";
+			attribute<bool> art32_1c_partially: Expr = "ANC = 'NPN' || ANC ='NPP' || ANC ='PPN' || ANC ='PPP'";
+			attribute<bool> art32_1b_all: Expr = "ANC = 'NNT' || ANC = 'NNP' || ANC ='NPP' || ANC ='PNP' || ANC ='PPP'";
+			attribute<bool> art32_1b_totally: Expr = "ANC = 'NNT'";
+			attribute<bool> art32_1b_partially: Expr = "ANC = 'NNP' || ANC ='NPP' || ANC ='PNP'";
+		}
+		
+		unit<uint32> ancRef2019: expr = "DataContainer/anc_2019/inFile" {
+			attribute<bool> art32_1a_all: Expr = "ANC = 'TNN' ||ANC = 'PNN' || ANC ='PNP' || ANC ='PPN' || ANC ='PPP'";
+			attribute<bool> art32_1a_totally: Expr = "ANC = 'TNN'";
+			attribute<bool> art32_1a_partially: Expr = "ANC = 'PNN' || ANC ='PNP' || ANC ='PPN' || ANC ='PPP'";
+			attribute<bool> art32_1c_all: Expr = "ANC = 'NTN' || ANC = 'NPN' || ANC ='NPP' || ANC ='PPN' || ANC ='PPP'";
+			attribute<bool> art32_1c_totally: Expr = "ANC = 'NTN'";
+			attribute<bool> art32_1c_partially: Expr = "ANC = 'NPN' || ANC ='NPP' || ANC ='PPN' || ANC ='PPP'";
+			attribute<bool> art32_1b_all: Expr = "ANC = 'NNT' || ANC = 'NNP' || ANC ='NPP' || ANC ='PNP' || ANC ='PPP'";
+			attribute<bool> art32_1b_totally: Expr = "ANC = 'NNT'";
+			attribute<bool> art32_1b_partially: Expr = "ANC = 'NNP' || ANC ='NPP' || ANC ='PNP'";
 		}
 		
 		container sourceData : IsHidden = "True"
 		{
 
-			attribute<uint32> 	lfa_grid 			(domain_grid):      Expr = "PrepareVariables/LoadSpatialData/lfa/RasterIds", FreeData = "False";
-			attribute<bool> art18_totally		(domain_grid): 		Expr = "lfaRef/art18_totally[lfa_grid]", DisableStorage = "True";
-			attribute<bool> art18_partially 	(domain_grid): 	 	Expr = "lfaRef/art18_partially[lfa_grid]", DisableStorage="True";
-			attribute<bool> art19_all 			(domain_grid): 		Expr = "lfaRef/art19_all[lfa_grid]", DisableStorage="True";
-			attribute<bool> art20_totally		(domain_grid): 		Expr = "lfaRef/art20_totally[lfa_grid]", DisableStorage = "True";
-			attribute<bool> art20_partially 	(domain_grid): 	 	Expr = "lfaRef/art20_partially[lfa_grid]", DisableStorage="True";		
+	//		attribute<uint32> 	lfa_grid 			(domain_grid):      Expr = "PrepareVariables/LoadSpatialData/lfa/RasterIds", FreeData = "False";
+	//		attribute<bool> art18_totally		(domain_grid): 		Expr = "lfaRef/art18_totally[lfa_grid]", DisableStorage = "True";
+	//		attribute<bool> art18_partially 	(domain_grid): 	 	Expr = "lfaRef/art18_partially[lfa_grid]", DisableStorage="True";
+	//		attribute<bool> art19_all 			(domain_grid): 		Expr = "lfaRef/art19_all[lfa_grid]", DisableStorage="True";
+	//		attribute<bool> art20_totally		(domain_grid): 		Expr = "lfaRef/art20_totally[lfa_grid]", DisableStorage = "True";
+	//		attribute<bool> art20_partially 	(domain_grid): 	 	Expr = "lfaRef/art20_partially[lfa_grid]", DisableStorage="True";		
 			attribute<bool> floodRiskMap        (domain_grid):  	Expr = "bool(DataContainer/FloodRisk/inFile/ReadData)", DisableStorage = "True";
 			attribute<bool> coastMap        	(domain_grid):   	Expr = "bool(VariableContainer/coastalZone)[domain/BasisGrid]", DisableStorage = "True";	
 	//	    attribute<JrcFactorData/ShapeData/coastalZones> cz_grid (domain_grid): expr = "poly2grid(JrcFactorData/ShapeData/coastalZones/Geometry, Geography/Lambert100mGrid)", FreeData = "False";
@@ -36,7 +75,43 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 			attribute<bool> riparianAreaMap  	(domain_grid):  	Expr = "bool(DataContainer/RiparianAreas/inFile/ReadData)", DisableStorage = "True";
 			attribute<Int16> erosionRiskMap     (domain_grid):  	Expr = "int16(VariableContainer/erosionRisk)[domain/BasisGrid]", DisableStorage = "True";
 			attribute<bool> Natura2000		    (domain_grid): 	    Expr = "bool(VariableContainer/Natura2000_v2011)[domain/BasisGrid]", DisableStorage = "True";
+			attribute<bool> Natura2000_2019		(domain_grid): 	    Expr = "bool(VariableContainer/Natura2000_v2019)[domain/BasisGrid]", DisableStorage = "True";
 
+			
+			attribute<uint32> 	anc_grid_2016 	(domain_grid):      Expr = "PrepareVariables/LoadSpatialData/anc_2016/RasterIds", FreeData = "False";
+			attribute<bool> art32_1a_totally6	(domain_grid): 		Expr = "ancRef2016/art32_1a_totally6[anc_grid_2016]", DisableStorage = "True";
+			attribute<bool> art32_1a_partially6	(domain_grid): 		Expr = "ancRef2016/art32_1a_partially6[anc_grid_2016]", DisableStorage = "True";
+			attribute<bool> art32_1a_all6	(domain_grid): 		Expr = "ancRef2016/art32_1a_all6[anc_grid_2016]", DisableStorage = "True";
+			attribute<bool> art32_1b_totally6	(domain_grid): 		Expr = "ancRef2016/art32_1b_totally6[anc_grid_2016]", DisableStorage = "True";
+			attribute<bool> art32_1b_partially6	(domain_grid): 		Expr = "ancRef2016/art32_1b_partially6[anc_grid_2016]", DisableStorage = "True";
+			attribute<bool> art32_1b_all6		(domain_grid): 		Expr = "ancRef2016/art32_1b_all6[anc_grid_2016]", DisableStorage = "True";
+			attribute<bool> art32_1c_totally6	(domain_grid): 		Expr = "ancRef2016/art32_1c_totally6[anc_grid_2016]", DisableStorage = "True";
+			attribute<bool> art32_1c_partially6	(domain_grid): 		Expr = "ancRef2016/art32_1c_partially6[anc_grid_2016]", DisableStorage = "True";
+			attribute<bool> art32_1c_all6		(domain_grid): 		Expr = "ancRef2016/art32_1c_all6[anc_grid_2016]", DisableStorage = "True";	
+
+			attribute<uint32> 	anc_grid_2019 	(domain_grid):      Expr = "PrepareVariables/LoadSpatialData/anc_2019/RasterIds", FreeData = "False";
+			attribute<bool> art32_1a_totally	(domain_grid): 		Expr = "ancRef2019/art32_1a_totally[anc_grid_2019]", DisableStorage = "True";
+			attribute<bool> art32_1a_partially	(domain_grid): 		Expr = "ancRef2019/art32_1a_partially[anc_grid_2019]", DisableStorage = "True";
+			attribute<bool> art32_1a_all		(domain_grid): 		Expr = "ancRef2019/art32_1a_all[anc_grid_2019]", DisableStorage = "True";
+			attribute<bool> art32_1b_totally	(domain_grid): 		Expr = "ancRef2019/art32_1b_totally[anc_grid_2019]", DisableStorage = "True";
+			attribute<bool> art32_1b_partially	(domain_grid): 		Expr = "ancRef2019/art32_1b_partially[anc_grid_2019]", DisableStorage = "True";
+			attribute<bool> art32_1b_all		(domain_grid): 		Expr = "ancRef2019/art32_1b_all[anc_grid_2019]", DisableStorage = "True";
+			attribute<bool> art32_1c_totally	(domain_grid): 		Expr = "ancRef2019/art32_1c_totally[anc_grid_2019]", DisableStorage = "True";
+			attribute<bool> art32_1c_partially	(domain_grid): 		Expr = "ancRef2019/art32_1c_partially[anc_grid_2019]", DisableStorage = "True";
+			attribute<bool> art32_1c_all		(domain_grid): 		Expr = "ancRef2019/art32_1c_all[anc_grid_2019]", DisableStorage = "True";						
+			
+			attribute<uint32> 	lfa_sel_grid 	(domain_grid):      Expr = "PrepareVariables/LoadSpatialData/lfa_sel/RasterIds", FreeData = "False";
+			attribute<bool> art18_totally	(domain_grid): 		Expr = "lfaRefsel/art18_totally[lfa_sel_grid]", DisableStorage = "True";
+			attribute<bool> art18_partially	(domain_grid): 		Expr = "lfaRefsel/art18_partially[lfa_sel_grid]", DisableStorage = "True";
+			attribute<bool> art18_all		(domain_grid): 		Expr = "lfaRefsel/art18_all[lfa_sel_grid]", DisableStorage = "True";
+			attribute<bool> art19_totally	(domain_grid): 		Expr = "lfaRefsel/art19_totally[lfa_sel_grid]", DisableStorage = "True";
+			attribute<bool> art19_partially	(domain_grid): 		Expr = "lfaRefsel/art19_partially[lfa_sel_grid]", DisableStorage = "True";
+			attribute<bool> art19_all		(domain_grid): 		Expr = "lfaRefsel/art19_all[lfa_sel_grid]", DisableStorage = "True";
+			attribute<bool> art20_totally	(domain_grid): 		Expr = "lfaRefsel/art20_totally[lfa_sel_grid]", DisableStorage = "True";
+			attribute<bool> art20_partially	(domain_grid): 		Expr = "lfaRefsel/art20_partially[lfa_sel_grid]", DisableStorage = "True";
+			attribute<bool> art20_all		(domain_grid): 		Expr = "lfaRefsel/art20_all[lfa_sel_grid]", DisableStorage = "True";
+	
+			
 			//GAECS
 			attribute<bool> IsGrassland    (domain_grid): expr = "Classifications/LU/GAEC_classes/Bools/isNaturalGrass[PrepareVariables/CorineGrid]" , DisableStorage = "True";
 			attribute<bool> IsOlive        (domain_grid): expr = "Classifications/LU/GAEC_classes/Bools/isOlives[PrepareVariables/CorineGrid]", DisableStorage = "True";
@@ -59,15 +134,18 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 
 	//		attribute<uint16>  JrcRegionId  (RegionDomain): Expr= "id(RunRegions/UnitSets/RunAreas)";
 			
-			//FOR ARTICLE 16
+			//FOR ARTICLE 16 and Natura2000_2019
 			attribute<bool>    Natura2000_agri  (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Natura2kAgri[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
 			attribute<bool>    Natura2000_forest(RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Natura2kFor[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]"; 
-			//FOR ARTICLE 18   CRITERIA
+			
+
+			
+			//FOR ARTICLE 18 and 32_1a   CRITERIA
 			attribute<int16>   MaxElev      	(RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_MaxElev[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
 			attribute<int16>   MaxSlope    	 (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_MaxSlope[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
 			attribute<int16>   Elev4Comb   	 (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Elev4Comb[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
 			attribute<int16>   Slope4Comb  	 (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Slope4Comb[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
-			//FOR ARTICLE 20 CRITERIA
+			//FOR ARTICLE 20 and 32_1b CRITERIA
 			attribute<units/tonne_ha>   MinErosionRisk(RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Erosion[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
 			attribute<bool>    floodRisk    (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_FloodRisk[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
 			attribute<bool>    coastalZone  (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Coast[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
@@ -86,8 +164,9 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 			attribute<bool>    ElevSlopeComb_isok (domain_grid):  expr = "JrcFactorData/TiffData/Eu27_e/ReadData > Elev4Comb[RegionGrid] && JrcFactorData/TiffData/slope_continuous/ReadData > Slope4Comb[RegionGrid]";
 			attribute<bool>    ErosionRisk_isok	  (domain_grid):  expr = "JrcFactorData/TiffData/erosionRisk/erosionRisk > MinErosionRisk[RegionGrid]";
 			
-			attribute<int8> Art16Agri(domain_grid): expr = "SourceData/Natura2000 && Natura2000_agri[RegionGrid] ? int8(35) : int8(0)";
-			attribute<int8> Art16For (domain_grid): expr = "SourceData/Natura2000 && Natura2000_forest[RegionGrid] ? int8(35) : int8(0)";
+			attribute<int8> Art16Agri(domain_grid): expr = "SourceData/Natura2000_2019 && Natura2000_agri[RegionGrid] ? int8(35) : int8(0)";
+			attribute<int8> Art16For (domain_grid): expr = "SourceData/Natura2000_2019 && Natura2000_forest[RegionGrid] ? int8(35) : int8(0)";
+			
 			attribute<int8> Art18Areas (domain_grid): expr = 
 				"switch("
 					"case(SourceData/art18_totally, int8(15)), "
@@ -96,8 +175,22 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 					"case(SourceData/art18_partially, int8(15)), "
 					"int8(0)"
 				")";
+			// new code 2021/05/26
+			attribute<int8> Art321aAreas (domain_grid): expr = 
+				"switch("
+					"case(SourceData/art32_1a_totally, int8(15)), "
+					"case(SourceData/art32_1a_partially && maxElev_Slope_ok, int8(35)), "
+					"case(SourceData/art32_1a_partially && ElevSlopeComb_isok, int8(35)), "
+					"case(SourceData/art32_1a_partially, int8(15)), "
+					"int8(0)"
+				")";
 			attribute<int8> Art19Areas(domain_grid): expr =
 				"SourceData/art19_all ? int8(35) : int8(0)";
+				
+			// new code 2021/05/26
+			attribute<int8> Art321cAreas(domain_grid): expr =
+				"SourceData/art32_1c_all ? int8(35) : int8(0)";
+			
 			attribute<int8> Art20Areas(domain_grid): expr = 
 				"switch("
 					"case(SourceData/art20_totally, int8(35)), "
@@ -109,17 +202,31 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 					"case(SourceData/art20_partially, int8(25)), "
 					"int8(0)"
 				")";
+			// new code 2021/05/26
+			attribute<int8> Art321bAreas(domain_grid): expr = 
+				"switch("
+					"case(SourceData/art32_1b_totally, int8(35)), "
+					"case(SourceData/art32_1b_partially && ErosionRisk_isok ,int8(35)),"
+					"case(SourceData/art32_1b_partially && SourceData/floodRiskMap    && floodRisk[RegionGrid],    int8(35)),"
+					"case(SourceData/art32_1b_partially && SourceData/coastMap        && coastalZone[RegionGrid],  int8(35)), "
+					"case(SourceData/art32_1b_partially && SourceData/buff_ndaMap     && ndaBuffer500[RegionGrid], int8(35)),"
+					"case(SourceData/art32_1b_partially && SourceData/riparianAreaMap && riparian[RegionGrid],     int8(35)),"
+					"case(SourceData/art32_1b_partially, int8(25)), "
+					"int8(0)"
+				")";
 			attribute<int8> AvgArableSuitab (domain_grid) : expr = "JrcFactorData/TiffData/FibonacciArableClassif/ReadDataint8";
 
 	//		attribute<int8> gaecGrassland(domain_grid): expr = 
 	//			"SourceData/IsGrassland && Grassland ? int8(35) : int8(0)";
 			attribute<int8> gaecOlive  (domain_grid): expr = "SourceData/IsOlive   && Olive  [RegionGrid] ? int8(35) : int8(0)";	
 			attribute<int8> gaecPasture(domain_grid): expr = "SourceData/IsPasture && Pasture[RegionGrid] ? int8(35) : int8(0)";
-
-			attribute<int8> LocSpecsAra  (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas,AvgArableSuitab)";
-			attribute<int8> LocSpecsPast (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas, gaecPasture)";
-			attribute<int8> LocSpecsPC   (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas, gaecOlive)";
-			//     		 attribute<int8> LocSpecsSNV  (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas, gaecGrassland)";    
+			
+			// new code 2021/05/26
+			attribute<int8> LocSpecsAra  (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art321aAreas, Art19Areas,Art321cAreas, Art20Areas, Art321bAreas, AvgArableSuitab)";
+			attribute<int8> LocSpecsPast (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art321aAreas, Art19Areas,Art321cAreas, Art20Areas, Art321bAreas,  gaecPasture)";
+			attribute<int8> LocSpecsPC   (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art321aAreas, Art19Areas,Art321cAreas, Art20Areas, Art321bAreas, gaecOlive)";
+			//     		 attribute<int8> LocSpecsSNV  (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas, gaecGrassland)";
+			
 			attribute<bool> areLocSpecsUAA(domain_grid): expr = "LocSpecsAra + LocSpecsPast + LocSpecsPC > int8(1)";
 		//	attribute<int8> LocSpecsNecr  (domain_grid): expr = "switch("
 		//			"case(!areLocSpecsUAA && (SourceData/erosionRiskMap > 1[Int16]), int8(35)),"
@@ -130,14 +237,13 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 
 		container CAPCaseData: IsHidden="True"
 		{
-			//ART 16
+			//ART 16 and New NATURA2000_2019
 			attribute<bool> Nuts0_Natura2kAgri (Geography/Regions/RunAreas):
 			[0,0,0,0,1,0,0,1,1,0,1,1,0,1,1,1,1,1,1,0,1,0,1,0,0,1]; //boolean
 	//       FI,SE,UK,FR,EE,DK,IE,LT,DE,NL,PT,LV,PL,BE,CZ,SK,ES,AT,HU,RO,IT,SI,GR,BG,MT,CY
 			attribute<bool> Nuts0_Natura2kFor (Geography/Regions/RunAreas):
 			[0,0,0,0,1,0,0,1,1,0,1,1,0,1,1,1,0,1,0,0,1,0,1,0,0,0]; //boolean
-			//ART 18
-	//	    no data for RO and BG, so all art 18 sites included (there are no partial polygons anyway in these countries)
+			//ART 18 and Article32_1a
 			attribute<int16> Nuts0_MaxElev (Geography/Regions/RunAreas):
 			[5000,5000,5000,800,5000,5000,5000,5000,800,5000,750,5000,500,5000,600,700,1000,700,5000,5000,800,700,800,5000,5000,800]; //meters
 			attribute<int16> Nuts0_MaxSlope (Geography/Regions/RunAreas):
@@ -146,7 +252,7 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 			[5000,5000,5000,500,5000,5000,5000,5000,600,5000,400,5000,5000,5000,500,500,600,500,5000,5000,600,500,600,5000,5000,500]; //meters
 			attribute<int16> Nuts0_Slope4Comb (Geography/Regions/RunAreas):
 			[100,100,100,9,100,100,100,100,10,100,9,100,100,100,7,8,8,9,100,100,9,9,9,100,100,9]; //degrees
-			//ART 20
+			//ART 20and Article32_1b
 			attribute<units/tonne_ha> Nuts0_Erosion (Geography/Regions/RunAreas):
 			[500,500,500,500,500,500,500,500,500,500,500,500,10,500,500,500,500,500,500,500,500,500,500,500,500,500]; //tonne/ha/a
 			attribute<bool> Nuts0_FloodRisk (Geography/Regions/RunAreas):
