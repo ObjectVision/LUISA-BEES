@@ -39,6 +39,10 @@ container Luisetta
 		
 		#include <JrcClueWrap.dms>
 	}
+	container GenerateAllLandPairSupplyCurves
+	{
+		parameter<string> Generate2020 := 'Ready', ExplicitSuppliers = "=AsList('Runs/'+Parameters/Meta/Run/Name+'/TimeSteps/P2020/ResultingState/OutputGeneration/CrossSupplyCurves/GenerateAllCurves', ';')";
+	}
 	#include <Runs.dms>
 	container CompareResultsContainer;
 	#include <GenerateEU.dms>

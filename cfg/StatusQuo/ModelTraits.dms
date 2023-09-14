@@ -983,7 +983,11 @@ container ModelTraits
 					attribute<MT> to   := second_rel->to;
 					attribute<string> name := first_rel->ZoneID + '_' + second_rel->name;
 				}
-				unit<uint32> SupplyCurveKey := select_with_attr_by_org_rel(SupplyCurveKeyBase, SupplyCurveKeyBase/from == MT/V/Arable);
+				unit<uint32> SupplyCurveKey := SupplyCurveKeyBase;
+//				select_with_attr_by_org_rel(SupplyCurveKeyBase
+//				, SupplyCurveKeyBase/from == MT/V/Arable || SupplyCurveKeyBase/from == MT/V/AbanArable
+//				|| SupplyCurveKeyBase/to == MT/V/Arable || SupplyCurveKeyBase/to == MT/V/AbanArable
+//				);
 				
 				template LandSupplyCurve {
 					parameter<MT> from;
