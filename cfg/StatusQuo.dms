@@ -1,5 +1,5 @@
 container Luisetta
-:	IntegrityCheck = "GeoDmsVersion() >= 7.206"  // 7.206 needed for automatic DialogType and DialogData in case of a Geometry attribute
+:	IntegrityCheck = "GeoDmsVersion() >= 14.0099"  // 14.1.0 required for sub_or_null function
 //:	IntegrityCheck = "GeoDmsVersion() >= 7.022"  // 7.022 needed for improved poly2grid function
 //:	IntegrityCheck = "GeoDmsVersion() >= 7.015"  // 7.015 needed for adaptations to the code-breaking new reprojections
 //:	IntegrityCheck = "GeoDmsVersion() >= 7.005"  // 7.005 needed for derivation of the platform specific %OdbcExcelDriver% placeHolder
