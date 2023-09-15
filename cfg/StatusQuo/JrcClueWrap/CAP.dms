@@ -32,8 +32,8 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 			attribute<bool> art19_partially: Expr = "LFA_comb2 = 'NPN' || LFA_comb2 ='NPP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
 			attribute<bool> art20_all: Expr = "LFA_comb2 = 'NNT' || LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP'";
 			attribute<bool> art20_totally: Expr = "LFA_comb2 = 'NNT'";
-		}	attribute<bool> art20_partially: Expr = "LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP'";
-		
+			attribute<bool> art20_partially: Expr = "LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP'";
+		}
 		 
 		unit<uint32> ancRef2016: expr = "DataContainer/anc_2016/inFile" {
 			attribute<bool> art32_1a_all: Expr = "ANC = 'TNN' ||ANC = 'PNN' || ANC ='PNP' || ANC ='PPN' || ANC ='PPP'";
