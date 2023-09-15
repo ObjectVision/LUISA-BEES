@@ -86,7 +86,7 @@ Container PopulationParameters
 		   attribute<Bool> LinesAreSignedIntegerStringOrEmpy (Domain): expr = 
 		      "regex_match(BodyLines,'(-?+[0-9]++|\"[^\"]*+\")?+(;(-?+[0-9]++|\"[^\"]*+\")?+)*+')";
 		        
-		   container Data: Expr = "for_each_nedv(Field/Name,'ReadElems(BodyLines,string,'+MakeDefined(Field/Name[ID(Field)-1]+'/ReadPos','const(0,Domain)')+')',Domain,string)"
+		   container Data := for_each_nedv(Field/Name, 'ReadElems(BodyLines,string,'+MakeDefined(Field/Name[sub_or_null(ID(Field), 1)]+'/ReadPos','const(0,Domain)')+')',Domain,string)
 		   {
 		   		attribute<uint16> 							TrueCountryid (Domain): expr = "= 'rlookup(Domain/Name, '+ Factors/FactorName[0[Factors]] +')'";
 		   }

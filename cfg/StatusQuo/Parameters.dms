@@ -25,9 +25,9 @@ container Parameters: KeepData = "True", Using = "Units"
 		
 		unit<UInt16> result: Expr = "Range(UInt16, UInt16(0), UInt16( (EndYear - SpoofStartYear) / TimeStep))"
 		{
-			attribute<YearDiffRange> PeriodLength: 	Expr = "id(result) > uint16(0) ? 5.0[YearDiffRange] : 3.0[YearDiffRange]";
-			attribute<YearDiffRange> YearsPast:		Expr = "cumulate(PeriodLength)";
-			attribute<YearRange> CurrYear: 			Expr = "id(.) > uint16(0) ? StartYear + YearsPast[Id(.) - uint16(1)]: StartYear";
+			attribute<YearDiffRange> PeriodLength := id(result) > uint16(0) ? 5.0[YearDiffRange] : 3.0[YearDiffRange];
+			attribute<YearDiffRange> YearsPast    := cumulate(PeriodLength);
+			attribute<YearRange> CurrYear         := StartYear + MakeDefined(YearsPast[sub_or_null(Id(.), 1w)], 0f);
 			attribute<YearRange> ProjectedYear:		Expr = "CurrYear + PeriodLength";
 			attribute<String>  YearStr: Expr = "String(ProjectedYear)";
 			attribute<String>  IdStr: Expr = "'UInt16('+String(ID(.))+')'";
@@ -36,7 +36,7 @@ container Parameters: KeepData = "True", Using = "Units"
 			
 			attribute<Float32> ClaimFraction: Expr = "Float32(CurrYear - StartYear)/Float32(EndYear - StartYear)"; // "Float32(PeriodLength)*Float32(CurrYear - StartYear)/Float32(EndYear - StartYear)";
 			attribute<String>  ClaimFractionStr: Expr = "'value('+String(ClaimFraction)+',Float32)'";
-			attribute<String>  PrevRef: Expr = "MakeDefined(Name[ID(.)-UInt16(1)]+'/ResultingState', 'StartingState')";
+			attribute<String>  PrevRef := MakeDefined(Name[sub_or_null(ID(.), 1w)]+'/ResultingState', 'StartingState');
 			unit<UInt16> Decennium: Expr = "../Decennium";
 			unit<UInt16> Lustrum: Expr = "../Lustrum";
 			parameter<String> BaseYearCorineDataFileName: Expr = "'%LuisettaDataDir%/landuse/CLC12_Land_Cover_Adj_Poly.tif'"; 
@@ -217,7 +217,7 @@ container Parameters: KeepData = "True", Using = "Units"
 			   attribute<Bool> LinesAreSignedIntegerStringOrEmpy (Domain): expr = 
 			      "regex_match(BodyLines,'(-?+[0-9]++|\"[^\"]*+\")?+(;(-?+[0-9]++|\"[^\"]*+\")?+)*+')";
 			        
-			   container Data: Expr = "for_each_nedv(Field/Name,'ReadElems(BodyLines,string,'+MakeDefined(Field/Name[ID(Field)-1]+'/ReadPos','const(0,Domain)')+')',Domain,string)"
+			   container Data := for_each_nedv(Field/Name, 'ReadElems(BodyLines,string,'+MakeDefined(Field/Name[sub_or_null(ID(Field), 1)]+'/ReadPos','const(0,Domain)')+')',Domain,string)
 			   {
 			   		attribute<Domain> 							id (Domain): expr = "id(Domain)";
 			   		attribute<Classifications/LU/ModelType> 	LandUseType	(Domain): expr = "const(LandUseNr, Domain, Classifications/LU/ModelType)";
@@ -1114,21 +1114,11 @@ container Parameters: KeepData = "True", Using = "Units"
 				attribute<Bool> LinesAreNuts2CodeAndIntegers(BodyDomain): expr = "regex_match(Line, '[A-Z][A-Z]([A-Z]|[0-9])?+([A-Z]|[0-9])?+(,([0-9]++))*+')";
 				
 				attribute<String> ZoneId: Expr = "ReadElems(Line, string, const(0, BodyDomain))";//, IntegrityCheck = "LinesAreNuts2CodeAndIntegers";
-				attribute<Zones> ZoneRel: Expr = "rlookup(ZoneId,Zones/ZoneId)";
-				container Data: Expr = 
-					"for_each_nedv("
-						" PopField/Name"
-						",'ReadElems("
-							" Line"
-							",float32"
-							",'+MakeDefined("
-							" PopField/Name[ID(PopField)-1]+'/ReadPos'"
-							",'ZoneId/ReadPos'"
-							")+'"
-						")'"
-						",BodyDomain"
-						",float32"
-					")";
+				attribute<Zones> ZoneRel := rlookup(ZoneId,Zones/ZoneId);
+				container Data := for_each_nedv(PopField/Name
+						,'ReadElems(Line,float32,'+MakeDefined(PopField/Name[sub_or_null(ID(PopField), 1)]+'/ReadPos','ZoneId/ReadPos')+')'
+						, BodyDomain,float32
+					);
 			}
 			container InColumns: expr = "for_each_nedv(PopField/Name, 'sum(BodyDomain/Data/'+ PopField/Name +', BodyDomain/ZoneRel)', Zones, float32)";
 			
@@ -1193,20 +1183,10 @@ container Parameters: KeepData = "True", Using = "Units"
 // 					",'(-?+[0-9]++|\"[^\"]*+\")?+(;(-?+[0-9]++|\"[^\"]*+\")?+)*+'"
 // 				")";
 			
-			container Data: Expr = 
-				"for_each_nedv("
-					" Field/Name"
-					",'ReadElems("
-						" BodyLines"
-						",string"
-						",'+MakeDefined("
-							" Field/Name[ID(Field)-1]+'/ReadPos'"
-							",'const(0,Domain)'"
-						")+'"
-					")'"
-					",Domain"
-					",string"
-				")"
+			container Data := for_each_nedv(Field/Name
+					, 'ReadElems(BodyLines, string, '+MakeDefined(Field/Name[sub_or_null(ID(Field), 1)]+'/ReadPos', 'const(0,Domain)')+')'
+					, Domain, string
+				)
 			{
 				attribute<String> RegionUp_Raw (Domain): Expr = "UpperCase(Region)",               StoreData = "False", FreeData = "True";
 				attribute<String> RegionUp     (Domain): Expr = "RegionUp_Raw"; //,                    IntegrityCheck = "all(region_allowed)";
