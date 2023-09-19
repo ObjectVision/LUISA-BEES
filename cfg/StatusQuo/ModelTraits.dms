@@ -962,6 +962,7 @@ container ModelTraits
 					attribute<int32>  values;
 					attribute<uint32> count := pcount(UniquePrice_rel);
 					attribute<uint32> cumulative := cumulate(count);
+					attribute<ipoint>  p  := point(values, int32(cumulative));
 				}
 				parameter<string> Export := 'CumulHa;Price\n'+AsList(string(UniquePrice/cumulative)+';'+string(UniquePrice/values), '\n')
 				,	StorageName = "=OutputDirName+'_ArableLandSupply.csv'"
@@ -1006,6 +1007,7 @@ container ModelTraits
 						attribute<int32>  values;
 						attribute<uint32> count := pcount(UniquePrice_rel);
 						attribute<uint32> cumulative := cumulate(count);
+						attribute<ipoint>  p  := point(values, int32(cumulative));
 					}
 					parameter<string> Export := 'CumulHa;Price\n'+AsList(string(UniquePrice/cumulative)+';'+string(UniquePrice/values), '\n')
 					,	StorageName = "=OutputDirName+'/RegionalCrossLandSupply'+name+'.csv'"
