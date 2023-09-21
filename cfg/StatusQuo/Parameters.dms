@@ -410,10 +410,10 @@ container Parameters: KeepData = "True", Using = "Units"
 			   attribute<Bool> LinesAreSignedIntegerStringOrEmpy (Domain): expr = 
 			      "regex_match(BodyLines,'(-?+[0-9]++|\"[^\"]*+\")?+(;(-?+[0-9]++|\"[^\"]*+\")?+)*+')";
 			        
-			   container Data: Expr = "for_each_nedv(Field/Name,'ReadElems(BodyLines,string,'+MakeDefined(Field/Name[ID(Field)-1]+'/ReadPos','const(0,Domain)')+')',Domain,string)"
+			   container Data := for_each_nedv(Field/Name,'ReadElems(BodyLines,string,'+(ID(Field) > 0 ? Field/Name[ID(Field)-min_elem(1, ID(Field))]+'/ReadPos' : 'const(0,Domain)')+')',Domain,string)
 			   {
-			   		attribute<Domain> 						id 			(Domain): expr = "id(Domain)";
-			   		attribute<LandUses> 					LandUseType	(Domain): expr = "const(LandUseNr, Domain, LandUses)";
+			   		attribute<Domain> 	id 			(Domain): expr = "id(Domain)";
+			   		attribute<LandUses> LandUseType	(Domain): expr = "const(LandUseNr, Domain, LandUses)";
 			   }
 			   
 			   parameter<string> multiple_unit_ref: expr = "repeat('UnitRef,', #FactorList)";
@@ -832,7 +832,7 @@ container Parameters: KeepData = "True", Using = "Units"
 				attribute<float32>		Weight:		 expr = "AllocData/Constants/Weight[nr_OrgEntity]";
 			}
 			
-			unit<UInt32> FactorWeightsOrg: Expr = "subset(AllocData/RegionId = inRegionId)"
+			unit<UInt32> FactorWeightsOrg := subset(AllocData/RegionId == inRegionId)
 			{
 				attribute<ModelType> LandUseType: 	Expr = "AllocData/LandUseType[Nr_OrgEntity]";
 				attribute<ModelType> SrcLUT:		Expr = "AllocData/SrcLUT[Nr_OrgEntity]";
@@ -1056,7 +1056,7 @@ container Parameters: KeepData = "True", Using = "Units"
 		 					"? ' * CaseData/LocSpec/'+ModelType/Name+'* ParamSet/LocationSpecificPreferenceAddition['+ggModelIdExpr+']'"
 		 					": '')";
 				
-				attribute<string> LocSpecsModifierExpr (ModelType): expr = "CombinedSuitExpr + ' * ' + LocSpecExprPrefix";
+//				attribute<string> LocSpecsModifierExpr (ModelType): expr = "CombinedSuitExpr + ' * ' + LocSpecExprPrefix";
 				
 				attribute<string> CombinedSuitExpr(ModelType): expr = "'Suitability/'+ModelType/Name";
 

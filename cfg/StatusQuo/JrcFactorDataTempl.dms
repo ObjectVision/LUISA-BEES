@@ -1,14 +1,26 @@
-container JrcFactorDataTempl: IsTemplate = "True", IsHidden = "true"  //, Expr = "ReprojectedFactorData" 
+template JrcFactorDataTempl: IsHidden = "true"
 {
 	unit<WPoint> domain_grid;
-	Container RunRegions;
-	parameter<String> BaseYearCorineDataFileName;
 		
+	// ============ factor data
+	container PrepareData {
+		attribute<Classifications/LU/Corine> CorineGrid_2012    (domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2012/inFile/ReadData];
+		attribute<Classifications/LU/Corine> CorineGrid_2018    (domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2018/inFile/ReadData];
+		attribute<Classifications/LU/Corine> CorineGrid_2018_Org(domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2018_Org/inFile/ReadData];
+		attribute<Classifications/LU/Corine> CorineGrid         (domain_grid) := MakeDefined(CorineGrid_2018, CorineGrid_2018_org, CorineGrid_2012);
+		
+		attribute<Classifications/LU/ModelType> LandUse2012Grid (domain_grid) := Classifications/LU/Corine/MT[CorineGrid_2012];
+		attribute<Classifications/LU/ModelType> LandUse2018Grid (domain_grid) := Classifications/LU/Corine/MT[CorineGrid_2018];
+		attribute<Classifications/LU/ModelType> LandUseGrid     (domain_grid) := Classifications/LU/Corine/MT[CorineGrid];
+		
+		container LoadSpatialData := for_each_ne(MetaData/DataManagement/SpatialDataToLoad/Name, 'Templates/loadDataFile_'+MetaData/DataManagement/SpatialDataToLoad/Type+'('+Quote(MetaData/DataManagement/SpatialDataToLoad/Path)+', domain_grid)');
+	}
+	
 	container TiffData: IsHidden = "True"
 	{
 		container CorineGrid // already read in CaseData
 		{
-			attribute<Classifications/LU/Corine>    CorineLandUse	(domain_grid) := PrepareVariables/CorineGrid;
+			attribute<Classifications/LU/Corine>    CorineLandUse	(domain_grid) := PrepareData/CorineGrid;
 			attribute<Classifications/LU/ModelType> ModelLandUse 	(domain_grid) := Classifications/LU/Corine/MT [CorineLandUse];
 			attribute<Classifications/LU/ViewType>  ViewLandUse  	(domain_grid) := Classifications/LU/Corine/VT2[CorineLandUse];
 		}
@@ -141,5 +153,13 @@ container JrcFactorDataTempl: IsTemplate = "True", IsHidden = "true"  //, Expr =
 		attribute<uint32>				BurntInYear	 (domain_grid):	expr = "BurntAreas_shape/YearSeason[BurntGrid_id]";
 	}
 	#include <Biodiversity.dms>
+	
+	container StaticModelTypeNeighbourhoods
+	{
+		container Small := for_each_nedv(Classifications/LU/ModelType/name, 'potential(float32(PrepareData/LandUseGrid == Classifications/LU/ModelType/V/'+Classifications/LU/ModelType/Name+'), /Parameters/FuncKernels/QueensNeighbours/Matr)'
+		, domain_grid, float32);
+		container Large := for_each_nedv(Classifications/LU/ModelType/name, 'potential(float32(PrepareData/LandUseGrid == Classifications/LU/ModelType/V/'+Classifications/LU/ModelType/Name+'), /Parameters/FuncKernels/LinearDecay1km/Matr)'
+		, domain_grid, float32);
+	}
 }
 

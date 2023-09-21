@@ -1,15 +1,5 @@
 container Luisetta
 :	IntegrityCheck = "GeoDmsVersion() >= 14.0099"  // 14.1.0 required for sub_or_null function
-//:	IntegrityCheck = "GeoDmsVersion() >= 7.022"  // 7.022 needed for improved poly2grid function
-//:	IntegrityCheck = "GeoDmsVersion() >= 7.015"  // 7.015 needed for adaptations to the code-breaking new reprojections
-//:	IntegrityCheck = "GeoDmsVersion() >= 7.005"  // 7.005 needed for derivation of the platform specific %OdbcExcelDriver% placeHolder
-//:	IntegrityCheck = "GeoDmsVersion() >= 6.0309" // 6.031 required for array-based FullPathName
-//:	IntegrityCheck = "GeoDmsVersion() >= 6.0169" // required for d_alloc on checking that Suitabilities are Int32 for fixing issue 100
-//	"&& (GeoDmsVersion() < 6.0189 || GeoDmsVersion() > 6.0229)" // versions 6.018..6.022 seem to have a bug in exporting .dbf files. Is fixed in 6.023
-//:	IntegrityCheck = "GeoDmsVersion() >= 6.016"  // required for tile support of Unique operator used in the renumbering of ClaimRegions
-//:	IntegrityCheck = "GeoDmsVersion() >= 6.014"  // required for writing tiffs (as in LisFlood indicator production)
-//:	IntegrityCheck = "GeoDmsVersion() >= 6.012"  // required for reading/writing numeric arrays from/to str storage managers (for binary files).
-//:	IntegrityCheck = "GeoDmsVersion() >= 6.011"
 {
 	container ConfigSettings : IsHidden = "True"
 	{		
@@ -30,6 +20,8 @@ container Luisetta
 				
 	#include <JrcFactorDataTempl.dms>
 	
+	container JrcFactorData := JrcFactorDataTempl(Geography/Lambert100mgrid);
+	
 	#include <Parameters.dms>
 
 	container LandUseModels: Using = "Units;Geography;Classifications", isHidden = "True"
@@ -39,11 +31,16 @@ container Luisetta
 		
 		#include <JrcClueWrap.dms>
 	}
+	#include <Runs.dms>
+	
+	container GenerateAllLandSupplyCurves
+	{
+		parameter<string> Generate2020 := 'Ready', ExplicitSuppliers = "=AsList('Runs/'+Parameters/Meta/Run/Name+'/TimeSteps/P2020/ResultingState/OutputGeneration/SupplyCurves/GenerateAllCurves', ';')";
+	}
 	container GenerateAllLandPairSupplyCurves
 	{
 		parameter<string> Generate2020 := 'Ready', ExplicitSuppliers = "=AsList('Runs/'+Parameters/Meta/Run/Name+'/TimeSteps/P2020/ResultingState/OutputGeneration/CrossSupplyCurves/GenerateAllCurves', ';')";
 	}
-	#include <Runs.dms>
 	container CompareResultsContainer;
 	#include <GenerateEU.dms>
 	#include <Templates.dms>

@@ -1,241 +1,242 @@
-container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
+container CAPTemplate
 {
-	Template getCAPLocSpecs {	
+	Template getCAPLocSpecs 
+	{	
 		unit<uint16> Zones         := RunRegions/UnitSets/RunAreas;
-		container DataContainer    := CaseData/PrepareVariables/LoadSpatialData;
-		container VariableContainer:= CaseData/PrepareVariables/Variables;
+		container DataContainer    := CaseData/JrcFactorData/PrepareData/LoadSpatialData;
+		container VariableContainer:= CaseData/JrcFactorData/PrepareData/Variables;
 		
 		
 		//unit<uint32> lfaRef: expr = "DataContainer/lfa/inFile" {
 
-			////attribute<string> LFA_comb2: expr = "PrepareVariables/LoadSpatialData/lfa/inFile/LFA_comb2";
-			//attribute<bool> art18_all: Expr = "LFA_comb2 = 'TNN' ||LFA_comb2 = 'PNN' || LFA_comb2 ='PNP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
-			//attribute<bool> art18_totally: Expr = "LFA_comb2 = 'TNN'";
-			//attribute<bool> art18_partially: Expr = "LFA_comb2 = 'PNN' || LFA_comb2 ='PNP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
-			//attribute<bool> art19_all: Expr = "LFA_comb2 = 'NTN' || LFA_comb2 = 'NPN' || LFA_comb2 ='NPP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
-			//attribute<bool> art19_totally: Expr = "LFA_comb2 = 'NTN'";
-			//attribute<bool> art19_partially: Expr = "LFA_comb2 = 'NPN' || LFA_comb2 ='NPP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
-			//attribute<bool> art20_all: Expr = "LFA_comb2 = 'NNT' || LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP'";
-			//attribute<bool> art20_totally: Expr = "LFA_comb2 = 'NNT'";
-			//attribute<bool> art20_partially: Expr = "LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP'";
+			////attribute<string> LFA_comb2: expr = "DataContainer/lfa/inFile/LFA_comb2";
+			//attribute<bool> art18_all := LFA_comb2 = 'TNN' ||LFA_comb2 = 'PNN' || LFA_comb2 ='PNP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP';
+			//attribute<bool> art18_totally := LFA_comb2 = 'TNN';
+			//attribute<bool> art18_partially := LFA_comb2 = 'PNN' || LFA_comb2 ='PNP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP';
+			//attribute<bool> art19_all := LFA_comb2 = 'NTN' || LFA_comb2 = 'NPN' || LFA_comb2 ='NPP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP';
+			//attribute<bool> art19_totally := LFA_comb2 = 'NTN';
+			//attribute<bool> art19_partially := LFA_comb2 = 'NPN' || LFA_comb2 ='NPP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP';
+			//attribute<bool> art20_all := LFA_comb2 = 'NNT' || LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP';
+			//attribute<bool> art20_totally := LFA_comb2 = 'NNT';
+			//attribute<bool> art20_partially := LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP';
 		//}
 		
 
-		unit<uint32> lfaRefsel: expr = "DataContainer/lfa_sel/inFile" {
-		//unit<uint32> lfa_sel: Expr = "= lfaRefsel" {
-			//attribute<string> LFA_comb2: expr = "PrepareVariables/LoadSpatialData/lfa_sel/inFile/LFA_comb2";
-			attribute<bool> art18_all: Expr = "LFA_comb2 = 'TNN' ||LFA_comb2 = 'PNN' || LFA_comb2 ='PNP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
-			attribute<bool> art18_totally: Expr = "LFA_comb2 = 'TNN'";
-			attribute<bool> art18_partially: Expr = "LFA_comb2 = 'PNN' || LFA_comb2 ='PNP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
-			attribute<bool> art19_all: Expr = "LFA_comb2 = 'NTN' || LFA_comb2 = 'NPN' || LFA_comb2 ='NPP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
-			attribute<bool> art19_totally: Expr = "LFA_comb2 = 'NTN'";
-			attribute<bool> art19_partially: Expr = "LFA_comb2 = 'NPN' || LFA_comb2 ='NPP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP'";
-			attribute<bool> art20_all: Expr = "LFA_comb2 = 'NNT' || LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP'";
-			attribute<bool> art20_totally: Expr = "LFA_comb2 = 'NNT'";
-			attribute<bool> art20_partially: Expr = "LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP'";
+		unit<uint32> lfaRefsel := DataContainer/lfa_sel/inFile {
+		//unit<uint32> lfa_sel:= =lfaRefsel {
+			//attribute<string> LFA_comb2:=DataContainer/lfa_sel/inFile/LFA_comb2;
+			attribute<bool> art18_all       := LFA_comb2 = 'TNN' ||LFA_comb2 = 'PNN' || LFA_comb2 ='PNP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP';
+			attribute<bool> art18_totally   := LFA_comb2 = 'TNN';
+			attribute<bool> art18_partially := LFA_comb2 = 'PNN' || LFA_comb2 ='PNP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP';
+			attribute<bool> art19_all       := LFA_comb2 = 'NTN' || LFA_comb2 = 'NPN' || LFA_comb2 ='NPP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP';
+			attribute<bool> art19_totally   := LFA_comb2 = 'NTN';
+			attribute<bool> art19_partially := LFA_comb2 = 'NPN' || LFA_comb2 ='NPP' || LFA_comb2 ='PPN' || LFA_comb2 ='PPP';
+			attribute<bool> art20_all       := LFA_comb2 = 'NNT' || LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP';
+			attribute<bool> art20_totally   := LFA_comb2 = 'NNT';
+			attribute<bool> art20_partially := LFA_comb2 = 'NNP' || LFA_comb2 ='NPP' || LFA_comb2 ='PNP' || LFA_comb2 ='PPP';
 		}
 		 
-		unit<uint32> ancRef2016: expr = "DataContainer/anc_2016/inFile" {
-			attribute<bool> art32_1a_all: Expr = "ANC = 'TNN' ||ANC = 'PNN' || ANC ='PNP' || ANC ='PPN' || ANC ='PPP'";
-			attribute<bool> art32_1a_totally: Expr = "ANC = 'TNN'";
-			attribute<bool> art32_1a_partially: Expr = "ANC = 'PNN' || ANC ='PNP' || ANC ='PPN' || ANC ='PPP'";
-			attribute<bool> art32_1c_all: Expr = "ANC = 'NTN' || ANC = 'NPN' || ANC ='NPP' || ANC ='PPN' || ANC ='PPP'";
-			attribute<bool> art32_1c_totally: Expr = "ANC = 'NTN'";
-			attribute<bool> art32_1c_partially: Expr = "ANC = 'NPN' || ANC ='NPP' || ANC ='PPN' || ANC ='PPP'";
-			attribute<bool> art32_1b_all: Expr = "ANC = 'NNT' || ANC = 'NNP' || ANC ='NPP' || ANC ='PNP' || ANC ='PPP'";
-			attribute<bool> art32_1b_totally: Expr = "ANC = 'NNT'";
-			attribute<bool> art32_1b_partially: Expr = "ANC = 'NNP' || ANC ='NPP' || ANC ='PNP'";
+		unit<uint32> ancRef2016 := DataContainer/anc_2016/inFile {
+			attribute<bool> art32_1a_all       := ANC = 'TNN' ||ANC = 'PNN' || ANC ='PNP' || ANC ='PPN' || ANC ='PPP';
+			attribute<bool> art32_1a_totally   := ANC = 'TNN';
+			attribute<bool> art32_1a_partially := ANC = 'PNN' || ANC ='PNP' || ANC ='PPN' || ANC ='PPP';
+			attribute<bool> art32_1c_all       := ANC = 'NTN' || ANC = 'NPN' || ANC ='NPP' || ANC ='PPN' || ANC ='PPP';
+			attribute<bool> art32_1c_totally   := ANC = 'NTN';
+			attribute<bool> art32_1c_partially := ANC = 'NPN' || ANC ='NPP' || ANC ='PPN' || ANC ='PPP';
+			attribute<bool> art32_1b_all       := ANC = 'NNT' || ANC = 'NNP' || ANC ='NPP' || ANC ='PNP' || ANC ='PPP';
+			attribute<bool> art32_1b_totally   := ANC = 'NNT';
+			attribute<bool> art32_1b_partially := ANC = 'NNP' || ANC ='NPP' || ANC ='PNP';
 		}
 		
-		unit<uint32> ancRef2019: expr = "DataContainer/anc_2019/inFile" {
-			attribute<bool> art32_1a_all: Expr = "ANC = 'TNN' ||ANC = 'PNN' || ANC ='PNP' || ANC ='PPN' || ANC ='PPP'";
-			attribute<bool> art32_1a_totally: Expr = "ANC = 'TNN'";
-			attribute<bool> art32_1a_partially: Expr = "ANC = 'PNN' || ANC ='PNP' || ANC ='PPN' || ANC ='PPP'";
-			attribute<bool> art32_1c_all: Expr = "ANC = 'NTN' || ANC = 'NPN' || ANC ='NPP' || ANC ='PPN' || ANC ='PPP'";
-			attribute<bool> art32_1c_totally: Expr = "ANC = 'NTN'";
-			attribute<bool> art32_1c_partially: Expr = "ANC = 'NPN' || ANC ='NPP' || ANC ='PPN' || ANC ='PPP'";
-			attribute<bool> art32_1b_all: Expr = "ANC = 'NNT' || ANC = 'NNP' || ANC ='NPP' || ANC ='PNP' || ANC ='PPP'";
-			attribute<bool> art32_1b_totally: Expr = "ANC = 'NNT'";
-			attribute<bool> art32_1b_partially: Expr = "ANC = 'NNP' || ANC ='NPP' || ANC ='PNP'";
+		unit<uint32> ancRef2019 := DataContainer/anc_2019/inFile {
+			attribute<bool> art32_1a_all       := ANC = 'TNN' ||ANC = 'PNN' || ANC ='PNP' || ANC ='PPN' || ANC ='PPP';
+			attribute<bool> art32_1a_totally   := ANC = 'TNN';
+			attribute<bool> art32_1a_partially := ANC = 'PNN' || ANC ='PNP' || ANC ='PPN' || ANC ='PPP';
+			attribute<bool> art32_1c_all       := ANC = 'NTN' || ANC = 'NPN' || ANC ='NPP' || ANC ='PPN' || ANC ='PPP';
+			attribute<bool> art32_1c_totally   := ANC = 'NTN';
+			attribute<bool> art32_1c_partially := ANC = 'NPN' || ANC ='NPP' || ANC ='PPN' || ANC ='PPP';
+			attribute<bool> art32_1b_all       := ANC = 'NNT' || ANC = 'NNP' || ANC ='NPP' || ANC ='PNP' || ANC ='PPP';
+			attribute<bool> art32_1b_totally   := ANC = 'NNT';
+			attribute<bool> art32_1b_partially := ANC = 'NNP' || ANC ='NPP' || ANC ='PNP';
 		}
 		
-		container sourceData : IsHidden = "True"
+		container sourceData
 		{
 
-	//		attribute<uint32> 	lfa_grid 			(domain_grid):      Expr = "PrepareVariables/LoadSpatialData/lfa/RasterIds", FreeData = "False";
-	//		attribute<bool> art18_totally		(domain_grid): 		Expr = "lfaRef/art18_totally[lfa_grid]", DisableStorage = "True";
-	//		attribute<bool> art18_partially 	(domain_grid): 	 	Expr = "lfaRef/art18_partially[lfa_grid]", DisableStorage="True";
-	//		attribute<bool> art19_all 			(domain_grid): 		Expr = "lfaRef/art19_all[lfa_grid]", DisableStorage="True";
-	//		attribute<bool> art20_totally		(domain_grid): 		Expr = "lfaRef/art20_totally[lfa_grid]", DisableStorage = "True";
-	//		attribute<bool> art20_partially 	(domain_grid): 	 	Expr = "lfaRef/art20_partially[lfa_grid]", DisableStorage="True";		
-			attribute<bool> floodRiskMap        (domain_grid):  	Expr = "bool(DataContainer/FloodRisk/inFile/ReadData)", DisableStorage = "True";
-			attribute<bool> coastMap        	(domain_grid):   	Expr = "bool(VariableContainer/coastalZone)[domain/BasisGrid]", DisableStorage = "True";	
-	//	    attribute<JrcFactorData/ShapeData/coastalZones> cz_grid (domain_grid): expr = "poly2grid(JrcFactorData/ShapeData/coastalZones/Geometry, Geography/Lambert100mGrid)", FreeData = "False";
-			attribute<bool> buff_ndaMap (domain_grid) : 			Expr = "bool(VariableContainer/NDA)[domain/BasisGrid]", DisableStorage = "True";
-			attribute<bool> riparianAreaMap  	(domain_grid):  	Expr = "bool(DataContainer/RiparianAreas/inFile/ReadData)", DisableStorage = "True";
-			attribute<Int16> erosionRiskMap     (domain_grid):  	Expr = "int16(VariableContainer/erosionRisk)[domain/BasisGrid]", DisableStorage = "True";
-			attribute<bool> Natura2000		    (domain_grid): 	    Expr = "bool(VariableContainer/Natura2000_v2011)[domain/BasisGrid]", DisableStorage = "True";
-			attribute<bool> Natura2000_2019		(domain_grid): 	    Expr = "bool(VariableContainer/Natura2000_v2019)[domain/BasisGrid]", DisableStorage = "True";
+	//		attribute<uint32> 	lfa_grid 		(domain_grid) :=  DataContainer/lfa/RasterIds;
+	//		attribute<bool> art18_totally		(domain_grid) :=  lfaRef/art18_totally[lfa_grid];
+	//		attribute<bool> art18_partially 	(domain_grid) :=  lfaRef/art18_partially[lfa_grid], 
+	//		attribute<bool> art19_all 			(domain_grid) :=  lfaRef/art19_all[lfa_grid], 
+	//		attribute<bool> art20_totally		(domain_grid) :=  lfaRef/art20_totally[lfa_grid];
+	//		attribute<bool> art20_partially 	(domain_grid) :=  lfaRef/art20_partially[lfa_grid];
+			attribute<bool> floodRiskMap        (domain_grid) :=  bool(DataContainer/FloodRisk/inFile/ReadData);
+			attribute<bool> coastMap        	(domain_grid) :=  bool(VariableContainer/coastalZone)[domain/BasisGrid];	
+	//	    attribute<JrcFactorData/ShapeData/coastalZones> cz_grid (domain_grid) := poly2grid(JrcFactorData/ShapeData/coastalZones/Geometry, Geography/Lambert100mGrid);
+			attribute<bool> buff_ndaMap         (domain_grid) :=  bool(VariableContainer/NDA)[domain/BasisGrid];
+			attribute<bool> riparianAreaMap  	(domain_grid) :=  bool(DataContainer/RiparianAreas/inFile/ReadData);
+			attribute<Int16> erosionRiskMap     (domain_grid) :=  int16(VariableContainer/erosionRisk)[domain/BasisGrid];
+			attribute<bool> Natura2000		    (domain_grid) :=  bool(VariableContainer/Natura2000_v2011)[domain/BasisGrid];
+			attribute<bool> Natura2000_2019		(domain_grid) :=  bool(VariableContainer/Natura2000_v2019)[domain/BasisGrid];
 
 			
-			attribute<uint32> 	anc_grid_2016 	(domain_grid):      Expr = "PrepareVariables/LoadSpatialData/anc_2016/RasterIds", FreeData = "False";
-			attribute<bool> art32_1a_totally6	(domain_grid): 		Expr = "ancRef2016/art32_1a_totally6[anc_grid_2016]", DisableStorage = "True";
-			attribute<bool> art32_1a_partially6	(domain_grid): 		Expr = "ancRef2016/art32_1a_partially6[anc_grid_2016]", DisableStorage = "True";
-			attribute<bool> art32_1a_all6	(domain_grid): 		Expr = "ancRef2016/art32_1a_all6[anc_grid_2016]", DisableStorage = "True";
-			attribute<bool> art32_1b_totally6	(domain_grid): 		Expr = "ancRef2016/art32_1b_totally6[anc_grid_2016]", DisableStorage = "True";
-			attribute<bool> art32_1b_partially6	(domain_grid): 		Expr = "ancRef2016/art32_1b_partially6[anc_grid_2016]", DisableStorage = "True";
-			attribute<bool> art32_1b_all6		(domain_grid): 		Expr = "ancRef2016/art32_1b_all6[anc_grid_2016]", DisableStorage = "True";
-			attribute<bool> art32_1c_totally6	(domain_grid): 		Expr = "ancRef2016/art32_1c_totally6[anc_grid_2016]", DisableStorage = "True";
-			attribute<bool> art32_1c_partially6	(domain_grid): 		Expr = "ancRef2016/art32_1c_partially6[anc_grid_2016]", DisableStorage = "True";
-			attribute<bool> art32_1c_all6		(domain_grid): 		Expr = "ancRef2016/art32_1c_all6[anc_grid_2016]", DisableStorage = "True";	
+			attribute<uint32> 	anc_grid_2016 	(domain_grid) :=  DataContainer/anc_2016/RasterIds;
+			attribute<bool> art32_1a_totally6	(domain_grid) :=  ancRef2016/art32_1a_totally6[anc_grid_2016];
+			attribute<bool> art32_1a_partially6	(domain_grid) :=  ancRef2016/art32_1a_partially6[anc_grid_2016];
+			attribute<bool> art32_1a_all6	    (domain_grid) :=  ancRef2016/art32_1a_all6[anc_grid_2016];
+			attribute<bool> art32_1b_totally6	(domain_grid) :=  ancRef2016/art32_1b_totally6[anc_grid_2016];
+			attribute<bool> art32_1b_partially6	(domain_grid) :=  ancRef2016/art32_1b_partially6[anc_grid_2016];
+			attribute<bool> art32_1b_all6		(domain_grid) :=  ancRef2016/art32_1b_all6[anc_grid_2016];
+			attribute<bool> art32_1c_totally6	(domain_grid) :=  ancRef2016/art32_1c_totally6[anc_grid_2016];
+			attribute<bool> art32_1c_partially6	(domain_grid) :=  ancRef2016/art32_1c_partially6[anc_grid_2016];
+			attribute<bool> art32_1c_all6		(domain_grid) :=  ancRef2016/art32_1c_all6[anc_grid_2016];	
 
-			attribute<uint32> 	anc_grid_2019 	(domain_grid):      Expr = "PrepareVariables/LoadSpatialData/anc_2019/RasterIds", FreeData = "False";
-			attribute<bool> art32_1a_totally	(domain_grid): 		Expr = "ancRef2019/art32_1a_totally[anc_grid_2019]", DisableStorage = "True";
-			attribute<bool> art32_1a_partially	(domain_grid): 		Expr = "ancRef2019/art32_1a_partially[anc_grid_2019]", DisableStorage = "True";
-			attribute<bool> art32_1a_all		(domain_grid): 		Expr = "ancRef2019/art32_1a_all[anc_grid_2019]", DisableStorage = "True";
-			attribute<bool> art32_1b_totally	(domain_grid): 		Expr = "ancRef2019/art32_1b_totally[anc_grid_2019]", DisableStorage = "True";
-			attribute<bool> art32_1b_partially	(domain_grid): 		Expr = "ancRef2019/art32_1b_partially[anc_grid_2019]", DisableStorage = "True";
-			attribute<bool> art32_1b_all		(domain_grid): 		Expr = "ancRef2019/art32_1b_all[anc_grid_2019]", DisableStorage = "True";
-			attribute<bool> art32_1c_totally	(domain_grid): 		Expr = "ancRef2019/art32_1c_totally[anc_grid_2019]", DisableStorage = "True";
-			attribute<bool> art32_1c_partially	(domain_grid): 		Expr = "ancRef2019/art32_1c_partially[anc_grid_2019]", DisableStorage = "True";
-			attribute<bool> art32_1c_all		(domain_grid): 		Expr = "ancRef2019/art32_1c_all[anc_grid_2019]", DisableStorage = "True";						
+			attribute<uint32> 	anc_grid_2019 	(domain_grid) :=  DataContainer/anc_2019/RasterIds;
+			attribute<bool> art32_1a_totally	(domain_grid) :=  ancRef2019/art32_1a_totally[anc_grid_2019];
+			attribute<bool> art32_1a_partially	(domain_grid) :=  ancRef2019/art32_1a_partially[anc_grid_2019];
+			attribute<bool> art32_1a_all		(domain_grid) :=  ancRef2019/art32_1a_all[anc_grid_2019];
+			attribute<bool> art32_1b_totally	(domain_grid) :=  ancRef2019/art32_1b_totally[anc_grid_2019];
+			attribute<bool> art32_1b_partially	(domain_grid) :=  ancRef2019/art32_1b_partially[anc_grid_2019];
+			attribute<bool> art32_1b_all		(domain_grid) :=  ancRef2019/art32_1b_all[anc_grid_2019];
+			attribute<bool> art32_1c_totally	(domain_grid) :=  ancRef2019/art32_1c_totally[anc_grid_2019];
+			attribute<bool> art32_1c_partially	(domain_grid) :=  ancRef2019/art32_1c_partially[anc_grid_2019];
+			attribute<bool> art32_1c_all		(domain_grid) :=  ancRef2019/art32_1c_all[anc_grid_2019];						
 			
-			attribute<uint32> 	lfa_sel_grid 	(domain_grid):      Expr = "PrepareVariables/LoadSpatialData/lfa_sel/RasterIds", FreeData = "False";
-			attribute<bool> art18_totally	(domain_grid): 		Expr = "lfaRefsel/art18_totally[lfa_sel_grid]", DisableStorage = "True";
-			attribute<bool> art18_partially	(domain_grid): 		Expr = "lfaRefsel/art18_partially[lfa_sel_grid]", DisableStorage = "True";
-			attribute<bool> art18_all		(domain_grid): 		Expr = "lfaRefsel/art18_all[lfa_sel_grid]", DisableStorage = "True";
-			attribute<bool> art19_totally	(domain_grid): 		Expr = "lfaRefsel/art19_totally[lfa_sel_grid]", DisableStorage = "True";
-			attribute<bool> art19_partially	(domain_grid): 		Expr = "lfaRefsel/art19_partially[lfa_sel_grid]", DisableStorage = "True";
-			attribute<bool> art19_all		(domain_grid): 		Expr = "lfaRefsel/art19_all[lfa_sel_grid]", DisableStorage = "True";
-			attribute<bool> art20_totally	(domain_grid): 		Expr = "lfaRefsel/art20_totally[lfa_sel_grid]", DisableStorage = "True";
-			attribute<bool> art20_partially	(domain_grid): 		Expr = "lfaRefsel/art20_partially[lfa_sel_grid]", DisableStorage = "True";
-			attribute<bool> art20_all		(domain_grid): 		Expr = "lfaRefsel/art20_all[lfa_sel_grid]", DisableStorage = "True";
+			attribute<uint32> 	lfa_sel_grid 	(domain_grid) :=  DataContainer/lfa_sel/RasterIds;
+			attribute<bool> art18_totally   	(domain_grid) :=  lfaRefsel/art18_totally[lfa_sel_grid];
+			attribute<bool> art18_partially		(domain_grid) :=  lfaRefsel/art18_partially[lfa_sel_grid];
+			attribute<bool> art18_all			(domain_grid) :=  lfaRefsel/art18_all[lfa_sel_grid];
+			attribute<bool> art19_totally		(domain_grid) :=  lfaRefsel/art19_totally[lfa_sel_grid];
+			attribute<bool> art19_partially		(domain_grid) :=  lfaRefsel/art19_partially[lfa_sel_grid];
+			attribute<bool> art19_all			(domain_grid) :=  lfaRefsel/art19_all[lfa_sel_grid];
+			attribute<bool> art20_totally		(domain_grid) :=  lfaRefsel/art20_totally[lfa_sel_grid];
+			attribute<bool> art20_partially		(domain_grid) :=  lfaRefsel/art20_partially[lfa_sel_grid];
+			attribute<bool> art20_all			(domain_grid) :=  lfaRefsel/art20_all[lfa_sel_grid];
 	
 			
 			//GAECS
-			attribute<bool> IsGrassland    (domain_grid): expr = "Classifications/LU/GAEC_classes/Bools/isNaturalGrass[PrepareVariables/CorineGrid]" , DisableStorage = "True";
-			attribute<bool> IsOlive        (domain_grid): expr = "Classifications/LU/GAEC_classes/Bools/isOlives[PrepareVariables/CorineGrid]", DisableStorage = "True";
-			attribute<bool> IsPasture      (domain_grid): expr = "Classifications/LU/GAEC_classes/Bools/isPastures[PrepareVariables/CorineGrid]" , DisableStorage = "True";
-			attribute<bool> IsAgroFor      (domain_grid): expr = "Classifications/LU/GAEC_classes/Bools/isAgroForestry[PrepareVariables/CorineGrid]" , DisableStorage = "True";	
-			attribute<bool> IsHeterogArable(domain_grid): expr = "Classifications/LU/GAEC_classes/Bools/isComplexCultiv[PrepareVariables/CorineGrid] || Classifications/LU/GAEC_classes/Bools/isMixedAgri[PrepareVariables/CorineGrid]", DisableStorage = "True";
+			attribute<bool> IsGrassland    (domain_grid) := Classifications/LU/GAEC_classes/Bools/isNaturalGrass[JrcFactorData/PrepareData/CorineGrid] ;
+			attribute<bool> IsOlive        (domain_grid) := Classifications/LU/GAEC_classes/Bools/isOlives[JrcFactorData/PrepareData/CorineGrid];
+			attribute<bool> IsPasture      (domain_grid) := Classifications/LU/GAEC_classes/Bools/isPastures[JrcFactorData/PrepareData/CorineGrid] ;
+			attribute<bool> IsAgroFor      (domain_grid) := Classifications/LU/GAEC_classes/Bools/isAgroForestry[JrcFactorData/PrepareData/CorineGrid] ;	
+			attribute<bool> IsHeterogArable(domain_grid) := (Classifications/LU/GAEC_classes/Bools/isComplexCultiv || Classifications/LU/GAEC_classes/Bools/isMixedAgri)[JrcFactorData/PrepareData/CorineGrid];
 																				
 			 //NECR                                                                  
-			 attribute<UInt32> NECR_Map   (domain_grid): expr = "UInt32(DataContainer/SuitabilityMapNECR/inFile/ReadData < uint8(100) ? uint32(DataContainer/SuitabilityMapNECR/inFile/ReadData): uint32(0))" , DisableStorage = "True"; 
-			 attribute<uint8> IsPeatlands (domain_grid): expr = "uint8(VariableContainer/IsPeatlands)[domain/BasisGrid]" , DisableStorage = "True";                                                                    
-			 attribute<uint8> salinity    (domain_grid): expr = "uint8(DataContainer/salinity2/inFile/ReadData)" , DisableStorage = "True";  
-			 attribute<uint16> Erodibility(domain_grid): expr = "DataContainer/Erodibility/inFile/ReadData" , DisableStorage = "True";
-			 attribute<bool> CDDA         (domain_grid): Expr = "bool(VariableContainer/NDA)[domain/BasisGrid]", DisableStorage = "True";
-			 attribute<uint8> Pot_Contamnated (domain_grid): Expr = "uint8(VariableContainer/IsContaminated)[domain/BasisGrid]", DisableStorage = "True";
+			 attribute<UInt32> NECR_Map   (domain_grid) := UInt32(DataContainer/SuitabilityMapNECR/inFile/ReadData < uint8(100) ? uint32(DataContainer/SuitabilityMapNECR/inFile/ReadData): uint32(0)) ; 
+			 attribute<uint8> IsPeatlands (domain_grid) := uint8(VariableContainer/IsPeatlands)[domain/BasisGrid] ;                                                                    
+			 attribute<uint8> salinity    (domain_grid) := uint8(DataContainer/salinity2/inFile/ReadData) ;  
+			 attribute<uint16> Erodibility(domain_grid) := DataContainer/Erodibility/inFile/ReadData ;
+			 attribute<bool> CDDA         (domain_grid) := bool(VariableContainer/NDA)[domain/BasisGrid];
+			 attribute<uint8> Pot_Contamnated (domain_grid) := uint8(VariableContainer/IsContaminated)[domain/BasisGrid];
 		}
 		
 		container ExTemplate
 		{
-			attribute<RunRegions/UnitSets/RunAreas> RegionGrid	(domain_grid):  expr = "RunRegions/RasterSets/RunAreas";
+			attribute<RunRegions/UnitSets/RunAreas> RegionGrid	(domain_grid) := RunRegions/RasterSets/RunAreas;
 
-	//		attribute<uint16>  JrcRegionId  (RegionDomain): Expr= "id(RunRegions/UnitSets/RunAreas)";
+	//		attribute<uint16>  JrcRegionId  (RegionDomain) := id(RunRegions/UnitSets/RunAreas);
 			
 			//FOR ARTICLE 16 and Natura2000_2019
-			attribute<bool>    Natura2000_agri  (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Natura2kAgri[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
-			attribute<bool>    Natura2000_forest(RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Natura2kFor[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]"; 
+			attribute<bool>    Natura2000_agri  (RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_Natura2kAgri[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
+			attribute<bool>    Natura2000_forest(RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_Natura2kFor[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]; 
 			
 
 			
 			//FOR ARTICLE 18 and 32_1a   CRITERIA
-			attribute<int16>   MaxElev      	(RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_MaxElev[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
-			attribute<int16>   MaxSlope    	 (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_MaxSlope[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
-			attribute<int16>   Elev4Comb   	 (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Elev4Comb[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
-			attribute<int16>   Slope4Comb  	 (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Slope4Comb[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
+			attribute<int16>   MaxElev      	(RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_MaxElev[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
+			attribute<int16>   MaxSlope    	 (RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_MaxSlope[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
+			attribute<int16>   Elev4Comb   	 (RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_Elev4Comb[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
+			attribute<int16>   Slope4Comb  	 (RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_Slope4Comb[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
 			//FOR ARTICLE 20 and 32_1b CRITERIA
-			attribute<units/tonne_ha>   MinErosionRisk(RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Erosion[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
-			attribute<bool>    floodRisk    (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_FloodRisk[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
-			attribute<bool>    coastalZone  (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Coast[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
-			attribute<bool>    ndaBuffer500 (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Nda[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
-			attribute<bool>    riparian     (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Riparian[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
+			attribute<units/tonne_ha>   MinErosionRisk(RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_Erosion[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
+			attribute<bool>    floodRisk    (RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_FloodRisk[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
+			attribute<bool>    coastalZone  (RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_Coast[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
+			attribute<bool>    ndaBuffer500 (RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_Nda[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
+			attribute<bool>    riparian     (RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_Riparian[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
 			//FOR GAEC CRITERIA
-			attribute<bool>    Grassland    (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Grassland[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
-			attribute<bool>    Olive        (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Olive[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
-			attribute<bool>    Pasture      (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_Pasture[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
-			attribute<bool>    AgroFor      (RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_AgroFor[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
-			attribute<bool>    HeterogArable(RunRegions/UnitSets/RunAreas): Expr= "CAPCaseData/Nuts0_HeterogAra[RunRegions/UnitSets/RunAreas/Nr_OrgEntity]";
+			attribute<bool>    Grassland    (RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_Grassland[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
+			attribute<bool>    Olive        (RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_Olive[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
+			attribute<bool>    Pasture      (RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_Pasture[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
+			attribute<bool>    AgroFor      (RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_AgroFor[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
+			attribute<bool>    HeterogArable(RunRegions/UnitSets/RunAreas) := CAPCaseData/Nuts0_HeterogAra[RunRegions/UnitSets/RunAreas/Nr_OrgEntity];
 
-			attribute<bool>    maxElev_isok    	  (domain_grid):  expr = "JrcFactorData/TiffData/Eu27_e/ReadData > MaxElev[RegionGrid]";
-			attribute<bool>    maxSlope_isok   	  (domain_grid):  expr = "JrcFactorData/TiffData/slope_continuous/ReadData > MaxSlope[RegionGrid]";
-			attribute<bool>    maxElev_Slope_ok   (domain_grid):  expr = "maxElev_isok && maxSlope_isok";
-			attribute<bool>    ElevSlopeComb_isok (domain_grid):  expr = "JrcFactorData/TiffData/Eu27_e/ReadData > Elev4Comb[RegionGrid] && JrcFactorData/TiffData/slope_continuous/ReadData > Slope4Comb[RegionGrid]";
-			attribute<bool>    ErosionRisk_isok	  (domain_grid):  expr = "JrcFactorData/TiffData/erosionRisk/erosionRisk > MinErosionRisk[RegionGrid]";
+			attribute<bool>    maxElev_isok    	  (domain_grid) := JrcFactorData/TiffData/Eu27_e/ReadData > MaxElev[RegionGrid];
+			attribute<bool>    maxSlope_isok   	  (domain_grid) := JrcFactorData/TiffData/slope_continuous/ReadData > MaxSlope[RegionGrid];
+			attribute<bool>    maxElev_Slope_ok   (domain_grid) := maxElev_isok && maxSlope_isok;
+			attribute<bool>    ElevSlopeComb_isok (domain_grid) := JrcFactorData/TiffData/Eu27_e/ReadData > Elev4Comb[RegionGrid] && JrcFactorData/TiffData/slope_continuous/ReadData > Slope4Comb[RegionGrid];
+			attribute<bool>    ErosionRisk_isok	  (domain_grid) := JrcFactorData/TiffData/erosionRisk/erosionRisk > MinErosionRisk[RegionGrid];
 			
-			attribute<int8> Art16Agri(domain_grid): expr = "SourceData/Natura2000_2019 && Natura2000_agri[RegionGrid] ? int8(35) : int8(0)";
-			attribute<int8> Art16For (domain_grid): expr = "SourceData/Natura2000_2019 && Natura2000_forest[RegionGrid] ? int8(35) : int8(0)";
+			attribute<int8> Art16Agri(domain_grid) := SourceData/Natura2000_2019 && Natura2000_agri[RegionGrid] ? int8(35) : int8(0);
+			attribute<int8> Art16For (domain_grid) := SourceData/Natura2000_2019 && Natura2000_forest[RegionGrid] ? int8(35) : int8(0);
 			
-			attribute<int8> Art18Areas (domain_grid): expr = 
-				"switch("
-					"case(SourceData/art18_totally, int8(15)), "
-					"case(SourceData/art18_partially && maxElev_Slope_ok, int8(35)), "
-					"case(SourceData/art18_partially && ElevSlopeComb_isok, int8(35)), "
-					"case(SourceData/art18_partially, int8(15)), "
-					"int8(0)"
-				")";
+			attribute<int8> Art18Areas (domain_grid) := 
+				switch(
+					case(SourceData/art18_totally, int8(15)), 
+					case(SourceData/art18_partially && maxElev_Slope_ok, int8(35)), 
+					case(SourceData/art18_partially && ElevSlopeComb_isok, int8(35)), 
+					case(SourceData/art18_partially, int8(15)), 
+					int8(0)
+				);
 			// new code 2021/05/26
-			attribute<int8> Art321aAreas (domain_grid): expr = 
-				"switch("
-					"case(SourceData/art32_1a_totally, int8(15)), "
-					"case(SourceData/art32_1a_partially && maxElev_Slope_ok, int8(35)), "
-					"case(SourceData/art32_1a_partially && ElevSlopeComb_isok, int8(35)), "
-					"case(SourceData/art32_1a_partially, int8(15)), "
-					"int8(0)"
-				")";
-			attribute<int8> Art19Areas(domain_grid): expr =
-				"SourceData/art19_all ? int8(35) : int8(0)";
+			attribute<int8> Art321aAreas (domain_grid) := 
+				switch(
+					case(SourceData/art32_1a_totally, int8(15)), 
+					case(SourceData/art32_1a_partially && maxElev_Slope_ok, int8(35)), 
+					case(SourceData/art32_1a_partially && ElevSlopeComb_isok, int8(35)), 
+					case(SourceData/art32_1a_partially, int8(15)), 
+					int8(0)
+				);
+			attribute<int8> Art19Areas(domain_grid) := 
+				SourceData/art19_all ? int8(35) : int8(0);
 				
 			// new code 2021/05/26
-			attribute<int8> Art321cAreas(domain_grid): expr =
-				"SourceData/art32_1c_all ? int8(35) : int8(0)";
+			attribute<int8> Art321cAreas(domain_grid) := 
+				SourceData/art32_1c_all ? int8(35) : int8(0);
 			
-			attribute<int8> Art20Areas(domain_grid): expr = 
-				"switch("
-					"case(SourceData/art20_totally, int8(35)), "
-					"case(SourceData/art20_partially && ErosionRisk_isok ,int8(35)),"
-					"case(SourceData/art20_partially && SourceData/floodRiskMap    && floodRisk[RegionGrid],    int8(35)),"
-					"case(SourceData/art20_partially && SourceData/coastMap        && coastalZone[RegionGrid],  int8(35)), "
-					"case(SourceData/art20_partially && SourceData/buff_ndaMap     && ndaBuffer500[RegionGrid], int8(35)),"
-					"case(SourceData/art20_partially && SourceData/riparianAreaMap && riparian[RegionGrid],     int8(35)),"
-					"case(SourceData/art20_partially, int8(25)), "
-					"int8(0)"
-				")";
+			attribute<int8> Art20Areas(domain_grid) := 
+				switch(
+					case(SourceData/art20_totally, int8(35)), 
+					case(SourceData/art20_partially && ErosionRisk_isok ,int8(35)),
+					case(SourceData/art20_partially && SourceData/floodRiskMap    && floodRisk[RegionGrid],    int8(35)),
+					case(SourceData/art20_partially && SourceData/coastMap        && coastalZone[RegionGrid],  int8(35)), 
+					case(SourceData/art20_partially && SourceData/buff_ndaMap     && ndaBuffer500[RegionGrid], int8(35)),
+					case(SourceData/art20_partially && SourceData/riparianAreaMap && riparian[RegionGrid],     int8(35)),
+					case(SourceData/art20_partially, int8(25)), 
+					int8(0)
+				);
 			// new code 2021/05/26
-			attribute<int8> Art321bAreas(domain_grid): expr = 
-				"switch("
-					"case(SourceData/art32_1b_totally, int8(35)), "
-					"case(SourceData/art32_1b_partially && ErosionRisk_isok ,int8(35)),"
-					"case(SourceData/art32_1b_partially && SourceData/floodRiskMap    && floodRisk[RegionGrid],    int8(35)),"
-					"case(SourceData/art32_1b_partially && SourceData/coastMap        && coastalZone[RegionGrid],  int8(35)), "
-					"case(SourceData/art32_1b_partially && SourceData/buff_ndaMap     && ndaBuffer500[RegionGrid], int8(35)),"
-					"case(SourceData/art32_1b_partially && SourceData/riparianAreaMap && riparian[RegionGrid],     int8(35)),"
-					"case(SourceData/art32_1b_partially, int8(25)), "
-					"int8(0)"
-				")";
-			attribute<int8> AvgArableSuitab (domain_grid) : expr = "JrcFactorData/TiffData/FibonacciArableClassif/ReadDataint8";
+			attribute<int8> Art321bAreas(domain_grid) := 
+				switch(
+					case(SourceData/art32_1b_totally, int8(35)), 
+					case(SourceData/art32_1b_partially && ErosionRisk_isok ,int8(35)),
+					case(SourceData/art32_1b_partially && SourceData/floodRiskMap    && floodRisk[RegionGrid],    int8(35)),
+					case(SourceData/art32_1b_partially && SourceData/coastMap        && coastalZone[RegionGrid],  int8(35)), 
+					case(SourceData/art32_1b_partially && SourceData/buff_ndaMap     && ndaBuffer500[RegionGrid], int8(35)),
+					case(SourceData/art32_1b_partially && SourceData/riparianAreaMap && riparian[RegionGrid],     int8(35)),
+					case(SourceData/art32_1b_partially, int8(25)), 
+					int8(0)
+				);
+			attribute<int8> AvgArableSuitab (domain_grid)  := JrcFactorData/TiffData/FibonacciArableClassif/ReadDataint8;
 
-	//		attribute<int8> gaecGrassland(domain_grid): expr = 
-	//			"SourceData/IsGrassland && Grassland ? int8(35) : int8(0)";
-			attribute<int8> gaecOlive  (domain_grid): expr = "SourceData/IsOlive   && Olive  [RegionGrid] ? int8(35) : int8(0)";	
-			attribute<int8> gaecPasture(domain_grid): expr = "SourceData/IsPasture && Pasture[RegionGrid] ? int8(35) : int8(0)";
+	//		attribute<int8> gaecGrassland(domain_grid) := 
+	//			SourceData/IsGrassland && Grassland ? int8(35) : int8(0);
+			attribute<int8> gaecOlive  (domain_grid) := SourceData/IsOlive   && Olive  [RegionGrid] ? int8(35) : int8(0);	
+			attribute<int8> gaecPasture(domain_grid) := SourceData/IsPasture && Pasture[RegionGrid] ? int8(35) : int8(0);
 			
 			// new code 2021/05/26
-			attribute<int8> LocSpecsAra  (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art321aAreas, Art19Areas,Art321cAreas, Art20Areas, Art321bAreas, AvgArableSuitab)";
-			attribute<int8> LocSpecsPast (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art321aAreas, Art19Areas,Art321cAreas, Art20Areas, Art321bAreas,  gaecPasture)";
-			attribute<int8> LocSpecsPC   (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art321aAreas, Art19Areas,Art321cAreas, Art20Areas, Art321bAreas, gaecOlive)";
-			//     		 attribute<int8> LocSpecsSNV  (domain_grid): expr = "max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas, gaecGrassland)";
+			attribute<int8> LocSpecsAra  (domain_grid) := max_elem(Art16Agri, Art18Areas, Art321aAreas, Art19Areas,Art321cAreas, Art20Areas, Art321bAreas, AvgArableSuitab);
+			attribute<int8> LocSpecsPast (domain_grid) := max_elem(Art16Agri, Art18Areas, Art321aAreas, Art19Areas,Art321cAreas, Art20Areas, Art321bAreas,  gaecPasture);
+			attribute<int8> LocSpecsPC   (domain_grid) := max_elem(Art16Agri, Art18Areas, Art321aAreas, Art19Areas,Art321cAreas, Art20Areas, Art321bAreas, gaecOlive);
+			//     		 attribute<int8> LocSpecsSNV  (domain_grid) := max_elem(Art16Agri, Art18Areas, Art19Areas, Art20Areas, gaecGrassland);
 			
-			attribute<bool> areLocSpecsUAA(domain_grid): expr = "LocSpecsAra + LocSpecsPast + LocSpecsPC > int8(1)";
-		//	attribute<int8> LocSpecsNecr  (domain_grid): expr = "switch("
-		//			"case(!areLocSpecsUAA && (SourceData/erosionRiskMap > 1[Int16]), int8(35)),"
-		//			" int8(0)"
-		//		")";
-			attribute<int8> LocSpecsFor  (domain_grid): expr = "Art16For";
+			attribute<bool> areLocSpecsUAA(domain_grid) := LocSpecsAra + LocSpecsPast + LocSpecsPC > int8(1);
+		//	attribute<int8> LocSpecsNecr  (domain_grid) := switch(
+		//			case(!areLocSpecsUAA && (SourceData/erosionRiskMap > 1[Int16]), int8(35)),
+		//			 int8(0)
+		//		);
+			attribute<int8> LocSpecsFor  (domain_grid) := Art16For;
 		}
 
-		container CAPCaseData: IsHidden="True"
+		container CAPCaseData
 		{
 			//ART 16 and New NATURA2000_2019
 			attribute<bool> Nuts0_Natura2kAgri (Geography/Regions/RunAreas):
@@ -280,39 +281,39 @@ container CAPTemplate: IntegrityCheck = "GeoDmsVersion() >= 7.021"
 
 		container LOCSPECS
 		{
-			attribute<int8> LocSpecsAra (domain_grid): expr = "ExTemplate/LocSpecsAra";
-		//	attribute<int8> written_LocSpecsAra (domain_grid): expr= "LocSpecsAra",
-		//		StorageName = "%LocalDataDir%/100m/LocSpecsAra.tif";
-		//	attribute<int8> read_LocSpecsAra (domain_grid): StorageReadOnly = "True",
-		//		StorageName = "%LocalDataDir%/100m/LocSpecsAra.tif";
+			attribute<int8> LocSpecsAra (domain_grid) := ExTemplate/LocSpecsAra;
+		//	attribute<int8> written_LocSpecsAra (domain_grid) := LocSpecsAra,
+		//		StorageName = %LocalDataDir%/100m/LocSpecsAra.tif;
+		//	attribute<int8> read_LocSpecsAra (domain_grid): StorageReadOnly = True,
+		//		StorageName = %LocalDataDir%/100m/LocSpecsAra.tif;
 
-			attribute<int8> LocSpecsPC (domain_grid): expr = "ExTemplate/LocSpecsPC";
-		//	attribute<int8> written_LocSpecsPC (domain_grid): expr= "LocSpecsPC",
-		//		StorageName = "%LocalDataDir%/100m/LocSpecsPC.tif";
-		//	attribute<int8> read_LocSpecsPC (domain_grid): StorageReadOnly = "True",
-		//		StorageName = "%LocalDataDir%/100m/LocSpecsPC.tif";
+			attribute<int8> LocSpecsPC (domain_grid) := ExTemplate/LocSpecsPC;
+		//	attribute<int8> written_LocSpecsPC (domain_grid) := LocSpecsPC,
+		//		StorageName = %LocalDataDir%/100m/LocSpecsPC.tif;
+		//	attribute<int8> read_LocSpecsPC (domain_grid): StorageReadOnly = True,
+		//		StorageName = %LocalDataDir%/100m/LocSpecsPC.tif;
 
-			attribute<int8> LocSpecsPast (domain_grid): expr = "ExTemplate/LocSpecsPast";
-		//	attribute<int8> written_LocSpecsPast (domain_grid): expr = "LocSpecsPast",
-		//		StorageName = "%LocalDataDir%/100m/LocSpecsPast.tif"; 
-		//	attribute<int8> read_LocSpecsPast (domain_grid): StorageReadOnly = "True",
-		//		StorageName = "%LocalDataDir%/100m/LocSpecsPast.tif";
+			attribute<int8> LocSpecsPast (domain_grid) := ExTemplate/LocSpecsPast;
+		//	attribute<int8> written_LocSpecsPast (domain_grid) := LocSpecsPast,
+		//		StorageName = %LocalDataDir%/100m/LocSpecsPast.tif; 
+		//	attribute<int8> read_LocSpecsPast (domain_grid): StorageReadOnly = True,
+		//		StorageName = %LocalDataDir%/100m/LocSpecsPast.tif;
 				
-			attribute<int8> LocSpecsFor (domain_grid): expr = "ExTemplate/LocSpecsFor";
-		//	attribute<int8> written_LocSpecsFor (domain_grid): expr = "LocSpecsFor",
-		//		StorageName = "%LocalDataDir%/100m_CAP/LocSpecsFor.tif"; 
-		//	attribute<int8> read_LocSpecsFor (domain_grid): StorageReadOnly = "True",
-		//		StorageName = "%LocalDataDir%/100m/LocSpecsFor.tif";
+			attribute<int8> LocSpecsFor (domain_grid) := ExTemplate/LocSpecsFor;
+		//	attribute<int8> written_LocSpecsFor (domain_grid) := LocSpecsFor,
+		//		StorageName = %LocalDataDir%/100m_CAP/LocSpecsFor.tif; 
+		//	attribute<int8> read_LocSpecsFor (domain_grid): StorageReadOnly = True,
+		//		StorageName = %LocalDataDir%/100m/LocSpecsFor.tif;
 			
-			attribute<bool> areLocSpecsUAA (domain_grid): expr = "ExTemplate/areLocSpecsUAA";
+			attribute<bool> areLocSpecsUAA (domain_grid) := ExTemplate/areLocSpecsUAA;
 			
-			attribute<int8> LocSpecNecr  (domain_grid): expr = "int8(JrcFactorData/LocSpec_NECR/NECR_LocSpec)"; //!areLocSpecsUAA &&
-		//	attribute<int8> written_LocSpecsNECR (domain_grid): expr= "LocSpecNecr",
-		//		StorageName = "%LocalDataDir%/100m/LocSpecsNECR.tif";
-		//	attribute<int8> read_LocSpecsNecr (domain_grid): StorageReadOnly = "True",
-		//		StorageName = "%LocalDataDir%/100m/LocSpecsNecr.tif";
+			attribute<int8> LocSpecNecr  (domain_grid) := int8(JrcFactorData/LocSpec_NECR/NECR_LocSpec); //!areLocSpecsUAA &&
+		//	attribute<int8> written_LocSpecsNECR (domain_grid) := LocSpecNecr,
+		//		StorageName = %LocalDataDir%/100m/LocSpecsNECR.tif;
+		//	attribute<int8> read_LocSpecsNecr (domain_grid): StorageReadOnly = True,
+		//		StorageName = %LocalDataDir%/100m/LocSpecsNecr.tif;
 				
-		//	parameter<String> Generate: Expr = "'Ready'", ExplicitSuppliers = "written_LocSpecsAra;written_LocSpecsPC;written_LocSpecsPast;written_LocSpecsFor;written_LocSpecsNECR";
+		//	parameter<String> Generate := 'Ready', ExplicitSuppliers = written_LocSpecsAra;written_LocSpecsPC;written_LocSpecsPast;written_LocSpecsFor;written_LocSpecsNECR;
 		}
 	}
 }

@@ -969,6 +969,49 @@ container ModelTraits
 				,	StorageType = "str";
 			}
 			
+			container SupplyCurves {
+				unit<uint8> MT := Classifications/LU/ModelType;
+				unit<uint32> SupplyCurveKeyBase := combine(Capri, MT)
+				{
+					attribute<MT> to   := second_rel;
+					attribute<string> name := first_rel->ZoneID + '_' + second_rel->name;
+				}
+				unit<uint32> SupplyCurveKey := SupplyCurveKeyBase;
+				
+				template LandSupplyCurve {
+					parameter<MT> to;
+					parameter<Capri> Capri_rel;
+					
+					parameter<string> name;
+					
+					unit<uint8> OtherMT := select_with_org_rel(ID(MT) != to);
+					
+					attribute<int32> ScaledTransPot_from(domain) := ='max_elem('+AsItemList(replace('ScaledTransPot/@MT + d_alloc/shadow_prices/@MT[CaseData/RegionData/@CT]', '@MT', OtherMT/org_rel->name, '@CT', CaseData/DestClaimTableName[OtherMT/org_rel]))+')';
+					attribute<int32> ScaledTransPot_to  (domain) := =replace('ScaledTransPot/@MT + d_alloc/shadow_prices/@MT[CaseData/RegionData/@CT]', '@MT', to  ->name, '@CT', CaseData/DestClaimTableName[to  ]);
+					
+					attribute<int32>       SupplyPrice    (domain) := iif(CaseData/RegionData/Capri == capri_rel, ScaledTransPot_from - ScaledTransPot_to, int32(0 / 0));
+					attribute<UniquePrice> UniquePrice_rel(domain) := rlookup(SupplyPrice, UniquePrice/values);
+					
+					unit<uint32> UniquePrice := unique(SupplyPrice) {
+						attribute<int32>  values;
+						attribute<uint32> count := pcount(UniquePrice_rel);
+						attribute<uint32> cumulative := cumulate(count);
+						attribute<ipoint>  p  := point(values, int32(cumulative));
+					}
+					parameter<string> Export := 'CumulHa;Price\n'+AsList(string(UniquePrice/cumulative)+';'+string(UniquePrice/values), '\n')
+					,	StorageName = "=OutputDirName+'/RegionalLandSupply'+name+'.csv'"
+					,	StorageType = "str";
+				}
+				container LandSupplyCurves := for_each_ne(SupplyCurveKey/name
+					, replace('LandSupplyCurve(MT/V/@T, @C[Capri], @N)'
+						, '@T', SupplyCurveKey/to->name
+						, '@C', String(SupplyCurveKey/first_rel)
+						, '@N', Quote(SupplyCurveKey/name)
+					  )
+					);
+				parameter<string> GenerateAllCurves := 'Ready', ExplicitSuppliers = "=AsList('LandSupplyCurves/'+SupplyCurveKey/name+'/Export' , ';')";
+			}
+			
 			container CrossSupplyCurves {
 				unit<uint8> MT := Classifications/LU/ModelType;
 				unit<uint32> MT2 := combine(MT, MT);
@@ -985,10 +1028,6 @@ container ModelTraits
 					attribute<string> name := first_rel->ZoneID + '_' + second_rel->name;
 				}
 				unit<uint32> SupplyCurveKey := SupplyCurveKeyBase;
-//				select_with_attr_by_org_rel(SupplyCurveKeyBase
-//				, SupplyCurveKeyBase/from == MT/V/Arable || SupplyCurveKeyBase/from == MT/V/AbanArable
-//				|| SupplyCurveKeyBase/to == MT/V/Arable || SupplyCurveKeyBase/to == MT/V/AbanArable
-//				);
 				
 				template LandSupplyCurve {
 					parameter<MT> from;
@@ -1000,7 +1039,7 @@ container ModelTraits
 					attribute<int32> ScaledTransPot_from(domain) := =replace('ScaledTransPot/@MT + d_alloc/shadow_prices/@MT[CaseData/RegionData/@CT]', '@MT', from->name, '@CT', CaseData/DestClaimTableName[from]);
 					attribute<int32> ScaledTransPot_to  (domain) := =replace('ScaledTransPot/@MT + d_alloc/shadow_prices/@MT[CaseData/RegionData/@CT]', '@MT', to  ->name, '@CT', CaseData/DestClaimTableName[to  ]);
 					
-					attribute<int32>       SupplyPrice    (domain) := iif(d_alloc/landuse == from, ScaledTransPot_from - ScaledTransPot_to, int32(0 / 0));
+					attribute<int32>       SupplyPrice    (domain) := iif(d_alloc/landuse == from && CaseData/RegionData/Capri == capri_rel, ScaledTransPot_from - ScaledTransPot_to, int32(0 / 0));
 					attribute<UniquePrice> UniquePrice_rel(domain) := rlookup(SupplyPrice, UniquePrice/values);
 					
 					unit<uint32> UniquePrice := unique(SupplyPrice) {

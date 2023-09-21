@@ -13,7 +13,7 @@ template JrcClueWrap:
 	
 	// ===================== End of Required Case Parameters
 	
-	unit<uint32> domain: Expr = "CaseData/Land/FreeLandCells";
+	unit<uint32> domain := CaseData/Land/FreeLandCells;
 	
 	container ParamSet: Expr = "RunParameters/ParamSet";
 	
@@ -41,29 +41,17 @@ template JrcClueWrap:
 	#include<inRunRegions.dms>
 	
 	container CaseData
-	{
-	
-		// ============ factor data
-		container PrepareVariables {
-			attribute<Classifications/LU/Corine> CorineGrid_2012    (domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2012/inFile/ReadData];
-			attribute<Classifications/LU/Corine> CorineGrid_2018    (domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2018/inFile/ReadData];
-			attribute<Classifications/LU/Corine> CorineGrid_2018_Org(domain_grid) := invert(Classifications/Lu/Corine/CLC12_Code)[LoadSpatialData/LandUse_2018_Org/inFile/ReadData];
-			attribute<Classifications/LU/Corine> CorineGrid         (domain_grid) := MakeDefined(CorineGrid_2018, CorineGrid_2018_org, CorineGrid_2012);
-			
-			attribute<Classifications/LU/ModelType> LandUse2012Grid (domain_grid) := Classifications/LU/Corine/MT[CorineGrid_2012];
-			attribute<Classifications/LU/ModelType> LandUse2018Grid (domain_grid) := Classifications/LU/Corine/MT[CorineGrid_2018];
-			attribute<Classifications/LU/ModelType> LandUseGrid     (domain_grid) := Classifications/LU/Corine/MT[CorineGrid];
-			attribute<Classifications/LU/ModelType> landuse2012 (domain) := LandUse2012Grid[domain/grid_rel];
-			attribute<Classifications/LU/ModelType> landuse2018 (domain) := LandUse2018Grid[domain/grid_rel];
-			attribute<Classifications/LU/ModelType> landuse     (domain) := LandUseGrid    [domain/grid_rel];
+	{	
+		container JrcFactorData := JrcFactorDataTempl(domain_grid);
+		container PrepareVariables := for_each_nedv(Factors/Name, Factors/StartExpr, domain, float32)
+		{
+			attribute<Classifications/LU/ModelType> landuse2012 (domain) := JrcFactorData/PrepareData/LandUse2012Grid[domain/grid_rel];
+			attribute<Classifications/LU/ModelType> landuse2018 (domain) := JrcFactorData/PrepareData/LandUse2018Grid[domain/grid_rel];
+			attribute<Classifications/LU/ModelType> landuse     (domain) := JrcFactorData/PrepareData/LandUseGrid    [domain/grid_rel];
 			
 			attribute<Classifications/LU/Capri> CorCapri_2012(domain) := Classifications/LU/Capri/per_ModelType[landuse2012];
 			attribute<Classifications/LU/Capri> CorCapri_2018(domain) := Classifications/LU/Capri/per_ModelType[landuse2018];
-			
-			container LoadSpatialData := for_each_ne(MetaData/DataManagement/SpatialDataToLoad/Name, 'Templates/loadDataFile_'+MetaData/DataManagement/SpatialDataToLoad/Type+'('+Quote(MetaData/DataManagement/SpatialDataToLoad/Path)+', domain_grid)');
-			container Variables       := for_each_nedv(Factors/Name, Factors/StartExpr, domain, float32);
 		}
-		container JrcFactorData: Expr = "JrcFactorDataTempl(domain_grid, RunRegions, Periods/BaseYearCorineDataFileName)";
 		
 		// ============ allocatable land
 		container Land: Descr = "These attributes are used to describe the freeLand for allocation"
@@ -74,7 +62,7 @@ template JrcClueWrap:
 				
 			attribute<bool> IsInDestClaimRegions(domain_grid): Expr = "= 'and('+ AsItemList('!IsNull(RunRegions/RasterSets/'+UniqueDestRegionRefs/Values+')') +')'";
 			
-			attribute<bool> Allocatable  (domain_grid): Expr = "IsInRunRegion && IsDefined(PrepareVariables/LandUseGrid) && IsInDestClaimRegions";
+			attribute<bool> Allocatable  (domain_grid) := IsInRunRegion && IsDefined(JrcFactorData/PrepareData/LandUseGrid) && IsInDestClaimRegions;
 			
 			unit<UInt32> FreeLandCells: Expr = "subset(Allocatable)", DialogType = "Map", DialogData = "BasisGrid"
 			{
@@ -231,18 +219,20 @@ template JrcClueWrap:
 		unit<int32> EUR_Ha_int32: Expr = "int32(EUR_HA)";
 		
 		#include<getOptimalk_NUTS2.dms>
-		container CAP := CAPTemplate/getCAPLocSpecs(RunRegions/UnitSets/RunAreas, CaseData/PrepareVariables/LoadSpatialData, CaseData/PrepareVariables/Variables);
+		container CAP := CAPTemplate/getCAPLocSpecs(RunRegions/UnitSets/RunAreas, CaseData/JrcFactorData/PrepareData/LoadSpatialData, PrepareVariables);
 		#include<CAP.dms>
 			
 	}
 	container StartingState
 	{
-		attribute<ModelType> LandUse_Grid(domain_grid) := CaseData/PrepareVariables/LandUseGrid;
+		attribute<ModelType> LandUse_Grid(domain_grid) := CaseData/JrcFactorData/PrepareData/LandUseGrid;
 		attribute<ModelType> LandUse     (domain)      := !BurntForest ? LandUse_Grid[domain/grid_rel] : ModelType/V/TransWoodlandShrub;
-		attribute<bool>		 BurntForest (domain): 		Expr = "(LandUse_Grid[domain/grid_rel] == ModelType/V/ForestsMature || LandUse_Grid[domain/grid_rel] = ModelType/V/ForestsYoung) && float32(CaseData/JrcFactorData/BurntAreas/BurntInYear[domain/grid_rel]) < Parameters/PeriodSet/StartYear";
-		attribute<bool>		 CorineBurnt (domain): 		Expr = "Classifications/LU/Corine/Burnt[CaseData/PrepareVariables/CorineGrid[domain/grid_rel]]";
-		parameter<float32>   ComingPeriodLength:		Expr = "Periods/PeriodLength[uint16(0)]";
-		parameter<YearRange> CurrYear:					Expr = "Periods/CurrYear[uint16(0)]";
+		attribute<bool>		 BurntForest (domain)      := 
+			(LandUse_Grid[domain/grid_rel] == ModelType/V/ForestsMature || LandUse_Grid[domain/grid_rel] = ModelType/V/ForestsYoung) 
+			&& float32(CaseData/JrcFactorData/BurntAreas/BurntInYear[domain/grid_rel]) < Parameters/PeriodSet/StartYear;
+		attribute<bool>		 CorineBurnt (domain)      := Classifications/LU/Corine/Burnt[CaseData/JrcFactorData/PrepareData/CorineGrid[domain/grid_rel]];
+		parameter<float32>   ComingPeriodLength        := Periods/PeriodLength[0w];
+		parameter<YearRange> CurrYear                  := Periods/CurrYear[0w];
 		parameter<YearDiffRange> RefTime := CurrYear;
 		parameter<bool> cumulStatusFlag: Expr = "true";
 		attribute<YearDiffRange> Age    (domain): Expr = "switch("

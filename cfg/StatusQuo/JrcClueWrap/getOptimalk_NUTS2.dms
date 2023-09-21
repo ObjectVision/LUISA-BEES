@@ -7,13 +7,13 @@ container getOptimalk
 	unit<uint8> ModelType: expr = "Classifications/LU/ModelType";
 	Container 		PrevState
 	{
-		attribute<Classifications/LU/ModelType> LandUse	(domain): expr = "PrepareVariables/LandUseGrid[domain/grid_rel]";
-		attribute<float32>	Qi							(domain): expr = "float32(CaseData/PrepareVariables/Variables/Qi)";
-		attribute<float32>	PotQi 						(domain): expr = "potential(CaseData/PrepareVariables/Variables/Qi[domain/basisgrid], Parameters/FuncKernels/RooksNeighbours/Matr)[domain/grid_rel]";
-		attribute<float32>  PotentialAccess				(domain): expr = "PrepareVariables/Variables/PotentialAccess";
+		attribute<Classifications/LU/ModelType> LandUse	(domain): expr = "JrcFactordata/PrepareData/LandUseGrid[domain/grid_rel]";
+		attribute<float32>	Qi							(domain): expr = "float32(CaseData/PrepareVariables/Qi)";
+		attribute<float32>	PotQi 						(domain): expr = "potential(CaseData/PrepareVariables/Qi[domain/basisgrid], Parameters/FuncKernels/RooksNeighbours/Matr)[domain/grid_rel]";
+		attribute<float32>  PotentialAccess				(domain): expr = "PrepareVariables/PotentialAccess";
 		attribute<float32>  TownAccess					(domain): expr = "PrepareVariables/TownAccess[domain/grid_rel]";
 		
-		container Variables: expr = "CaseData/PrepareVariables/Variables";
+		container Variables := CaseData/PrepareVariables;
 	}
 	container ResultingState: Expr = "PrevState";
  	container HousingStock {

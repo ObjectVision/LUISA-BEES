@@ -288,18 +288,19 @@ container LU
 	}	
 	unit<uint8> SNV
 	{
-		attribute<Corine> Corine_rel: [ null, 26, 29 ];
+//		attribute<Corine> Corine_rel: [ null, 26, 29 ]; // old typology ???
+		attribute<Corine> Corine_rel: [ null, 28, 32 ];
 		attribute<.>      Back_rel(Corine): Expr = "invert(Corine_rel)"; // resulted in illegal abstract before GeoDms 6.061, see issue 212
 
 		attribute<String> Label: ['', 'Natural grasslands', 'Transitional woodland-shrub'];
 		attribute<String> Name:  ['', 'NatGrass', 'TransWoodShrub' ];
 
 		// as enumeration		
-		parameter<.> NoSNV:    			[ 0 ];
-		parameter<.> NatGrass: 			[ 26 ];
-		parameter<.> TransWoodShrub:  	[ 29 ];
+		parameter<Corine> NoSNV          := Corine_rel[0[.]];
+		parameter<Corine> NatGrass       := Corine_rel[1[.]];
+		parameter<Corine> TransWoodShrub := Corine_rel[2[.]];
 		
-		attribute<UInt32> BrushColor: Expr = "Corine/BrushColor[Corine_rel]", DialogType = "BrushColor";
+		attribute<UInt32> BrushColor := Corine/BrushColor[Corine_rel], DialogType = "BrushColor";
 	}
 }
 
