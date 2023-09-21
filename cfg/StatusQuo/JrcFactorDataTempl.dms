@@ -156,10 +156,10 @@ template JrcFactorDataTempl: IsHidden = "true"
 	
 	container StaticModelTypeNeighbourhoods
 	{
-		container Small := for_each_nedv(Classifications/LU/ModelType/name, 'potential(float32(PrepareData/LandUseGrid == Classifications/LU/ModelType/V/'+Classifications/LU/ModelType/Name+'), /Parameters/FuncKernels/QueensNeighbours/Matr)'
-		, domain_grid, float32);
-		container Large := for_each_nedv(Classifications/LU/ModelType/name, 'potential(float32(PrepareData/LandUseGrid == Classifications/LU/ModelType/V/'+Classifications/LU/ModelType/Name+'), /Parameters/FuncKernels/LinearDecay1km/Matr)'
-		, domain_grid, float32);
+		container Small := for_each_ind('nedvat', Classifications/LU/ModelType/name, 'potential(float32(PrepareData/LandUseGrid == Classifications/LU/ModelType/V/'+Classifications/LU/ModelType/Name+'), /Parameters/FuncKernels/QueensNeighbours/Matr)'
+		, domain_grid, float32, 'Results/StaticModelTypeNeighbourhoods/Small/'+Classifications/LU/ModelType/name, 'gdalwrite.grid');
+		container Large := for_each_ind('nedvat', Classifications/LU/ModelType/name, 'potential(float32(PrepareData/LandUseGrid == Classifications/LU/ModelType/V/'+Classifications/LU/ModelType/Name+'), /Parameters/FuncKernels/LinearDecay1km/Matr)'
+		, domain_grid, float32, 'Results/StaticModelTypeNeighbourhoods/Small/'+Classifications/LU/ModelType/name, 'gdalwrite.grid');
 	}
 }
 
