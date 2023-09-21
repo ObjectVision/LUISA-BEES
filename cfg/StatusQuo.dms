@@ -21,6 +21,13 @@ container Luisetta
 	#include <JrcFactorDataTempl.dms>
 	
 	container JrcFactorData := JrcFactorDataTempl(Geography/Lambert100mgrid);
+	container StaticModelTypeNeighbourhoods
+	{
+		container Small := for_each_ind('nedvat', Classifications/LU/ModelType/name, 'potential(float32(JrcFactorData/PrepareData/LandUseGrid == Classifications/LU/ModelType/V/'+Classifications/LU/ModelType/Name+'), /Parameters/FuncKernels/QueensNeighbours/Matr)'
+		, Geography/Lambert100mgrid, float32, '%projdir%/Results/StaticModelTypeNeighbourhoods/Small/'+Classifications/LU/ModelType/name+'.TIF', 'gdalwrite.grid');
+		container Large := for_each_ind('nedvat', Classifications/LU/ModelType/name, 'potential(float32(JrcFactorData/PrepareData/LandUseGrid == Classifications/LU/ModelType/V/'+Classifications/LU/ModelType/Name+'), /Parameters/FuncKernels/LinearDecay1km/Matr)'
+		, Geography/Lambert100mgrid, float32, '%projdir%/Results/StaticModelTypeNeighbourhoods/Large/'+Classifications/LU/ModelType/name+'.TIF', 'gdalwrite.grid');
+	}
 	
 	#include <Parameters.dms>
 
