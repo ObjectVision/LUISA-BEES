@@ -12,6 +12,7 @@ template JrcFactorDataTempl: IsHidden = "true"
 		attribute<Classifications/LU/ModelType> LandUse2012Grid (domain_grid) := Classifications/LU/Corine/MT[CorineGrid_2012];
 		attribute<Classifications/LU/ModelType> LandUse2018Grid (domain_grid) := Classifications/LU/Corine/MT[CorineGrid_2018];
 		attribute<Classifications/LU/ModelType> LandUseGrid     (domain_grid) := Classifications/LU/Corine/MT[CorineGrid];
+		attribute<Classifications/LU/ModelType> LandUseGrid_2012(domain_grid) := Classifications/LU/Corine/MT[CorineGrid_2012];
 		
 		container LoadSpatialData := for_each_ne(MetaData/DataManagement/SpatialDataToLoad/Name, 'Templates/loadDataFile_'+MetaData/DataManagement/SpatialDataToLoad/Type+'('+Quote(MetaData/DataManagement/SpatialDataToLoad/Path)+', domain_grid)');
 	}
