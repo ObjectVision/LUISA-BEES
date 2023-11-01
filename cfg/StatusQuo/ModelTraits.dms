@@ -1002,6 +1002,31 @@ container ModelTraits
 					,	StorageName = "=OutputDirName+'/RegionalLandSupply'+name+'.csv'"
 					,	StorageType = "str";
 				}
+				
+				template ArtificialLandSupplyCurve {
+					parameter<Capri> Capri_rel;
+					
+					parameter<string> name;
+					
+					//unit<uint8> OtherMT := select_with_org_rel(ID(MT) != to);
+	
+					container UrbanSupply := ='LandSupplyCurves/'+name+'_Urban';
+					container IndusSupply := ='LandSupplyCurves/'+name+'_Industrial';
+					
+					attribute<int32>       SupplyPrice    (domain) := min_elem(UrbanSupply/SupplyPrice, IndusSupply/SupplyPrice);
+					attribute<UniquePrice> UniquePrice_rel(domain) := rlookup(SupplyPrice, UniquePrice/values);
+					
+					unit<uint32> UniquePrice := unique(SupplyPrice) {
+						attribute<int32>  values;
+						attribute<uint32> count := pcount(UniquePrice_rel);
+						attribute<uint32> cumulative := cumulate(count);
+						attribute<ipoint>  p  := point(values, int32(cumulative));
+					}
+					parameter<string> Export := 'CumulHa;Price\n'+AsList(string(UniquePrice/cumulative)+';'+string(UniquePrice/values), '\n')
+					,	StorageName = "=OutputDirName+'/RegionalLandSupply'+name+'_Artificial.csv'"
+					,	StorageType = "str";
+				}
+				
 				container LandSupplyCurves := for_each_ne(SupplyCurveKey/name
 					, replace('LandSupplyCurve(MT/V/@T, @C[Capri], @N)'
 						, '@T', SupplyCurveKey/to->name
@@ -1009,7 +1034,14 @@ container ModelTraits
 						, '@N', Quote(SupplyCurveKey/name)
 					  )
 					);
-				parameter<string> GenerateAllCurves := 'Ready', ExplicitSuppliers = "=AsList('LandSupplyCurves/'+SupplyCurveKey/name+'/Export' , ';')";
+				container ArtificialLandSupplyCurves := for_each_ne(Capri/ZoneID
+					, replace('ArtificialLandSupplyCurve(@C[Capri], @N)'
+						, '@C', String(ID(Capri))
+						, '@N', Quote(Capri/ZoneID)
+					  )
+					);
+				
+				parameter<string> GenerateAllCurves := 'Ready', ExplicitSuppliers = "=AsList('LandSupplyCurves/'+SupplyCurveKey/name+'/Export' , ';')+';'+AsList('ArtificialLandSupplyCurves/'+Capri/ZoneID+'/Export' , ';')";
 			}
 			
 			container CrossSupplyCurves {

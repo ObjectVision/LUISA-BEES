@@ -1,5 +1,6 @@
 Container Templates {
 	unit<dpoint> CoordSys: 			expr = "Geography/LambertEA";
+//	unit<dpoint> CoordSys: 			expr = "Geography/LatLong";
 	unit<wpoint> StandardRaster: 	expr = "Geography/Lambert100mGrid";
 	parameter<string> General_indicator: expr = "'General'";
 	

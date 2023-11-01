@@ -1,7 +1,8 @@
 container Geography: Using = "Units", IsHidden = "True"
 {
+	unit<dpoint> LatLong: SpatialReference = "GEOGCS[""GCS_ETRS_1989"",DATUM[""D_ETRS_1989"",SPHEROID[""GRS_1980"",6378137.0,298.257222101]],PRIMEM[""Greenwich"",0.0],UNIT[""Degree"",0.0174532925199433]]";
 	unit<dpoint> LambertEA: Descr = "ETRS_1989_LAEA_52N_10E" // "coords from SW to NE";
-		,	Format = "EPSG:3035" // EPSG code for Lambert EA
+		,	SpatialReference = "EPSG:3035" // EPSG code for Lambert EA
 	{
 		parameter<LambertEA> Origin: Expr = "point(1500000.0,  900000.0, LambertEA)"; // Left-Bottom coord
 		parameter<LambertEA> Extent: Expr = "point(6000000.0, 4530000.0, LambertEA)";
@@ -80,7 +81,7 @@ container Geography: Using = "Units", IsHidden = "True"
 	unit<dpoint> AlbersEA  // "coords from SW to NE";
 		:	Descr      = "Albers Equal_Area WGS72"
 		,	Expr       = "range(dpoint, point(-3932373.5, -1869965.125), point(-3932373.5 + 1000.0*5856.0, -1869965.125+1000.0* 4092.0))"
-		,	Format = "+proj=aea +lat_1=32.5 +lat_2=54.5 +lat_0=51.40 +lon_0=22.65 +x_0=0 +y_0=0 +ellps=intl +units=m +no_defs ";
+		,	SpatialReference = "+proj=aea +lat_1=32.5 +lat_2=54.5 +lat_0=51.40 +lon_0=22.65 +x_0=0 +y_0=0 +ellps=intl +units=m +no_defs ";
 	unit<fpoint> AlbersEA_F32: Expr = "range(AlbersEA, FPoint(LowerBound(AlbersEA)), FPoint(UpperBound(AlbersEA)))";
 
 
@@ -116,7 +117,7 @@ container Geography: Using = "Units", IsHidden = "True"
 	
 	// http://spatialreference.org/
 	// http://www.gdal.org/ogr/classOGRSpatialReference.html#a096b8dde4fd2eb475acd376060940b02
-	unit<dpoint> WGS84: Format = "EPSG:4326"; // could also be WGS84
+	unit<dpoint> WGS84: SpatialReference = "EPSG:4326"; // could also be WGS84
 	
 	#include<AdministrativeBoundaries.dms>
 	
