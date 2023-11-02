@@ -154,5 +154,18 @@ template JrcFactorDataTempl: IsHidden = "true"
 		attribute<uint32>				BurntInYear	 (domain_grid):	expr = "BurntAreas_shape/YearSeason[BurntGrid_id]";
 	}
 	#include <Biodiversity.dms>	
+	
+	container RegressionResults
+	{
+		container Logit := for_each_ndvat(MetaData/RegressionResults/LogitTransitions/name
+			,	domain_grid, Float32
+			, 	MetaData/RegressionResults/LogitTransitions/filename, 'gdal.grid'
+		);
+		
+		container RF := for_each_ndvat(MetaData/RegressionResults/RfTransitions/name
+			,	domain_grid, Float32
+			, 	MetaData/RegressionResults/RfTransitions/filename, 'gdal.grid'
+		);
+	}
 }
 

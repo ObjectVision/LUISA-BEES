@@ -1066,7 +1066,21 @@ container Parameters: KeepData = "True", Using = "Units"
 											
 				attribute<string> TransitionCostExpression(ModelType): Expr = "'SuitabilityModifiers/'+ ModelType/Name +' * (' + GrossRevenuesExpr + ') - (' + TransitionCostsExpr + ')'";
 				
-				attribute<string> TotalSuitabilityExpr(ModelType): Expr = "CombinedSuitExpr + LocSpecExprPrefix + '- (' + TransitionCostsExpr + ')'";
+				attribute<string> LogitRegrResutsProbExprBase(ModelType) := AsItemList(
+					'float32(PrevState/Landuse == '+string(MetaData/RegressionResults/LogitTransitions/from_rel)+'[Classifications/LU/ModelType]) '
+					'* CaseData/JrcFactorData/RegressionResults/Logit/'+MetaData/RegressionResults/LogitTransitions/name+'[domain/grid_rel]'
+				, 	MetaData/RegressionResults/LogitTransitions/to_rel
+				);
+				attribute<string> LogitRegrResutsProbExpr(ModelType) := LogitRegrResutsProbExprBase == '' ? 'const(0f, domain)' : 'add('+LogitRegrResutsProbExprBase+')';
+				
+				attribute<string> RfRegrResutsProbExprBase(ModelType) := AsItemList(
+					'float32(PrevState/Landuse == '+string(MetaData/RegressionResults/RfTransitions/from_rel)+'[Classifications/LU/ModelType]) '
+					'* CaseData/JrcFactorData/RegressionResults/RF/'+MetaData/RegressionResults/RfTransitions/name+'[domain/grid_rel]'
+				, 	MetaData/RegressionResults/RfTransitions/to_rel
+				);
+				attribute<string> RfRegrResutsProbExpr(ModelType) := RfRegrResutsProbExprBase == '' ? 'const(0f, domain)' : 'add('+RfRegrResutsProbExprBase+')';
+				
+				attribute<string> TotalSuitabilityExpr(ModelType) := RfRegrResutsProbExpr + ' + ' + CombinedSuitExpr + LocSpecExprPrefix + '- (' + TransitionCostsExpr + ')';
 				
 				unit<UInt32> Factor2Weights:    Expr = "Alloc2Reg/FactorWeights";
 				unit<UInt32> UniqueFactor2Func: Expr = "Alloc2Reg/UniqueFactorFuncs";

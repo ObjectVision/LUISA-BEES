@@ -22,6 +22,34 @@ container MetaData: KeepData = "True", IsHidden = "True"
 	#include<FactorDefinitions.dms>
 	
 	unit<uint32> Factors:				expr = "FactorDefinitions/Factors";
-	
+	container RegressionResults 
+	{
+		unit<uint8> landuse_transitions : StorageName = "%LuisettaDataDir%/regression_results/landuse_transition_codes_table.csv", StorageType = "gdal.vect", StorageReadOnly = "True"
+		{
+			attribute<uint16> transition_code := uint16(lut);
+			attribute<Classifications/LU/ModelType> from_rel := convert(uint8(from) - 1b, Classifications/LU/ModelType);
+			attribute<Classifications/LU/ModelType> to_rel   := convert(uint8(to)   - 1b, Classifications/LU/ModelType);
+		}
+		unit<uint8> LogitTransitions := range(uint8, 0b, 37b)
+		{
+			attribute<uint16> folder_lut : [ 115, 12, 13, 1415, 143, 145, 147, 15, 156, 16, 17, 215, 23, 25, 26, 27, 31, 315, 32, 34, 35, 415, 42, 43, 45, 47, 515, 53, 54, 615, 67, 714, 715, 73, 74, 75, 76];
+			attribute<landuse_transitions> lut_rel := rlookup(folder_lut, landuse_transitions/transition_code);			
+			attribute<Classifications/LU/ModelType> from_rel := lut_rel->from_rel;
+			attribute<Classifications/LU/ModelType> to_rel   := lut_rel->to_rel;
+			
+			attribute<string> name := 'prob_'+string(folder_lut);
+			attribute<string> filename := '%LuisettaDataDir%/regression_results/Logit/proba/'+name+'.tiff';
+		}
+		unit<uint8> RfTransitions := range(uint8, 0b, 35b)
+		{
+			attribute<uint16> folder_lut : [ 115, 12, 1415, 143, 145, 147, 15, 156, 16, 17, 215, 23, 25, 26, 27, 31, 315, 32, 34, 35, 415, 42, 43, 45, 47, 515, 53, 54, 67, 714, 715, 73, 74, 75, 76];
+			attribute<landuse_transitions> lut_rel := rlookup(folder_lut, landuse_transitions/transition_code);			
+			attribute<Classifications/LU/ModelType> from_rel := lut_rel->from_rel;
+			attribute<Classifications/LU/ModelType> to_rel   := lut_rel->to_rel;
+			
+			attribute<string> name := 'prob_'+string(folder_lut);
+			attribute<string> filename := '%LuisettaDataDir%/regression_results/RF/proba/'+name+'_0.tiff';
+		}
+	}
 }	
 
