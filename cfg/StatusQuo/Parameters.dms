@@ -1080,7 +1080,7 @@ container Parameters: KeepData = "True", Using = "Units"
 				);
 				attribute<string> RfRegrResutsProbExpr(ModelType) := RfRegrResutsProbExprBase == '' ? 'const(0f, domain)' : 'add('+RfRegrResutsProbExprBase+')';
 				
-				attribute<string> TotalSuitabilityExpr(ModelType) := RfRegrResutsProbExpr + ' + ' + CombinedSuitExpr + LocSpecExprPrefix + '- (' + TransitionCostsExpr + ')';
+				attribute<string> TotalSuitabilityExpr(ModelType) := RfRegrResutsProbExpr + ' * 0.5f + ' + LogitRegrResutsProbExpr + ' * 0.5f + ' + CombinedSuitExpr + LocSpecExprPrefix + '- (' + TransitionCostsExpr + ')';
 				
 				unit<UInt32> Factor2Weights:    Expr = "Alloc2Reg/FactorWeights";
 				unit<UInt32> UniqueFactor2Func: Expr = "Alloc2Reg/UniqueFactorFuncs";
@@ -1165,7 +1165,7 @@ container Parameters: KeepData = "True", Using = "Units"
 			parameter<string> RegionName;
 			// end case parameter
 
-			parameter<String> FileName   := '%projdir%/demand/' + ScenarioName + '/' + RegionDomainName + '/' + RegionName + '.csv';
+			parameter<String> FileName   := '%projdir%/demand/' + ScenarioName + '/' + replace_value(RegionDomainName, 'Capri', 'Capri23') + '/' + RegionName + '.csv';
 			parameter<String> FieldSeparator := strcount(FileData, ',') > strcount(FileData, ';') ? ',' : ';';
 		
 			parameter<String> FileData
@@ -1202,7 +1202,7 @@ container Parameters: KeepData = "True", Using = "Units"
 					, Domain, string
 				)
 			{
-				attribute<String> RegionUp_Raw (Domain): Expr = "UpperCase(Region)",               StoreData = "False", FreeData = "True";
+				attribute<String> RegionUp_Raw (Domain) := = RegionDomainName == 'Capri' ? 'UpperCase(luisa_nuts2)' : 'UpperCase(Region)',               StoreData = "False", FreeData = "True";
 				attribute<String> RegionUp     (Domain): Expr = "RegionUp_Raw"; //,                    IntegrityCheck = "all(region_allowed)";
 				attribute<UInt32> ZeroClaim    (Domain): Expr = "const(0,Domain)",           StoreData = "False", FreeData = "True";
 				attribute<UInt32> HighClaim    (Domain): Expr = "const(2000000000,Domain)",  StoreData = "False", FreeData = "True";
@@ -1276,15 +1276,19 @@ container Parameters: KeepData = "True", Using = "Units"
 					parameter<float32> Arable_Inc_factor   := float32(replace_value(Expand(., '%env:ARABLE_INC%'  ), 'env:ARABLE_INC'  , '0.00'));
 					
 					container data := ClaimTablesOrg/Capri/data {
-						attribute<float32> ArableMin_org(Domain) := float32(ClaimTablesOrg/Capri/data/OtherArableMin);
-						attribute<float32> ArableMax_org(Domain) := float32(ClaimTablesOrg/Capri/data/OtherArableMax);
+						attribute<float32> ArableMin_org(Domain) := float32(ClaimTablesOrg/Capri/data/Arable);
+						attribute<float32> ArableMax_org(Domain) := float32(ClaimTablesOrg/Capri/data/Arable);
 						attribute<float32> ArableMid_org(Domain) := 0.5f * (ArableMin_org+ArableMax_org);
 						attribute<float32> ArableMid    (Domain) := ArableMid_org * (1f+iif(Uint32(Data/year) < 2019, 0f, Arable_Inc_factor));
 						
-						attribute<float32> ArableMin(Domain) := ArableMid * (1f - Arable_Width_factor);
-						attribute<float32> ArableMax(Domain) := ArableMid * (1f + Arable_Width_factor);
-						attribute<float32> NewEnergyMin(Domain) := const(0f, Domain);
-						attribute<float32> NewEnergyMax(Domain) := const(0f, Domain);
+						attribute<float32> ArableMin    (Domain) := ArableMid * (1f - Arable_Width_factor);
+						attribute<float32> ArableMax    (Domain) := ArableMid * (1f + Arable_Width_factor);
+						attribute<float32> NewEnergyMin (Domain) := const(0f, Domain);
+						attribute<float32> NewEnergyMax (Domain) := const(0f, Domain);
+						attribute<float32> PasturesMin  (Domain) := float32(ClaimTablesOrg/Capri/data/Pastures);
+						attribute<float32> PasturesMax  (Domain) := float32(ClaimTablesOrg/Capri/data/Pastures);
+						attribute<float32> PermCropsMin (Domain) := float32(ClaimTablesOrg/Capri/data/PermanentCrops);
+						attribute<float32> PermCropsMax (Domain) := float32(ClaimTablesOrg/Capri/data/PermanentCrops);
 					}
 				}
 			}

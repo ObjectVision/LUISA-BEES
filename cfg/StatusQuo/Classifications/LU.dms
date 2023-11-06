@@ -1,6 +1,6 @@
 container LU
 {	
-	unit<UInt8> ModelType: NrOfRows = 15 // @USERINPUT: keep in sync with the actual nr of model classes
+	unit<UInt8> ModelType: NrOfRows = 16 // @USERINPUT: keep in sync with the actual nr of model classes
 	{
 		parameter<uint32> nrAttr: Expr = "10";
 		unit<UInt32> Elements: Expr = "Range(uint32, 0, nrAttr*#ModelType)"
@@ -9,9 +9,9 @@ container LU
 			//   VT, IT,    R,    G,    B, Label,                     	DemandcharacteristicsRel, 	MinClaimColumn, 	MaxClaimColumn ForestTransitionState
 				'1' ,'0','219','000','000','Urban',                   	'urban', 			'ZeroClaim',     	'ZeroClaim',      null,
 				'2' ,'1','128','000','128','Industrial',              	'industrial',		'IndustryMin',   	'IndustryMax',    null, 
-				'3' ,'5','254','250','194','Arable',        	     	'agrimarket',		'ArableMin', 	     'ArableMax',     '0',
-				'4' ,'6','207','152','107','PermanentCrops',          	'agrimarket',		'PermCropMin',   	'PermCropMax',    '0',
-				'5' ,'6','163','222','133','Pastures',                	'agrimarket',		'PastureMin',    	'PastureMax',     '0',
+				'3' ,'5','254','250','194','Arable',        	     	'agrimarket',		'Arable', 	     'Arable',     '0',
+				'4' ,'6','207','152','107','PermanentCrops',          	'agrimarket',		'PermanentCrops',   	'PermanentCrops',    '0',
+				'5' ,'6','163','222','133','Pastures',                	'agrimarket',		'Pastures',    	'Pastures',     '0',
 				'6' ,'2','001','099','000','ForestsMature',             null,               null,               null,             '4', //Mature forests can never appear without first passing through the young forest class
 				'7' ,'3','114','137','068','TransWoodlandShrub',    	null, 	 			null, 				null, 	          '2', 
 			//	'8' ,'5','227','201','053','Cereals',                 	'agrimarket',		'CerealsMin',    	'CerealsMax',     '0',
@@ -24,7 +24,8 @@ container LU
 				'12','1','071','000','117','AbanIndustry',        		null, 				null, 				null, '1', // amount is determined by decreased demand for Industry with low transition costs to Abandonment.
 				'13','6','000','200','000','NewEnergyCrops' ,         	'agrimarket',		'NewEnergyMin',     'NewEnergyMax',   null,
 				'14','3','166','242','000','SHVA',    					null, 				null, 				null,             null, 
-				'15','2','036','130','056','ForestsYoung',            	'forest',			'ForestsYoMin',    	'ForestsYoMax',   '3'
+				'15','2','036','130','056','ForestsYoung',            	'forest',			'ForestsYoMin',    	'ForestsYoMax',   '3',
+				'16','3','136','230','156','NaturalGrassland',        	null,				null,    	        null,    '0'
 			];
 		}
 		attribute<String>           Name: Expr = "Label";
@@ -203,7 +204,7 @@ container LU
 				'311',       '23',  '05', null, '056', '168', '000', 'Forest and semi natural areas', 'Forests',                                         'Broad-leaved forest',                                         '4', '0',
 				'312',       '24',  '05', null, '038', '115', '000', 'Forest and semi natural areas', 'Forests',                                         'Coniferous forest',                                           '4', '0',
 				'313',       '25',  '05', null, '056', '138', '000', 'Forest and semi natural areas', 'Forests',                                         'Mixed forest',                                                '4', '0',
-				'321',       '26',  '13', null, '211', '255', '190', 'Forest and semi natural areas', 'Scrub and/or herbaceous vegetation associations', 'Natural grasslands',                                          '8', '0',
+				'321',       '26',  '15', null, '211', '255', '190', 'Forest and semi natural areas', 'Scrub and/or herbaceous vegetation associations', 'Natural grasslands',                                          '8', '0',
 				'322',       '27',  '13', null, '205', '245', '122', 'Forest and semi natural areas', 'Scrub and/or herbaceous vegetation associations', 'Moors and heathland',                                         '8', '0',
 				'323',       '28',  '13', null, '165', '245', '122', 'Forest and semi natural areas', 'Scrub and/or herbaceous vegetation associations', 'Sclerophyllous vegetation',                                   '8', '0',
 				'324',       '29',  '06', null, '137', '205', '102', 'Forest and semi natural areas', 'Scrub and/or herbaceous vegetation associations', 'Transitional woodland-shrub',                                 '8', '0',

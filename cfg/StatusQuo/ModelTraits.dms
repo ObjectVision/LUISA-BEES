@@ -55,6 +55,7 @@ container ModelTraits
 				attribute<bool> NewEnergyCrops    (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/V/ForestsYoung);
 				attribute<bool> SHVA              (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/V/ForestsYoung) && not(PrevState/LandUse == ModelType/V/ForestsMature) && not(PrevState/LandUse == ModelType/V/TransWoodlandShrub);
 				attribute<bool> ForestsYoung      (domain):= not(BurntForest/NewlyBurnt) && ((PrevState/LandUse == ModelType/V/ForestsYoung && PrevState/Age < 20[YearDiffRange])	||	(PrevState/LandUse == ModelType/V/TransWoodlandShrub && PrevState/Age >= 10[YearDiffRange]));
+				attribute<bool> NaturalGrassland  (domain):= const(true, domain);
 			}
 			container TransPot := for_each_nedv(LUT/Name
 				, replace('iif(Allowed/@LUT, TotalSuitability/@LUT * 100[EUR_m2], -100000[EUR_m2])', '@LUT', LUT/Name)
@@ -211,10 +212,10 @@ container ModelTraits
 	// demand containers below aggregate the demands to the wanted aggregation level
 			Container DemandMin := for_each_nednv(ModelType/Name
 				,	IsDefined(ModelType/DemandCharacteristics) 
-					? '(MakeDefined(uint32((sum(CollectMinDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * 
-						Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, 
-							Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)
-								+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')) * float32(0.99)), 0))' 
+					? '(MakeDefined(uint32((sum(CollectMinDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * '
+						'Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, '
+							'Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)'
+								'+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')) * float32(0.99)), 0))'
 					: 'uint32(CollectMinDemandFromClaimTables/'+ModelType/Name+')'
 				, 	CaseData/RegionNumbers, DestClaimTableName, uint32
 				);
