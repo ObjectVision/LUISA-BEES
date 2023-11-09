@@ -68,7 +68,7 @@ container AdministrativeBoundaries
 			attribute<string>		LUISA_Code: expr = "CountryTable/LUISACode[CT_id]";
 			attribute<string> 		Label:		expr = "CountryTable/ItlName[CT_id]";
 			attribute<string>		LUISAName:	expr = "CountryTable/LUISAName[CT_id]";
-			attribute<bool>			Exclude:	expr = "ZoneId = 'PT2' || ZoneId = 'PT3' || ZoneId = 'FRA' || ZoneId = 'FR9'"; // exclude atlantic islands of PT and ES
+			attribute<bool>			Exclude := ZoneId = 'PT2' || ZoneId = 'PT3' || ZoneId = 'FRA' || ZoneId = 'FR9' || ZoneId = 'CY0'; // exclude atlantic islands of PT and ES, and Cyprus
 			attribute<bool>			Sel:		expr = "CountryTable/LUISAsel[CT_id] && !Exclude";
 		}
 		unit<uint32> RunN1s := subset(Nuts1/Sel)
