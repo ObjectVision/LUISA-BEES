@@ -1186,7 +1186,7 @@ container Parameters: KeepData = "True", Using = "Units"
 			unit<uint32> Domain: expr = "Range(UInt32, 0, strcount(FileData, '\n')-1)"
 			{
 //				attribute<.> id: expr = "id(.)";
-				attribute<String> Label: expr = "Data/Region", DialogType = "LabelText";
+				attribute<String> Label := Data/RegionUp, DialogType = "LabelText";
 			}
 			
 			attribute<String> BodyLines(Domain) := readLines(FileData, Domain, HeaderLine/ReadPos);

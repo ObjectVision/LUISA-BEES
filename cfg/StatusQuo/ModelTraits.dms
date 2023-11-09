@@ -188,7 +188,7 @@ container ModelTraits
 						'RunRegions/UnitSets/'+ClaimTableName+'/ZoneId, '+
 						'CaseData/ClaimTables/'+ClaimTableName+'/Data/RegionUp[ClaimTableSelections/'+ClaimTableName+'/sel/nr_OrgEntity], '+
 						'min_elem('+'ClaimTableL/' + ModelType/Name+', ClaimTableR/'+ModelType/Name+')'+
-					') - CaseData/adapt_claim/' + ModelType/Name + 
+					')*0.9f - CaseData/adapt_claim/' + ModelType/Name + 
 				', float32(0))'
 				, CaseData/RegionNumbers, ClaimTableName, float32) 
 			{
@@ -215,7 +215,7 @@ container ModelTraits
 					? '(MakeDefined(uint32((sum(CollectMinDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * '
 						'Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, '
 							'Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)'
-								'+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')) * float32(0.99)), 0))'
+								'+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')) * float32(0.90)), 0))'
 					: 'uint32(CollectMinDemandFromClaimTables/'+ModelType/Name+')'
 				, 	CaseData/RegionNumbers, DestClaimTableName, uint32
 				);
@@ -225,7 +225,7 @@ container ModelTraits
 						'(MakeDefined(uint32((sum(CollectMaxDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * 
 						Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, 
 							Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)
-								+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +'))* float32(1.01)), 0))' 
+								+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +'))* float32(1.10)), 0))' 
 					 : 'uint32(CollectMaxDemandFromClaimTables/'+ModelType/Name+')', 
 				 	 CaseData/RegionNumbers, DestClaimTableName, uint32);				
 		}
