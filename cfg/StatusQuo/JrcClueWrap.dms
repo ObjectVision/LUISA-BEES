@@ -182,7 +182,9 @@ template JrcClueWrap:
 						ClaimTableName, float32)", FreeData = "False";
 		container adapt_claim := adapt_claim_org {
 			unit<uint16> Capri := RegionNumbers/Capri;
-			attribute<float32> Arable(Capri) := float32(OrgLandUseCount/Arable); 
+			attribute<float32> Arable  (Capri) := float32(OrgLandUseCount/Arable); 
+			attribute<float32> Pastures(Capri) := float32(OrgLandUseCount/Pastures); 
+			attribute<float32> PermanentCrops(Capri) := float32(OrgLandUseCount/PermanentCrops); 
 		}
 		unit<uint16> AtomicRegions := overlay(UniqueDestRegionRefs/Values, domain, RegionData)
 		,	DialogType = "map", DialogData = "per_domain_grid"
