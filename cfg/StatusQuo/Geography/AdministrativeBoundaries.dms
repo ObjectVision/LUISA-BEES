@@ -54,7 +54,7 @@ container AdministrativeBoundaries
 		unit<uint32> LAU2               := aggregations/LAU2/UniqueZones
 		{
 			attribute<string> ZoneID    := replace(aggregations/LAU2/UniqueZones/ZoneID, '_', '');
-			attribute<string> RunAreaId := replace_value(left(ZoneID, 2), 'EL', 'GR', 'BE', 'BELUX', 'LU', 'BELUX', 'CH', 'CZ');
+			attribute<string> RunAreaId := replace_value(left(ZoneID, 2), 'CH', 'CZ');
 		}
 		unit<uint32> NUTS3_EuroStat     := src/NUTS3_EuroStat/inFile;
 	}
@@ -137,15 +137,15 @@ container AdministrativeBoundaries
 				'HU',	'HU',	'Hungary',	'Hungary',	'1',
 				'RO',	'RO',	'Romania',	'Romania',	'1',
 				'SE',	'SE',	'Sweden',	'Sweden',	'1',
-				'LU',	'BELUX',	'Luxembourg',	'BelgLux',	'1',
+				'LU',	'BL',	'Luxembourg',	'BelgLux',	'1',
 				'LI',	'LI',	'Liechtenstein',	'',	'0',
 				'BY',	'BY',	'Belarus',	'',	'0',
 				'MD',	'MD',	'Moldovia',	'',	'0',
 				'FO',	'DK',	'Faroe Islands',	'',	'0',
 				'DK',	'DK',	'Denmark',	'Denmark',	'1',
 				'GI',	'UK',	'Gibraltar',	'',	'0',
-				'BE',	'BELUX',	'Belgium',	'BelgLux',	'1',
-				'GR',	'GR',	'Greece',	'Greece',	'1',
+				'BE',	'BL',	'Belgium',	'BelgLux',	'1',
+				'GR',	'EL',	'Greece',	'Greece',	'1',
 				'SK',	'SK',	'Slovakia',	'Slovakia',	'1',
 				'RU',	'RU',	'Russia',	'',	'0',
 				'CY',	'CY',	'Cyprus',	'Cyprus',	'1',
