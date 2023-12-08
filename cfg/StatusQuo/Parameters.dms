@@ -5,11 +5,11 @@ container Parameters: KeepData = "True", Using = "Units"
 	container PeriodSet
 	{
 	
-		parameter<YearRange> StartYear: [2012]
+		parameter<YearRange> StartYear: [2018]
 		,	ParamType = "Numeric"
 		,	ParamData = "YearRange";
 			
-		parameter<YearRange> SpoofStartYear: [2010] // to ensure that result has necessary number of rows
+		parameter<YearRange> SpoofStartYear: [2015] // to ensure that result has necessary number of rows
 		,	ParamType = "Numeric"
 		,	ParamData = "YearRange";
 		
@@ -23,9 +23,9 @@ container Parameters: KeepData = "True", Using = "Units"
 		,	ParamData = "YearDiffRange"
 		,	Descr     = "Periodelengte (in jaren)";
 		
-		unit<UInt16> result: Expr = "Range(UInt16, UInt16(0), UInt16( (EndYear - SpoofStartYear) / TimeStep))"
+		unit<UInt16> result := Range(UInt16, UInt16(0), UInt16( (EndYear - SpoofStartYear) / TimeStep))
 		{
-			attribute<YearDiffRange> PeriodLength := id(result) > uint16(0) ? 5.0[YearDiffRange] : 3.0[YearDiffRange];
+			attribute<YearDiffRange> PeriodLength := id(result) > uint16(0) ? 5.0[YearDiffRange] : 2.0[YearDiffRange];
 			attribute<YearDiffRange> YearsPast    := cumulate(PeriodLength);
 			attribute<YearRange> CurrYear         := StartYear + MakeDefined(YearsPast[sub_or_null(Id(.), 1w)], 0f);
 			attribute<YearRange> ProjectedYear:		Expr = "CurrYear + PeriodLength";
@@ -1202,10 +1202,10 @@ container Parameters: KeepData = "True", Using = "Units"
 					, Domain, string
 				)
 			{
-				attribute<String> RegionUp_Raw (Domain) := = RegionDomainName == 'Capri' ? 'UpperCase(luisa_nuts2)' : 'UpperCase(Region)',               StoreData = "False", FreeData = "True";
-				attribute<String> RegionUp     (Domain): Expr = "RegionUp_Raw"; //,                    IntegrityCheck = "all(region_allowed)";
-				attribute<UInt32> ZeroClaim    (Domain): Expr = "const(0,Domain)",           StoreData = "False", FreeData = "True";
-				attribute<UInt32> HighClaim    (Domain): Expr = "const(2000000000,Domain)",  StoreData = "False", FreeData = "True";
+				attribute<String> RegionUp_Raw (Domain):= = RegionDomainName == 'Capri' ? 'UpperCase(luisa_nuts2)' : 'UpperCase(Region)';
+				attribute<String> RegionUp     (Domain):= replace_value(RegionUp_Raw, 'BELUX', 'BL');
+				attribute<UInt32> ZeroClaim    (Domain):= const(0,Domain);
+				attribute<UInt32> HighClaim    (Domain):= const(2000000000,Domain);
 				
 				// extra code for integrity check on Region Codes:
 				// they should all be known as codes in the corresponding Domain (which refers to a specific column in CAPRI_NUTS2_correspondences.xls)
@@ -1213,13 +1213,13 @@ container Parameters: KeepData = "True", Using = "Units"
 				// one region_exception is necessary as the demand files contain also aggregated demands per country
 				// The region exception checks on the pattern: rc00 (rc = a known region code prefix)
 				
-				attribute<RegionDomain> region_nr  (Domain):  Expr = "rlookup(RegionUp_Raw, RegionDomain/ZoneId)";
-				attribute<bool> region_prefixKnown (Domain):  Expr = "IsDefined(rlookup(substr(RegionUp_Raw, 0, 2),substr(RegionDomain/ZoneId, 0, 2))) ";
-				attribute<bool> region_exception1  (Domain):  Expr = "(strlen(RegionUp_Raw) == 4) && region_prefixKnown && (substr(RegionUp_Raw, 2, 2) == '00')";
-				attribute<bool> region_allowed     (Domain):  Expr = "isDefined(region_nr) || (region_exception1)";
+				attribute<RegionDomain> region_nr  (Domain) := rlookup(RegionUp, RegionDomain/ZoneId);
+				attribute<bool> region_prefixKnown (Domain) := IsDefined(rlookup(substr(RegionUp, 0, 2),substr(RegionDomain/ZoneId, 0, 2))) || RegionUp == 'BL';
+				attribute<bool> region_exception1  (Domain) := (strlen(RegionUp_Raw) == 4) && region_prefixKnown && (substr(RegionUp_Raw, 2, 2) == '00');
+				attribute<bool> region_allowed     (Domain) := isDefined(region_nr) || (region_exception1) || RegionUp == 'BL' || RegionUp == 'PT20' || RegionUp == 'PT30';
 				
-				attribute<Domain> rel_curr_years	(PeriodSet/result): expr = "rlookup(PeriodSet/result/CurrYear, value(year, float32))";
-				attribute<bool> check_rel			(PeriodSet/result): expr = "IsDefined(rel_curr_years)";
+				attribute<Domain> rel_curr_years	(PeriodSet/result) := rlookup(PeriodSet/result/ProjectedYear, value(year, float32));
+				attribute<bool> check_rel			(PeriodSet/result) := IsDefined(rel_curr_years);
 				
 			}
 		}
