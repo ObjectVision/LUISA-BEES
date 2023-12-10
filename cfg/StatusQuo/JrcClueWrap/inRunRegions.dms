@@ -25,14 +25,12 @@ container RunRegions: Using = "Geography/AdministrativeBoundaries;"
 		parameter<Geography/Regions/Runs> RunRegion;
 		unit<uint32> OrgZones;
 		
-//		unit<uint16> Set16 := subset_uint16(OrgZones/RunAreaID == Geography/Regions/Runs/ZoneId[RunRegion]) // USE THIS when GeoDmsVersion() >= 7.208
-		unit<uint32> Set   := subset(replace_value(OrgZones/RunAreaID, 'BELUX', 'BL', 'BE', 'BL', 'LU', 'BL') == Geography/Regions/Runs/ZoneId[RunRegion]);
-		unit<uint16> Set16 := range(uint16, 0w, uint16(#Set))
+		unit<uint16> Set16    := select_uint16_with_org_rel(replace_value(OrgZones/RunAreaID, 'BELUX', 'BL', 'BE', 'BL', 'LU', 'BL', 'GR', 'EL') == Geography/Regions/Runs/ZoneId[RunRegion])
 		{
-			attribute<OrgZones>     nr_OrgEntity     := union_data(., Set/nr_OrgEntity);
-			attribute<string> 		ZoneId           := OrgZones/ZoneId  [Nr_OrgEntity];
-			attribute<LambertEA> 	Geometry(polygon):= OrgZones/Geometry[Nr_OrgEntity];
-			attribute<string>		Label            := OrgZones/Label   [Nr_OrgEntity], DialogType = "LabelText";
+			attribute<OrgZones>     nr_OrgEntity     := org_rel;
+			attribute<string> 		ZoneId           := OrgZones/ZoneId  [org_rel];
+			attribute<LambertEA> 	Geometry(polygon):= OrgZones/Geometry[org_rel];
+			attribute<string>		Label            := OrgZones/Label   [org_rel], DialogType = "LabelText";
 		}
 	}
 }

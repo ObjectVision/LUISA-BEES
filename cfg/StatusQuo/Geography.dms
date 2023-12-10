@@ -170,7 +170,7 @@ container Geography: Using = "Units", IsHidden = "True"
 			attribute<LambertEA> Geometry (poly): expr = "partitioned_union_polygon(value(Geography/getCapriData/Nuts2/Geometry, ipoint), /Geography/getCapriData/Nuts2/Capri_rel)[LambertEA]";
 			attribute<String> Code: Expr = "Values";
 			attribute<string> ZoneId: expr = "Code";
-			attribute<string> RunAreaID := replace_value(left(ZoneId, 2), 'BL', 'BELUX', 'EL', 'GR', 'IR', 'IE');
+			attribute<string> RunAreaID := replace_value(left(ZoneId, 2), 'IR', 'IE');
 			attribute<string> Name: Expr = "rjoin(Values, getCapriData/CapriLookup/CapriCode, getCapriData/CapriLookup/CapriName)";
 			attribute<string> Label: Expr = "Code+': '+Name", DialogType = "LabelText";
 	

@@ -228,7 +228,7 @@ container Parameters: KeepData = "True", Using = "Units"
 			   
 			   unit<uint32> UnitsFactorBase: expr = "= 'union_unit('+ substr(multiple_unit_ref, 0, strlen(multiple_unit_ref)-1) +')'"
 			   {
-			   		attribute<RunsRef>		UnitId:						expr = "rlookup(replace_value(ZoneName, 'BELUX', 'BL'), RunsRef/ICC)";
+			   		attribute<RunsRef>		UnitId:						expr = "rlookup(replace_value(ZoneName, 'BELUX', 'BL', 'GR', 'EL'), RunsRef/ICC)";
 			   		attribute<FactorList> 	FactorId:					expr = "(id(.) / #UnitRef)[FactorList]";
 			   		attribute<Classifications/LU/ModelType> LandUseType:expr = "const(LandUseNr, ., Classifications/LU/ModelType)";
 			   		attribute<string> 		ZoneName: 					expr = "= 'union_data(UnitsFactorBase,'+ substr(multiple_zone_ref, 0, strlen(multiple_zone_ref)-1) +')'";
@@ -246,7 +246,7 @@ container Parameters: KeepData = "True", Using = "Units"
 			   		attribute<Factors> 		FactorRef                  := UnitsFactorBase_rel->FactorRef;					
 			   }
 			   
-			   attribute<Domain> ZoneId 		(RunsRef) := rlookup(RunsRef/ICC, replace_value(Data/ZoneName, 'BELUX', 'BL'));
+			   attribute<Domain> ZoneId 		(RunsRef) := rlookup(RunsRef/ICC, replace_value(Data/ZoneName, 'BELUX', 'BL', 'GR', 'EL'));
 			   attribute<float32> Constant 		(RunsRef): expr = "value(Data/Constant, float32)[ZoneId]"; 
 			   attribute<Classifications/LU/ModelType> LandUseType (Meta/Run): expr = "const(LandUseNr,Meta/Run,Classifications/LU/ModelType)";
 			}

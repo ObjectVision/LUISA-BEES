@@ -64,7 +64,7 @@ container AdministrativeBoundaries
 		unit<uint32> Nuts1 := src/NUTS1_LUISA/inFile
 		{
 			attribute<CountryTable> CT_id: 		expr = "rlookup(Itl_Code, CountryTable/N0Code)";
-			attribute<string> 		Itl_Code:	expr = "substr(replace(ZoneId, 'EL', 'GR'), 0, 2)";
+			attribute<string> 		Itl_Code:	expr = "substr(ZoneId, 0, 2)";
 			attribute<string>		LUISA_Code: expr = "CountryTable/LUISACode[CT_id]";
 			attribute<string> 		Label:		expr = "CountryTable/ItlName[CT_id]";
 			attribute<string>		LUISAName:	expr = "CountryTable/LUISAName[CT_id]";
@@ -93,6 +93,7 @@ container AdministrativeBoundaries
 		{
 			attribute<LambertEA> Geometry (poly) := partitioned_union_polygon(RunN1s/Geometry[ipoint], RunN1s/RunAreaId)[LambertEA];
 			attribute<string> 	 Name            := Values;
+			attribute<string>    Label           := Name, DialogType = "LabelText";
 			attribute<string> 	 ICC             := first(RunN1s/Code, RunN1s/RunAreaId);
 			attribute<string>	 ZoneId          := ICC;
 		}
