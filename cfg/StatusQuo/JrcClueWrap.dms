@@ -60,7 +60,7 @@ template JrcClueWrap:
 				//"Geography/Regions/Runs/RegionGridSet!RunParameters/Name"; 
 				"!IsNull(RunRegions/RasterSets/RunAreas)";
 				
-			attribute<bool> IsInDestClaimRegions(domain_grid): Expr = "= 'and('+ AsItemList('!IsNull(RunRegions/RasterSets/'+UniqueDestRegionRefs/Values+')') +')'";
+			attribute<bool> IsInDestClaimRegions(domain_grid) := ='and('+ AsItemList('!IsNull(RunRegions/RasterSets/'+UniqueDestRegionRefs/Values+')') +')';
 			
 			attribute<bool> Allocatable  (domain_grid) := IsInRunRegion && IsDefined(JrcFactorData/PrepareData/LandUseGrid) && IsInDestClaimRegions;
 			

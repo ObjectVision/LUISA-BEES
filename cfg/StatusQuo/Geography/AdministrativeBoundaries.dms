@@ -78,8 +78,8 @@ container AdministrativeBoundaries
 			attribute<string> 		Label:				expr = "Nuts1/Label[Nr_OrgEntity]";
 			attribute<string> 		Name:				expr = "Nuts1/LUISAName[Nr_OrgEntity]";
 			attribute<RunAreas>		RunAreaId:			expr = "rlookup(Name, RunAreas/Values)";
-			attribute<string> 		ForestDemandCode:	expr = "Code = 'BELUX' ? Code : Nuts1/Itl_Code[Nr_OrgEntity]";
-			attribute<string> 		ForestDemandName:	expr = "Code = 'BELUX' ? Name : Label";
+			attribute<string> 		ForestDemandCode:	expr = "Code = 'BL' ? Code : Nuts1/Itl_Code[Nr_OrgEntity]";
+			attribute<string> 		ForestDemandName:	expr = "Code = 'BL' ? 'BelgLux' : Label";
 			attribute<ForestDemandRegions> ForestDemandId: expr = "rlookup(ForestDemandName, ForestDemandRegions/Values)";
 		}
 		unit<uint32> outsideRun := subset(!Nuts1/Sel)

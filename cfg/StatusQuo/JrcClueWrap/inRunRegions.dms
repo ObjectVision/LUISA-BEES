@@ -26,7 +26,7 @@ container RunRegions: Using = "Geography/AdministrativeBoundaries;"
 		unit<uint32> OrgZones;
 		
 //		unit<uint16> Set16 := subset_uint16(OrgZones/RunAreaID == Geography/Regions/Runs/ZoneId[RunRegion]) // USE THIS when GeoDmsVersion() >= 7.208
-		unit<uint32> Set   := subset(OrgZones/RunAreaID == Geography/Regions/Runs/ZoneId[RunRegion]);
+		unit<uint32> Set   := subset(replace_value(OrgZones/RunAreaID, 'BELUX', 'BL', 'BE', 'BL', 'LU', 'BL') == Geography/Regions/Runs/ZoneId[RunRegion]);
 		unit<uint16> Set16 := range(uint16, 0w, uint16(#Set))
 		{
 			attribute<OrgZones>     nr_OrgEntity     := union_data(., Set/nr_OrgEntity);
