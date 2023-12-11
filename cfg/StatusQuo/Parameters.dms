@@ -1285,8 +1285,13 @@ container Parameters: KeepData = "True", Using = "Units"
 						attribute<float32> ArableMax    (Domain) := ArableMid * (1f + Arable_Width_factor);
 						attribute<float32> NewEnergyMin (Domain) := const(0f, Domain);
 						attribute<float32> NewEnergyMax (Domain) := const(0f, Domain);
-						attribute<float32> PasturesMin  (Domain) := float32(ClaimTablesOrg/Capri/data/Pastures);
-						attribute<float32> PasturesMax  (Domain) := float32(ClaimTablesOrg/Capri/data/Pastures);
+						attribute<float32> ExtensificationFactor(Domain) := 
+							year >= 2050 ? 1.20f : 
+							year >= 2040 ? 1.10f : 
+							year >= 2030 ? 1.05f : 
+							1.0f;
+						attribute<float32> PasturesMin  (Domain) := float32(ClaimTablesOrg/Capri/data/Pastures) * ExtensificationFactor;
+						attribute<float32> PasturesMax  (Domain) := float32(ClaimTablesOrg/Capri/data/Pastures) * ExtensificationFactor;
 						attribute<float32> PermCropsMin (Domain) := float32(ClaimTablesOrg/Capri/data/PermanentCrops);
 						attribute<float32> PermCropsMax (Domain) := float32(ClaimTablesOrg/Capri/data/PermanentCrops);
 					}
