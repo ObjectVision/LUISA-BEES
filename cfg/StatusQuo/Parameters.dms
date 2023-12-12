@@ -40,6 +40,7 @@ container Parameters: KeepData = "True", Using = "Units"
 			unit<UInt16> Decennium: Expr = "../Decennium";
 			unit<UInt16> Lustrum: Expr = "../Lustrum";
 			parameter<String> BaseYearCorineDataFileName: Expr = "'%LuisettaDataDir%/landuse/CLC12_Land_Cover_Adj_Poly.tif'"; 
+			container V := for_each_nedv(name, string(ID(.))+'[..]', void, .);
 		}
 		unit<UInt16> Decennium: NrOfRows = 5
 		{
@@ -1313,8 +1314,7 @@ container Parameters: KeepData = "True", Using = "Units"
 // 			unit<UInt16> Decennium: Expr = "PeriodSet/Decennium";
 // 			unit<UInt16> Lustrum:   Expr = "PeriodSet/Lustrum";
 
-			parameter<String> FolderName := replace_value(Expand(., '%env:DIR_OUTPUT%'), 'env:DIR_OUTPUT', 'GUI');
-			parameter<String> OutputDir := '%ProjDir%/results/' + ParamSets/ActiveSet/ParamName +'/' + replace(FolderName, '/', '_') + '/' + replace(Name, '/', '_');
+			parameter<String> OutputDir := ParamSets/ActiveSet/OutputFolderName + '/' + replace(Name, '/', '_');
 		}
 	}
 	container ParamSets 
@@ -1356,7 +1356,11 @@ container Parameters: KeepData = "True", Using = "Units"
 			
 			parameter<bool>	PopulationSpillovers: expr = "False";
 		}
-		container ActiveSet: Expr = "StatusQuo";   // @USERINPUT, use these lines to switch between StatusQuo and Integration
+		container ActiveSet := StatusQuo   // @USERINPUT, use these lines to switch between StatusQuo and Integration
+		{
+			parameter<String> FolderName := replace_value(Expand(., '%env:DIR_OUTPUT%'), 'env:DIR_OUTPUT', 'GUI');
+			parameter<string> OutputFolderName := '%projdir%/results/Reference' +'/' + replace(FolderName, '/', '_');
+		}
 		//container ActiveSet: Expr = "NoCAP";   // @USERINPUT, use these lines to switch between StatusQuo and Integration
 //		container ActiveSet: Expr = "Integration"; // @USERINPUT, use these lines to switch between StatusQuo and Integration
 	}
@@ -1508,7 +1512,7 @@ container Parameters: KeepData = "True", Using = "Units"
 				'AUT','BEL','BGR','HRV','CYP','CZE','DNM','EST','FIN','FRK','DEU','GRC','HUN','IRL','ITA','LVA','LTU','LUX','MLT','NLD','POL','PRT','ROU','SVK','SVN','ESP','SWE','GBE','EU-28','ISL','GBK'
 			];
 			attribute<string> ICC_code: [ 
-				'AT','BELUX','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','BELUX', 'MT','NL','PL','PT','RO','SK','SI','ES','SE','UK','EU-28','IS','???'
+				'AT','BL','BG','HR','CY','CZ','DK','EE','FI','FR','DE','EL','HU','IE','IT','LV','LT','BL', 'MT','NL','PL','PT','RO','SK','SI','ES','SE','UK','EU-28','IS','???'
 			];
 			attribute<Geography/Regions/JrcRegion> JrcRegion_rel := rlookup(ICC_code, Geography/Regions/JrcRegion/ICC);
 		}
