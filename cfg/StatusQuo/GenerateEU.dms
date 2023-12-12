@@ -68,7 +68,7 @@ container GenerateContainer
 			container LandusePerYear := for_each_nedv(Periods/Name, 'MakeDefined('+CombineExprPerPeriod+', 0[LandUseType])', Geography/Lambert100mGrid, LandUseType);
 			
 			// Mozaiking the generated RunRegion maps per Period
-			parameter<String> DirName := '%LocalDataProjDir%/Results/EU';
+			parameter<String> DirName := Parameters/ParamSets/ActiveSet/OutputFolderName + '/EU';
 			template GeneratePeriodTemplate
 			{
 				attribute<LandUseType> LandUse(Geography/Lambert100mGrid);				

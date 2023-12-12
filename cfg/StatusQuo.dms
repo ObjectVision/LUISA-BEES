@@ -61,5 +61,39 @@ container Luisetta
 	container CompareResultsContainer;
 	#include <GenerateEU.dms>
 	#include <Templates.dms>
+	
+	container Indicators
+	{
+		unit<uint8> MT := Classifications/LU/ModelType;
+		unit<wpoint> domain_grid := /Geography/Lambert100mGrid ;
+		unit<uint32> domain := ='union_unit('+AsItemList('Runs/'+Parameters/Meta/Run/Name+'/domain')+')', DialogType = "Map", DialogData = "BaseGrid"
+		{
+			attribute<domain_grid> grid_rel := ='union_data(domain, '+AsItemList('Runs/'+Parameters/Meta/Run/Name+'/domain/grid_rel[domain_grid]')+')';
+			attribute<.> BaseGrid(domain_grid) := invert(grid_rel);
+			attribute<MT> P2018 := /JrcFactorData/PrepareData/LandUseGrid[grid_rel];
+			attribute<MT> P2020 := Classifications/LU/ViewType/MT[ /GenerateContainer/MozaikLandUse/Results/landuse/P2020[grid_rel] ];
+			attribute<MT> P2045 := Classifications/LU/ViewType/MT[/GenerateContainer/MozaikLandUse/Results/landuse/P2045[grid_rel] ];
+			attribute<MT> P2050 := Classifications/LU/ViewType/MT[/GenerateContainer/MozaikLandUse/Results/landuse/P2050[grid_rel] ];
+		}
+		unit<uint32> IndicatorRegionSrc := /Geography/AdministrativeBoundaries/LUISA_zones/RunAreas;
+		unit<uint16> IndicatorRegion16  := cat_range(uint16, 0w, uint16(#IndicatorRegionSrc))
+		{
+			attribute<IndicatorRegionSrc> org_rel := value(ID(.), IndicatorRegionSrc);
+//			attribute<string> 		ZoneId           := IndicatorRegionSrc/ZoneId  [org_rel];
+			attribute<Geography/LambertEA> 	Geometry(polygon):= IndicatorRegionSrc/Geometry[org_rel];
+			attribute<string>		Label            := IndicatorRegionSrc/Label   [org_rel], DialogType = "LabelText";
+			attribute<.> per_grid(domain_grid) := poly2grid(Geometry, domain_grid);
+			attribute<.> per_domain(domain) := per_grid[domain/grid_rel];
+		}
+		
+		attribute</Geography/Regions/JrcRegion> JrcRegion_rel(domain) :=  poly2grid(/Geography/Regions/JrcRegion/geometry, domain_grid)[domain/grid_rel];
+		parameter<string> EuOutputDirName := Parameters/ParamSets/ActiveSet/OutputFolderName+'/EU';
+		container OutputGenerators := LandUseModels/ModelTraits/OutputGenerators;
+		
+		unit<uint16> Periods := /Parameters/PeriodSet/result;
+		container P2020 := OutputGenerators/SharedIndicators(domain, domain/P2018, domain/P2018, domain/P2020, JrcFactorData, IndicatorRegion16, IndicatorRegion16/per_domain, EuOutputDirName+'/P2020', Periods/V/P2020);
+		container P2050 := OutputGenerators/SharedIndicators(domain, domain/P2018, domain/P2045, domain/P2050, JrcFactorData, IndicatorRegion16, IndicatorRegion16/per_domain, EuOutputDirName+'/P2050', Periods/V/P2050);
+	}
+	
 
 }
