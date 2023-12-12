@@ -1277,22 +1277,19 @@ container Parameters: KeepData = "True", Using = "Units"
 					parameter<float32> Arable_Inc_factor   := float32(replace_value(Expand(., '%env:ARABLE_INC%'  ), 'env:ARABLE_INC'  , '0.00'));
 					
 					container data := ClaimTablesOrg/Capri/data {
-//						attribute<float32> ArableMin_org(Domain) := float32(ClaimTablesOrg/Capri/data/Arable);
-//						attribute<float32> ArableMax_org(Domain) := float32(ClaimTablesOrg/Capri/data/Arable);
-//						attribute<float32> ArableMid_org(Domain) := 0.5f * (ArableMin_org+ArableMax_org);
-//						attribute<float32> ArableMid    (Domain) := ArableMid_org * (1f+iif(Uint32(Data/year) < 2019, 0f, Arable_Inc_factor));
+						attribute<float32> ArableMin_org(Domain) := float32(ClaimTablesOrg/Capri/data/Arable);
+						attribute<float32> ArableMax_org(Domain) := float32(ClaimTablesOrg/Capri/data/Arable);
+						attribute<float32> ArableMid_org(Domain) := 0.5f * (ArableMin_org+ArableMax_org);
+						attribute<float32> ArableMid    (Domain) := ArableMid_org * (1f+iif(Uint32(Data/year) < 2019, 0f, Arable_Inc_factor));
 						
-//						attribute<float32> ArableMin    (Domain) := ArableMid * (1f - Arable_Width_factor);
-//						attribute<float32> ArableMax    (Domain) := ArableMid * (1f + Arable_Width_factor);
-						
+						attribute<float32> ArableMin    (Domain) := ArableMid * (1f - Arable_Width_factor);
+						attribute<float32> ArableMax    (Domain) := ArableMid * (1f + Arable_Width_factor);
 						attribute<float32> NewEnergyMin (Domain) := const(0f, Domain);
 						attribute<float32> NewEnergyMax (Domain) := const(0f, Domain);
-						attribute<float32> ExtensificationFactor(Domain) := 
-							uint32(year) >= 2050 ? 1.20f : 
-							uint32(year) >= 2040 ? 1.10f : 
-							uint32(year) >= 2030 ? 1.05f : 
-							1.0f;
-						attribute<float32> Pastures     (Domain) := float32(ClaimTablesOrg/Capri/data/Pastures) * ExtensificationFactor;
+						attribute<float32> PasturesMin  (Domain) := float32(ClaimTablesOrg/Capri/data/Pastures);
+						attribute<float32> PasturesMax  (Domain) := float32(ClaimTablesOrg/Capri/data/Pastures);
+						attribute<float32> PermCropsMin (Domain) := float32(ClaimTablesOrg/Capri/data/PermanentCrops);
+						attribute<float32> PermCropsMax (Domain) := float32(ClaimTablesOrg/Capri/data/PermanentCrops);
 					}
 				}
 			}
@@ -1362,7 +1359,7 @@ container Parameters: KeepData = "True", Using = "Units"
 		container ActiveSet := StatusQuo   // @USERINPUT, use these lines to switch between StatusQuo and Integration
 		{
 			parameter<String> FolderName := replace_value(Expand(., '%env:DIR_OUTPUT%'), 'env:DIR_OUTPUT', 'GUI');
-			parameter<string> OutputFolderName := '%projdir%/results/Reference' +'/' + replace(FolderName, '/', '_');
+			parameter<string> OutputFolderName := '%projdir%/results/Extensification' +'/' + replace(FolderName, '/', '_');
 		}
 		//container ActiveSet: Expr = "NoCAP";   // @USERINPUT, use these lines to switch between StatusQuo and Integration
 //		container ActiveSet: Expr = "Integration"; // @USERINPUT, use these lines to switch between StatusQuo and Integration
