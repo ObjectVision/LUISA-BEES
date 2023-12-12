@@ -1359,7 +1359,7 @@ container Parameters: KeepData = "True", Using = "Units"
 		container ActiveSet := StatusQuo   // @USERINPUT, use these lines to switch between StatusQuo and Integration
 		{
 			parameter<String> FolderName := replace_value(Expand(., '%env:DIR_OUTPUT%'), 'env:DIR_OUTPUT', 'GUI');
-			parameter<string> OutputFolderName := '%projdir%/results/Reference' +'/' + replace(FolderName, '/', '_');
+			parameter<string> OutputFolderName := '%projdir%/results/ProtectedGrassland' +'/' + replace(FolderName, '/', '_');
 		}
 		//container ActiveSet: Expr = "NoCAP";   // @USERINPUT, use these lines to switch between StatusQuo and Integration
 //		container ActiveSet: Expr = "Integration"; // @USERINPUT, use these lines to switch between StatusQuo and Integration
