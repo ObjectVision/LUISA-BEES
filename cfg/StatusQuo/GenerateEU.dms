@@ -16,7 +16,8 @@ container GenerateContainer
 				
 				container result: ExplicitSuppliers = "TimeStep/ResultingState/OutputGeneration/ClippedLandUseVT;TimeStep/ResultingState/CumulStatusFlag;TimeStep/ResultingState/GeneratedFiles"
 				{
-					parameter<bool> StatusFlag: Expr = "TimeStep/ResultingState/CumulStatusFlag";
+					parameter<bool> StatusFlag := TimeStep/ResultingState/CumulStatusFlag;
+					parameter<string> StatusText := TimeStep/d_alloc/Status;
 				}
 			}
 			
@@ -34,6 +35,9 @@ container GenerateContainer
 					attribute<bool> StatusFlags(Periods) := ='union_data(Periods, '+AsList('CalculatedPeriods/'+Periods/Name+'/result/StatusFlag', ',')+')'
 					,	ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result', ';')+';RunRegion/simulation_results/GeneratedFiles'"
 					;
+					attribute<string> StatusTexts(Periods) := ='union_data(Periods, '+AsList('CalculatedPeriods/'+Periods/Name+'/result/StatusText', ',')+')'
+					,	ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result', ';')+';RunRegion/simulation_results/GeneratedFiles'"
+					;
 				}
 			}
 			container All: Expr = 
@@ -47,6 +51,9 @@ container GenerateContainer
 		container ButtonCan: Descr = "The Generate parameter is contained in order to allow impl/All to be opened without all the meta info procesing that comes with getting Generate in the TreeView"
 		{
 			container StatusFlags:= for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusFlags', Periods, bool)
+				,	StoreData = "True"
+				,	FreeData  = "False";
+			container StatusTexts := for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusTexts', Periods, string)
 				,	StoreData = "True"
 				,	FreeData  = "False";
 			parameter<String> results
