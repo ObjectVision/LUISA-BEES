@@ -49,13 +49,14 @@ container GenerateContainer
 		}
 		
 		container ButtonCan: Descr = "The Generate parameter is contained in order to allow impl/All to be opened without all the meta info procesing that comes with getting Generate in the TreeView"
+			,	StoreData = "True"
+			,	FreeData  = "False"
 		{
-			container StatusFlags:= for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusFlags', Periods, bool)
-				,	StoreData = "True"
-				,	FreeData  = "False";
-			container StatusTexts := for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusTexts', Periods, string)
-				,	StoreData = "True"
-				,	FreeData  = "False";
+			container StatusFlags:= for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusFlags', Periods, bool);
+			container StatusTexts := for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusTexts', Periods, string);
+			attribute<Periods> FirstFailure(ActiveRun) := ='union_data(ActiveRun, '+AsItemList('min_index(StatusFlags/'+ActiveRun/Name+' ? 9999w - ID(Periods) : ID(Periods))')+')';
+			attribute<string> StatusText(ActiveRun) := ='union_data(ActiveRun, '+AsItemList('StatusTexts/'+ActiveRun/Name+'[FirstFailure['+string(id(ActiveRun))+'[ActiveRun]]]')+')';
+			
 			parameter<String> results
 				:	Expr = "'calculated'"
 				,	ExplicitSuppliers = "=AsList('impl/All/'+ActiveRun/Name+'/result',';')"
