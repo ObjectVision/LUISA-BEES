@@ -70,7 +70,7 @@ container getCapriData: Using = "Geography/AdministrativeBoundaries/BoundaryDoma
 			
 			attribute<Capri> Capri_rel: Expr = "CapriLookup/Capri_rel[rlookup(code, CapriLookup/Nuts2Code)]";
 	}
-	unit<UInt32> CapriLookup: NrOfRows = 268
+	unit<UInt32> CapriLookup: NrOfRows = 231
 	{
 	
 	parameter<uint32> nrAttr: Expr = "4";
@@ -365,6 +365,7 @@ container getCapriData: Using = "Geography/AdministrativeBoundaries/BoundaryDoma
 	//		,'TRC1','TR','TRC1','Gaziantep'
 	//		,'TRC2','TR','TRC2','Sanliurfa'
 	//		,'TRC3','TR','TRC3',''
+/*	Brexit
 			,'UKC1','UK','UKC0','North East'
 			,'UKC2','UK','UKC0','North East'
 			,'UKD1','UK','UKD0','North West (including Merseyside)'
@@ -402,6 +403,7 @@ container getCapriData: Using = "Geography/AdministrativeBoundaries/BoundaryDoma
 			,'UKM5','UK','UKM0','Scotland'
 			,'UKM6','UK','UKM0','Scotland'
 			,'UKN0','UK','UKN0','Northern Ireland'
+*/			
 		//	,'RS01','RS','RS00','Republic of Serbia'
 		//	,'RS02','RS','RS00','Republic of Serbia'
 		//	,'RS03','RS','RS00','Republic of Serbia'
