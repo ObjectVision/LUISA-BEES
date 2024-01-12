@@ -72,7 +72,8 @@ container ModelTraits
 	{
 		unit<uint32>			domain;
 		unit<uint16> 	   		Region;
-		attribute<Region> 		RegionRel 			(domain);
+		attribute<Region> 		RegionRel(domain);
+		attribute<ModelType>    LandUse  (domain);
 		
 		attribute<float32>  	randomfield (domain): expr = "rnd_uniform(1, domain, range(float32, float32(0.02), float32(0.1)))";
 		
@@ -84,7 +85,7 @@ container ModelTraits
 		
 		attribute<float32> 		proto_Population_Distribution	(domain): Expr = "max_elem(Demographics/InternalMovements/RemainingStock/summed + MakeDefined(scaleSum(Redistribution, Regionrel, Kj), float32(0)), float32(0))";
 		attribute<float32>		supply_effect			(domain): Expr = "HousingStock/Si - proto_Population_Distribution";
-		attribute<float32>		def_Redistribution		(domain): Expr = "(!ModelType/IsUrban[ResultingState/LandUse] && PrevState/Qi < 2[float32]) ? float32(0) : max_elem(Redistribution + (HousingStock/Si - proto_Population_Distribution), float32(0))"; // model very biased towards existing housing stock
+		attribute<float32>		def_Redistribution		(domain) := (!ModelType/IsUrban[LandUse] && PrevState/Qi < 2[float32]) ? float32(0) : max_elem(Redistribution + (HousingStock/Si - proto_Population_Distribution), float32(0)); // model very biased towards existing housing stock
 		attribute<float32> 		Population_Distribution	(domain): Expr = "max_elem(Demographics/InternalMovements/RemainingStock/summed + MakeDefined(scaleSum(def_Redistribution, Regionrel, Kj), float32(0)), float32(0))";
 		attribute<float32>		Distribution_dif  		(domain): Expr = "Population_Distribution - PrevState/Qi";
 		
