@@ -18,18 +18,17 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 	
 	container HousingStock {
 		
-		attribute<DestPopClaimRegion>UrbanProjectionRegionRel	(domain): Expr = "= '(RunRegions/RasterSets/'+CaseData/RegionRefs[uint8(0)] +')[domain/grid_rel]'";
-		
-		attribute<DestPopClaimRegion>  	 	Regionrel	  		(domain): Expr = "CaseData/DestPopRasterLink[domain/grid_rel]";
+		attribute<RunRegions/UnitSets/NUTS2_LUISA> UrbanProjectionRegionRel  (domain) := ='(RunRegions/RasterSets/'+CaseData/RegionRefs[uint8(0)] +')[domain/grid_rel]';		
+		attribute<DestPopClaimRegion>  Regionrel                (domain) := CaseData/DestPopRasterLink[domain/grid_rel];
 		
 		attribute<float32>  mean_urb_dens 						(DestPopClaimRegion): expr = "sum(float32(ModelType/isUrban[PrevState/landuse]) * PrevState/Qi, RegionRel) / sum(float32(ModelType/isUrban[PrevState/landuse]), RegionRel)";
 		
-		attribute<float32>  Si			(domain): expr = "switch("
-			"case(PrevState/LandUse != ModelType/V/Urban && ResultingState/LandUse = ModelType/V/Urban, float32(0.5) * (mean_urb_dens[RegionRel] + PrevState/Variables/Neigh_Si)), "
-			"case(PrevState/Si = float32(0) && ResultingState/LandUse != ModelType/V/Urban, prevState/Qi), "
-			"case(PrevState/S_Agei >= Rules/SupplyChange, PrevState/Qi), "
-			"PrevState/Si)";
-		attribute<Year>	   	S_Agei 		(domain): Expr = "Si = PrevState/Si ? PrevState/S_Agei + Parameters/PeriodSet/result/PeriodLength[PeriodId]: 0[Year]"; // 0 years if supply has changed in a year
+		attribute<float32>  Si			(domain) := switch(
+			case(PrevState/LandUse != ModelType/V/Urban && d_alloc/LandUse == ModelType/V/Urban, float32(0.5) * (mean_urb_dens[RegionRel] + PrevState/Variables/Neigh_Si)), 
+			case(PrevState/Si = float32(0) && d_alloc/LandUse != ModelType/V/Urban, prevState/Qi), 
+			case(PrevState/S_Agei >= Rules/SupplyChange, PrevState/Qi), 
+			PrevState/Si);
+		attribute<Year>	   	S_Agei 		(domain) := Si == PrevState/Si ? PrevState/S_Agei + Parameters/PeriodSet/result/PeriodLength[PeriodId]: 0[Year]; // 0 years if supply has changed in a year
 	}
 	
 	container Demographics {
@@ -163,22 +162,21 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 	
 	parameter<String> TimeStepDirName := simulation_results/metadata/DirName + '\'+Periods/Name[PeriodID];
 	
-	container ResultingState
+	container ResultingStateImpl
 	{	
 		parameter<YearRange> RefTime := CurrYear;
-		
-		attribute<ModelType> LandUse     (domain) := d_alloc/landuse, Label = "= 'Land use ' + string(RefTime)";
+		attribute<ModelType> LandUse    (domain) := d_alloc/landuse, Label = "= 'Land use ' + string(RefTime)";
+		attribute<bool>      HasChanged (domain) := LandUse != PrevState/LandUse;
+		attribute<float32>   Qi         (domain) := PopulationDistribution/Qi, Label = "= 'Qi ' + string(RefTime)"; //, IntegrityCheck = "DynamicComponent/Population/Solved";
+		attribute<float32> 	 Si         (domain) := HousingStock/Si, Label = "= 'Housing Supply ' + string(RefTime)";
+		attribute<Year>      S_Agei     (domain) := HousingStock/S_Agei, Label = "= 'Age of housing supply ' + string(RefTime)";
+		attribute<YearDiffRange> Age    (domain) := (HasChanged ? value(0, YearDiffRange) : PrevState/Age) + (RefTime - PrevState/RefTime)[YearDiffRange];
+	}
+	container ResultingState := FenceContainer(ResultingStateImpl, TimeStepDirName)
+	{
 		attribute<ModelType> LandUse_Grid(domain_grid) := LandUse[domain/BasisGrid];
 		attribute<int32>     Qi_Grid	 (domain_grid) := int32(Qi)[domain/BasisGrid];
 
-		attribute<bool>      HasChanged(domain) := LandUse != PrevState/LandUse;
-	
-		attribute<YearDiffRange> Age(domain) := (HasChanged ? value(0, YearDiffRange) : PrevState/Age) + (RefTime - PrevState/RefTime)[YearDiffRange];
-		
-		attribute<float32> 			Si(domain): 				  			Expr = "HousingStock/Si", Label = "= 'Housing Supply ' + string(RefTime)";
-		attribute<Year> S_Agei	   (domain): 				  				Expr = "HousingStock/S_Agei", Label = "= 'Age of housing supply ' + string(RefTime)";
-		attribute<float32> Qi(domain):                 						Expr = "PopulationDistribution/Qi", Label = "= 'Qi ' + string(RefTime)"; //, IntegrityCheck = "DynamicComponent/Population/Solved";
-		attribute<float32> Qj(DestPopClaimRegion): 							Expr = "Sum(PopulationDistribution/Qi, CaseData/DestPopRasterLink[domain/grid_rel])", Label = "= 'Qj ' + string(RefTime)";
 		attribute<float32> PotQi (domain): 									Expr = "MakeDefined(potential(Qi[domain/BasisGrid], Parameters/FuncKernels/RooksNeighbours/Matr)[domain/grid_rel] / StartingState/NeighboursWeight, 0[float32])";
 
 		attribute<float32> PopDensity_km2 (domain): 						Expr = "MakeDefined(potential(Qi[domain/BasisGrid], Parameters/FuncKernels/Area1km2/AbsWeight)[domain/grid_rel] , 0[NrResidents])";		
