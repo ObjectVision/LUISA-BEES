@@ -1216,7 +1216,7 @@ container Parameters: KeepData = "True", Using = "Units"
 				
 				attribute<RegionDomain> region_nr  (Domain) := rlookup(RegionUp, RegionDomain/ZoneId);
 				attribute<bool> region_prefixKnown (Domain) := IsDefined(rlookup(substr(RegionUp, 0, 2),substr(RegionDomain/ZoneId, 0, 2))) || RegionUp == 'BL';
-				attribute<bool> region_exception1  (Domain) := (strlen(RegionUp_Raw) == 4) && region_prefixKnown && (substr(RegionUp_Raw, 2, 2) == '00');
+				attribute<bool> region_exception1  (Domain) := (strlen(RegionUp_Raw) == 4) && region_prefixKnown && (substr(RegionUp_Raw, 2, 2) == '00') || substr(RegionUp_Raw, 0, 2) == 'UK';
 				attribute<bool> region_allowed     (Domain) := isDefined(region_nr) || (region_exception1) || RegionUp == 'BL' || RegionUp == 'PT20' || RegionUp == 'PT30';
 				
 				attribute<Domain> rel_curr_years	(PeriodSet/result) := rlookup(PeriodSet/result/ProjectedYear, value(year, float32));

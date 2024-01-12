@@ -46,7 +46,9 @@ Container PopulationParameters
 			attribute<bool>	  aSpatialComponent: 	expr = "id(.) = SpatialComponent";
 		}
 			
-		  Container parameterSet: expr = "for_each_nedv(Factors/Suitweight ? Factors/FactorName : '', 'value(GetFactorMatrix/TableChopper/Data/'+ Factors/FactorName+'[GetFactorMatrix/TableChopper/Data/TrueCountryId], float32)', Meta/Run, float32)"
+		  Container parameterSet := for_each_nedv(Factors/Suitweight ? Factors/FactorName : ''
+			, 'value(GetFactorMatrix/TableChopper/Data/'+ Factors/FactorName+'[GetFactorMatrix/TableChopper/Data/TrueCountryId], float32)'
+			, Meta/Run, float32)
 		  {
 		  	attribute<Meta/Run> ZoneId (Meta/Run): expr = "id(Meta/Run)";
 		  }
@@ -57,39 +59,42 @@ Container PopulationParameters
 
 	Container doReadPopFile: IsTemplate = "True"
 	{
-		unit<uint16> 								UnitRef; // :		expr = "Meta/Alloc1Set/UniqueFiles";
+		unit<uint16> UnitRef; // :		expr = "Meta/Alloc1Set/UniqueFiles";
 		
 		unit<uint32> Factors: 					expr = "popcali/factors";
 		
 		container TableChopper
 		{
-		   parameter<String> FileName:       	expr = "ParamSets/ActiveSet/ParamPath + '/Population/Population_weights.csv'";
-		   unit<uint16>      Domain:  			expr = "UnitRef";
-		   parameter<String> FieldSeparator: 	expr = "';'";
-		
-		   parameter<String> FileData
-		   :  StorageType = "str"
-		   ,  StorageName = "=FileName";
-		   parameter<String> HeaderLine: expr = "readLines(FileData, void, 0)";
-		   parameter<Bool>   HeaderOK:   expr = "regex_match(HeaderLine,'\"[^\"]*+\"(;\"[^\"]*+\")*+')";
-		        
-		   unit<UInt32> Field: expr = "Range(UInt32, 0, strcount(HeaderLine, FieldSeparator)+1)"
-		   { 
-		   		attribute<String> 		Name: 		Expr = "ReadArray(HeaderLine, Field, String, 0)";
-		   		attribute<bool>	  		Factor:		Expr = "id(.) >= 0[Field] && id(.) < #factors";
-		   		attribute<Factors> 		FactorRef:	Expr = "rlookup(Name, Factors/FactorName)";
-		   }
-		   
-		   unit<uint32> FactorList: expr = "subset(Field/Factor)" {attribute<string> Name: expr = "Field/Name[Nr_OrgEntity]"; attribute<Factors> FactorRef: expr = "Field/FactorRef[Nr_OrgEntity]";}
-		   
-		   attribute<String> BodyLines(Domain): expr = "readLines(FileData, Domain, HeaderLine/ReadPos)"; //,  IntegrityCheck = "HeaderOK";
-		   attribute<Bool> LinesAreSignedIntegerStringOrEmpy (Domain): expr = 
-		      "regex_match(BodyLines,'(-?+[0-9]++|\"[^\"]*+\")?+(;(-?+[0-9]++|\"[^\"]*+\")?+)*+')";
-		        
-		   container Data := for_each_nedv(Field/Name, 'ReadElems(BodyLines,string,'+MakeDefined(Field/Name[sub_or_null(ID(Field), 1)]+'/ReadPos','const(0,Domain)')+')',Domain,string)
-		   {
-		   		attribute<uint16> 							TrueCountryid (Domain): expr = "= 'rlookup(Domain/Name, '+ Factors/FactorName[0[Factors]] +')'";
-		   }
-		 }
+			parameter<String> FileName:       	expr = "ParamSets/ActiveSet/ParamPath + '/Population/Population_weights.csv'";
+			parameter<String> FieldSeparator: 	expr = "';'";
+
+			parameter<String> FileData
+				:  StorageType = "str"
+				,  StorageName = "=FileName";
+			parameter<String> HeaderLine: expr = "readLines(FileData, void, 0)";
+			parameter<Bool>   HeaderOK:   expr = "regex_match(HeaderLine,'\"[^\"]*+\"(;\"[^\"]*+\")*+')";
+
+			unit<UInt32> Field: expr = "Range(UInt32, 0, strcount(HeaderLine, FieldSeparator)+1)"
+			{ 
+				attribute<String> 		Name: 		Expr = "ReadArray(HeaderLine, Field, String, 0)";
+				attribute<bool>	  		Factor:		Expr = "id(.) >= 0[Field] && id(.) < #factors";
+				attribute<Factors> 		FactorRef:	Expr = "rlookup(Name, Factors/FactorName)";
+			}
+
+			unit<uint32> FactorList: expr = "subset(Field/Factor)" 
+			{
+				attribute<string> Name := Field/Name[Nr_OrgEntity]; 
+				attribute<Factors> FactorRef := Field/FactorRef[Nr_OrgEntity];
+			}
+
+			unit<uint16>      Domain := range(uint16, 0w, uint16(strcount(FileData, '\n'))-1w);
+			attribute<String> BodyLines(Domain): expr = "readLines(FileData, Domain, HeaderLine/ReadPos)"; //,  IntegrityCheck = "HeaderOK";
+			attribute<Bool> LinesAreSignedIntegerStringOrEmpy (Domain) := regex_match(BodyLines,'(-?+[0-9]++|\"[^\"]*+\")?+(;(-?+[0-9]++|\"[^\"]*+\")?+)*+');
+
+			container Data := for_each_nedv(Field/Name, 'ReadElems(BodyLines,string,'+MakeDefined(Field/Name[sub_or_null(ID(Field), 1)]+'/ReadPos','const(0,Domain)')+')',Domain,string)
+			{
+				attribute<Domain> TrueCountryid (UnitRef) := = 'rlookup(UnitRef/Name, '+ Factors/FactorName[0[Factors]] +')';
+			}
+		}
 	}
 }
