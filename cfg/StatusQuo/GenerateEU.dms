@@ -16,22 +16,23 @@ container GenerateContainer
 				
 				container result: ExplicitSuppliers = "TimeStep/ResultingState/OutputGeneration/ClippedLandUseVT;TimeStep/ResultingState/CumulStatusFlag;TimeStep/ResultingState/GeneratedFiles"
 				{
-					parameter<bool> StatusFlag: Expr = "TimeStep/ResultingState/CumulStatusFlag";
+					parameter<bool> StatusFlag := TimeStep/ResultingState/CumulStatusFlag;
+					parameter<string> StatusText := TimeStep/d_alloc/Status;
 				}
 			}
 			
 			template GenerateRunRegionTemplate
 			{
 				container RunRegion;
-				container CalculatedPeriods: Expr = 
-					"for_each_ne(Periods/Name, "
-						"'GeneratePeriodTemplate('"
-							"+'RunRegion/TimeSteps/'+Periods/Name"
-						"+')'"
-					")";
+				container CalculatedPeriods := for_each_ne(Periods/Name, 'GeneratePeriodTemplate(RunRegion/TimeSteps/'+Periods/Name+')');
+//				container CalculatedPeriods := FenceContainer(CalculatedPeriods_impl, 'RunRegion: '+RunRegion/RunParameters/name);
+				
 				container result
 				{
 					attribute<bool> StatusFlags(Periods) := ='union_data(Periods, '+AsList('CalculatedPeriods/'+Periods/Name+'/result/StatusFlag', ',')+')'
+					,	ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result', ';')+';RunRegion/simulation_results/GeneratedFiles'"
+					;
+					attribute<string> StatusTexts(Periods) := ='union_data(Periods, '+AsList('CalculatedPeriods/'+Periods/Name+'/result/StatusText', ',')+')'
 					,	ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result', ';')+';RunRegion/simulation_results/GeneratedFiles'"
 					;
 				}
@@ -45,14 +46,19 @@ container GenerateContainer
 		}
 		
 		container ButtonCan: Descr = "The Generate parameter is contained in order to allow impl/All to be opened without all the meta info procesing that comes with getting Generate in the TreeView"
+			,	StoreData = "True"
+			,	FreeData  = "False"
 		{
-			container StatusFlags:= for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusFlags', Periods, bool)
-				,	StoreData = "True"
-				,	FreeData  = "False";
+			container StatusFlags:= for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusFlags', Periods, bool);
+			container StatusTexts := for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusTexts', Periods, string);
+			attribute<Periods> FirstFailureOrLastAlloc(ActiveRun) := ='union_data(ActiveRun, '+AsItemList('max_index(StatusFlags/'+ActiveRun/Name+' ? 9999w - ID(Periods) : ID(Periods))')+')';
+			attribute<string> StatusText(ActiveRun) := ='union_data(ActiveRun, '+AsItemList('StatusTexts/'+ActiveRun/Name+'[FirstFailureOrLastAlloc['+string(id(ActiveRun))+'[ActiveRun]]]')+')';
+			
+			parameter<bool> StatusOK := ='and('+AsItemList('all(StatusFlags/'+ActiveRun/Name+')')+')';
 			parameter<String> results
 				:	Expr = "'calculated'"
-				,	ExplicitSuppliers = "=AsList('impl/All/'+ActiveRun/Name+'/result',';')"
-				,	IntegrityCheck   = "='and('+AsItemList('all(StatusFlags/'+ActiveRun/Name+')')+')'";
+				,	ExplicitSuppliers = "=AsList('impl/All/'+ActiveRun/Name+'/result',';')+';GenerateAllLandSupplyCurves/Generate2020;GenerateAllLandPairSupplyCurves/Generate2020'"
+				,	IntegrityCheck   = "StatusOK";
 		}
 	}
 	container MozaikLandUse
