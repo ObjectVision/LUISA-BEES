@@ -24,12 +24,9 @@ container GenerateContainer
 			template GenerateRunRegionTemplate
 			{
 				container RunRegion;
-				container CalculatedPeriods: Expr = 
-					"for_each_ne(Periods/Name, "
-						"'GeneratePeriodTemplate('"
-							"+'RunRegion/TimeSteps/'+Periods/Name"
-						"+')'"
-					")";
+				container CalculatedPeriods := for_each_ne(Periods/Name, 'GeneratePeriodTemplate(RunRegion/TimeSteps/'+Periods/Name+')');
+//				container CalculatedPeriods := FenceContainer(CalculatedPeriods_impl, 'RunRegion: '+RunRegion/RunParameters/name);
+				
 				container result
 				{
 					attribute<bool> StatusFlags(Periods) := ='union_data(Periods, '+AsList('CalculatedPeriods/'+Periods/Name+'/result/StatusFlag', ',')+')'
@@ -54,13 +51,14 @@ container GenerateContainer
 		{
 			container StatusFlags:= for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusFlags', Periods, bool);
 			container StatusTexts := for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusTexts', Periods, string);
-			attribute<Periods> FirstFailure(ActiveRun) := ='union_data(ActiveRun, '+AsItemList('min_index(StatusFlags/'+ActiveRun/Name+' ? 9999w - ID(Periods) : ID(Periods))')+')';
-			attribute<string> StatusText(ActiveRun) := ='union_data(ActiveRun, '+AsItemList('StatusTexts/'+ActiveRun/Name+'[FirstFailure['+string(id(ActiveRun))+'[ActiveRun]]]')+')';
+			attribute<Periods> FirstFailureOrLastAlloc(ActiveRun) := ='union_data(ActiveRun, '+AsItemList('max_index(StatusFlags/'+ActiveRun/Name+' ? 9999w - ID(Periods) : ID(Periods))')+')';
+			attribute<string> StatusText(ActiveRun) := ='union_data(ActiveRun, '+AsItemList('StatusTexts/'+ActiveRun/Name+'[FirstFailureOrLastAlloc['+string(id(ActiveRun))+'[ActiveRun]]]')+')';
 			
+			parameter<bool> StatusOK := ='and('+AsItemList('all(StatusFlags/'+ActiveRun/Name+')')+')';
 			parameter<String> results
 				:	Expr = "'calculated'"
-				,	ExplicitSuppliers = "=AsList('impl/All/'+ActiveRun/Name+'/result',';')"
-				,	IntegrityCheck   = "='and('+AsItemList('all(StatusFlags/'+ActiveRun/Name+')')+')'";
+				,	ExplicitSuppliers = "=AsList('impl/All/'+ActiveRun/Name+'/result',';')+';GenerateAllLandSupplyCurves/Generate2020;GenerateAllLandPairSupplyCurves/Generate2020'"
+				,	IntegrityCheck   = "StatusOK";
 		}
 	}
 	container MozaikLandUse
