@@ -158,7 +158,7 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 		attribute<ModelType> landuse(domain);
 	}
 	
-	container PopulationDistribution: expr = "ModelTraits/PopulationDistribution(domain, DestPopClaimRegion, CaseData/DestPopRasterLink[domain/grid_rel])";
+	container PopulationDistribution := ModelTraits/PopulationDistribution(domain, DestPopClaimRegion, CaseData/DestPopRasterLink[domain/grid_rel], d_alloc/LandUse);
 	
 	parameter<String> TimeStepDirName := simulation_results/metadata/DirName + '\'+Periods/Name[PeriodID];
 	
