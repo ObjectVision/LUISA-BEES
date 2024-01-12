@@ -11,11 +11,10 @@ container getOptimalk
 		attribute<float32>	Qi							(domain): expr = "float32(CaseData/PrepareVariables/Qi)";
 		attribute<float32>	PotQi 						(domain): expr = "potential(CaseData/PrepareVariables/Qi[domain/basisgrid], Parameters/FuncKernels/RooksNeighbours/Matr)[domain/grid_rel]";
 		attribute<float32>  PotentialAccess				(domain): expr = "PrepareVariables/PotentialAccess";
-		attribute<float32>  TownAccess					(domain): expr = "PrepareVariables/TownAccess[domain/grid_rel]";
+		attribute<float32>  TownAccess					(domain) := PrepareVariables/TownAccess;
 		
 		container Variables := CaseData/PrepareVariables;
 	}
-	container ResultingState: Expr = "PrevState";
  	container HousingStock {
 		attribute<float32> Si (domain): expr = "PrevState/Qi";
 	}
@@ -40,6 +39,6 @@ container getOptimalk
 		}
 		attribute<bool>	   popdecline 	(PopModelZones):   Expr = "Kj/summed < float32(0)";
 	}
-	container PopulationDistribution: expr = "LandUseModels/ModelTraits/PopulationDistribution(domain, PopModelZones, PopModelRaster)";
+	container PopulationDistribution := LandUseModels/ModelTraits/PopulationDistribution(domain, PopModelZones, PopModelRaster, PrevState/LandUse);
 	
 }
