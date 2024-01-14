@@ -43,8 +43,8 @@ container ModelTraits
 				
 				attribute<bool> Urban             (domain):= const(true, domain);
 				attribute<bool> Industrial        (domain):= const(true, domain);
-				attribute<bool> Arable     		  (domain):= not(IsBuiltupArea) && !IsPastures;
-				attribute<bool> PermanentCrops    (domain):= not(IsBuiltupArea) && !IsPastures;
+				attribute<bool> Arable     		  (domain):= not(IsBuiltupArea); // && !IsPastures;
+				attribute<bool> PermanentCrops    (domain):= not(IsBuiltupArea); // && !IsPastures;
 				attribute<bool> Pastures          (domain):= not(IsBuiltupArea);
 				attribute<bool> ForestsMature     (domain):= not(BurntForest/NewlyBurnt) && (PrevState/LandUse == ModelType/V/ForestsMature || (PrevState/LandUse == ModelType/V/ForestsYoung && PrevState/Age >= 20[YearDiffRange]));
 				attribute<bool> TransWoodlandShrub(domain):= (BurntForest/NewlyBurnt || IsAbandoned && PrevState/Age >= 5[YearDiffRange] || (PrevState/LandUse == ModelType/V/TransWoodlandShrub && PrevState/Age < 10[YearDiffRange]));
@@ -53,8 +53,8 @@ container ModelTraits
 				attribute<bool> AbanPastures      (domain):= const(false, domain);
 				attribute<bool> AbanUrban         (domain):= PrevState/LandUse == ModelType/V/Urban          || PrevState/LandUse == ModelType/V/AbanUrban || PrevState/LandUse == ModelType/V/AbanIndustry;
 				attribute<bool> AbanIndustry      (domain):= PrevState/LandUse == ModelType/V/Industrial     || PrevState/LandUse == ModelType/V/AbanIndustry || PrevState/LandUse == ModelType/V/AbanUrban;
-				attribute<bool> NewEnergyCrops    (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/V/ForestsYoung) && !IsPastures;
-				attribute<bool> SHVA              (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/V/ForestsYoung) && not(PrevState/LandUse == ModelType/V/ForestsMature) && not(PrevState/LandUse == ModelType/V/TransWoodlandShrub) && !IsPastures;
+				attribute<bool> NewEnergyCrops    (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/V/ForestsYoung); // && !IsPastures;
+				attribute<bool> SHVA              (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/V/ForestsYoung) && not(PrevState/LandUse == ModelType/V/ForestsMature) && not(PrevState/LandUse == ModelType/V/TransWoodlandShrub); // && !IsPastures;
 				attribute<bool> ForestsYoung      (domain):= not(BurntForest/NewlyBurnt) && ((PrevState/LandUse == ModelType/V/ForestsYoung && PrevState/Age < 20[YearDiffRange])	||	(PrevState/LandUse == ModelType/V/TransWoodlandShrub && PrevState/Age >= 10[YearDiffRange]));
 			}
 			container TransPot := for_each_nedv(LUT/Name
