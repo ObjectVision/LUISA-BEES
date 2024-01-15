@@ -24,8 +24,8 @@ container GenerateContainer
 			template GenerateRunRegionTemplate
 			{
 				container RunRegion;
-				container CalculatedPeriods := for_each_ne(Periods/Name, 'GeneratePeriodTemplate(RunRegion/TimeSteps/'+Periods/Name+')');
-//				container CalculatedPeriods := FenceContainer(CalculatedPeriods_impl, 'RunRegion: '+RunRegion/RunParameters/name);
+				container CalculatedPeriods_impl := for_each_ne(Periods/Name, 'GeneratePeriodTemplate(RunRegion/TimeSteps/'+Periods/Name+')');
+				container CalculatedPeriods := FenceContainer(CalculatedPeriods_impl, 'RunRegion: '+RunRegion/RunParameters/name);
 				
 				container result
 				{
@@ -51,9 +51,13 @@ container GenerateContainer
 		{
 			container StatusFlags:= for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusFlags', Periods, bool);
 			container StatusTexts := for_each_nedv(ActiveRun/Name, 'impl/All/'+ActiveRun/Name+'/result/StatusTexts', Periods, string);
-			attribute<Periods> FirstFailureOrLastAlloc(ActiveRun) := ='union_data(ActiveRun, '+AsItemList('max_index(StatusFlags/'+ActiveRun/Name+' ? 9999w - ID(Periods) : ID(Periods))')+')';
-			attribute<string> StatusText(ActiveRun) := ='union_data(ActiveRun, '+AsItemList('StatusTexts/'+ActiveRun/Name+'[FirstFailureOrLastAlloc['+string(id(ActiveRun))+'[ActiveRun]]]')+')';
-			
+			container RunRegionResults {
+				attribute<string>  Country                (ActiveRun) := ActiveRun/name;
+				attribute<bool>    AllOK                  (ActiveRun) := ='union_data(ActiveRun, '+AsItemList('all(StatusFlags/'+ActiveRun/Name+')')+')';
+				attribute<Periods> FirstFailureOrLastAlloc(ActiveRun) := ='union_data(ActiveRun, '+AsItemList('min_index(StatusFlags/'+ActiveRun/Name+' ? 9999w - ID(Periods) : ID(Periods))')+')';
+				attribute<string>  FailYear               (ActiveRun) := AllOK ? '' : string(FirstFailureOrLastAlloc->ProjectedYear);
+				attribute<string>  StatusText             (ActiveRun) := ='replace(union_data(ActiveRun, '+AsItemList('StatusTexts/'+ActiveRun/Name+'[FirstFailureOrLastAlloc['+string(id(ActiveRun))+'[ActiveRun]]]')+'), '';'',''$'')';
+			}
 			parameter<bool> StatusOK := ='and('+AsItemList('all(StatusFlags/'+ActiveRun/Name+')')+')';
 			parameter<String> results
 				:	Expr = "'calculated'"
