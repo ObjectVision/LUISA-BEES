@@ -1043,29 +1043,26 @@ container Parameters: KeepData = "True", Using = "Units"
 						"'add(const('+MakeDefined(String(Alloc1Reg/ConstWeight), ' -9999.1')+', domain, Float32)'"
 						"+asList(', '+SuitTermExpr, '', CurrFactorWeights/LandUseType)+')'";
 								
-				attribute<string> SuitabilityExpExpr   (ModelType): Expr = "'exp(min_elem(MakeDefined(SuitabilityData/'+ModelType/Name+', Float32(-1000000)), float32(60)))'";
-				attribute<string> SuitabilityLogitExpr 		(ModelType): Expr = "SuitabilityExpExpr+'/(Float32(1)+'+SuitabilityExpExpr+')'";
+				attribute<string> SuitabilityExpExpr   (ModelType) := 'exp(min_elem(MakeDefined(SuitabilityData/'+ModelType/Name+', Float32(-1000000)), float32(60)))';
+				attribute<string> SuitabilityLogitExpr 		(ModelType) := SuitabilityExpExpr+'/(Float32(1)+'+SuitabilityExpExpr+')';
 				attribute<string> SuitabilityRescaleExpr	(ModelType) :=
 					'MakeDefined(protoSuitabilityLogit/'+ ModelType/Name + ' / nth_element(protoSuitabilityLogit/'+ ModelType/Name +', domain/p99_value), float32(0))';
 
-				parameter<string> SuitabilitySumExpExpr: Expr = "'add('+AsItemList(SuitabilityExpExpr)+')'";
-				attribute<string> SuitabilityMnlExpr   (ModelType): Expr = "SuitabilityExpExpr+' / TotalExpSuitability'";
+				parameter<string> SuitabilitySumExpExpr := 'add('+AsItemList(SuitabilityExpExpr)+')';
+				attribute<string> SuitabilityMnlExpr   (ModelType ):= SuitabilityExpExpr+' / TotalExpSuitability';
 				
-				attribute<string> LocSpecExprPrefix(ModelType):		 		
-		 			Expr = 
-		 				"((ParamSet/LocationSpecificPreferenceAddition <> Float32(0.0))"
-		 					"? ' * CaseData/LocSpec/'+ModelType/Name+'* ParamSet/LocationSpecificPreferenceAddition['+ggModelIdExpr+']'"
-		 					": '')";
+				attribute<string> LocSpecExprPrefix(ModelType) := 
+		 				((ParamSet/LocationSpecificPreferenceAddition <> Float32(0.0))
+		 					? ' * CaseData/LocSpec/'+ModelType/Name+'* ParamSet/LocationSpecificPreferenceAddition['+ggModelIdExpr+']'
+		 					: '');
 				
-//				attribute<string> LocSpecsModifierExpr (ModelType): expr = "CombinedSuitExpr + ' * ' + LocSpecExprPrefix";
-				
-				attribute<string> CombinedSuitExpr(ModelType): expr = "'Suitability/'+ModelType/Name";
+				attribute<string> CombinedSuitExpr(ModelType) := 'Suitability/'+ModelType/Name;
 
-				attribute<string> TransitionCostsExpr(ModelType): Expr = "'value(Rules/TransitionCosts/pTab/'+ModelType/Name+', Float32)[PrevState/Landuse]'";
+				attribute<string> TransitionCostsExpr(ModelType) := 'value(Rules/TransitionCosts/pTab/'+ModelType/Name+', Float32)[PrevState/Landuse]';
 
-				attribute<string> GrossRevenuesExpr(ModelType): Expr = "'value(Rules/GrossRevenues/pTab/'+ModelType/Name+', Float32)[PrevState/Landuse]'";  	
+				attribute<string> GrossRevenuesExpr(ModelType) := 'value(Rules/GrossRevenues/pTab/'+ModelType/Name+', Float32)[PrevState/Landuse]';  
 											
-				attribute<string> TransitionCostExpression(ModelType): Expr = "'SuitabilityModifiers/'+ ModelType/Name +' * (' + GrossRevenuesExpr + ') - (' + TransitionCostsExpr + ')'";
+				attribute<string> TransitionCostExpression(ModelType) := 'SuitabilityModifiers/'+ ModelType/Name +' * (' + GrossRevenuesExpr + ') - (' + TransitionCostsExpr + ')';
 				
 				attribute<string> LogitRegrResutsProbExprBase(ModelType) := AsItemList(
 					'float32(PrevState/Landuse == '+string(MetaData/RegressionResults/LogitTransitions/from_rel)+'[Classifications/LU/ModelType]) '
@@ -1081,7 +1078,11 @@ container Parameters: KeepData = "True", Using = "Units"
 				);
 				attribute<string> RfRegrResutsProbExpr(ModelType) := RfRegrResutsProbExprBase == '' ? 'const(0f, domain)' : 'add('+RfRegrResutsProbExprBase+')';
 				
-				attribute<string> TotalSuitabilityExpr(ModelType) := RfRegrResutsProbExpr + ' * 0.5f + ' + LogitRegrResutsProbExpr + ' * 0.5f + ' + CombinedSuitExpr + LocSpecExprPrefix + '- (' + TransitionCostsExpr + ')';
+				attribute<string> TotalSuitabilityExpr(ModelType) := RfRegrResutsProbExpr 
+					+ ' * 0.5f + ' + LogitRegrResutsProbExpr 
+					+ ' * 0.5f + ' + CombinedSuitExpr 
+					+ LocSpecExprPrefix 
+					+ '- (' + TransitionCostsExpr + ')';
 				
 				unit<UInt32> Factor2Weights:    Expr = "Alloc2Reg/FactorWeights";
 				unit<UInt32> UniqueFactor2Func: Expr = "Alloc2Reg/UniqueFactorFuncs";

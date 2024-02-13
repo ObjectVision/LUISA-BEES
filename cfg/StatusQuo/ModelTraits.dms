@@ -33,7 +33,7 @@ container ModelTraits
 			
 			container DynamicNeighbour  : Expr = "for_each_nedv(LUT/Name, Rules/DynamicNeighbourMNLExpr, domain, Float32)";
 	
-			container TotalSuitability: Expr = "for_each_nedv(LUT/Name, Rules/TotalSuitabilityExpr, domain, Float32)";
+			container TotalSuitability := for_each_nedv(LUT/Name, Rules/TotalSuitabilityExpr, domain, Float32);
 
 			container Allowed
 			{
@@ -46,16 +46,22 @@ container ModelTraits
 				attribute<bool> Arable     		  (domain):= not(IsBuiltupArea); // && !IsPastures;
 				attribute<bool> PermanentCrops    (domain):= not(IsBuiltupArea); // && !IsPastures;
 				attribute<bool> Pastures          (domain):= not(IsBuiltupArea);
-				attribute<bool> ForestsMature     (domain):= not(BurntForest/NewlyBurnt) && (PrevState/LandUse == ModelType/V/ForestsMature || (PrevState/LandUse == ModelType/V/ForestsYoung && PrevState/Age >= 20[YearDiffRange]));
-				attribute<bool> TransWoodlandShrub(domain):= (BurntForest/NewlyBurnt || IsAbandoned && PrevState/Age >= 5[YearDiffRange] || (PrevState/LandUse == ModelType/V/TransWoodlandShrub && PrevState/Age < 10[YearDiffRange]));
+				attribute<bool> ForestsMature     (domain):= not(BurntForest/NewlyBurnt) 
+						&& (PrevState/LandUse == ModelType/V/ForestsMature || (PrevState/LandUse == ModelType/V/ForestsYoung && PrevState/Age >= 20[YearDiffRange]));
+				attribute<bool> TransWoodlandShrub(domain):= (BurntForest/NewlyBurnt 
+					|| IsAbandoned && PrevState/Age >= 5[YearDiffRange] 
+					|| (PrevState/LandUse == ModelType/V/TransWoodlandShrub && PrevState/Age < 10[YearDiffRange]));
 				attribute<bool> AbanArable        (domain):= PrevState/LandUse == ModelType/V/Arable         || PrevState/LandUse == ModelType/V/AbanArable;
 				attribute<bool> AbanPermanentCrops(domain):= PrevState/LandUse == ModelType/V/PermanentCrops || PrevState/LandUse == ModelType/V/AbanPermanentCrops;
 				attribute<bool> AbanPastures      (domain):= const(false, domain);
-				attribute<bool> AbanUrban         (domain):= PrevState/LandUse == ModelType/V/Urban          || PrevState/LandUse == ModelType/V/AbanUrban || PrevState/LandUse == ModelType/V/AbanIndustry;
-				attribute<bool> AbanIndustry      (domain):= PrevState/LandUse == ModelType/V/Industrial     || PrevState/LandUse == ModelType/V/AbanIndustry || PrevState/LandUse == ModelType/V/AbanUrban;
+				attribute<bool> AbanUrban         (domain):= PrevState/LandUse == ModelType/V/Urban          || PrevState/LandUse == ModelType/V/AbanUrban;
+				attribute<bool> AbanIndustry      (domain):= PrevState/LandUse == ModelType/V/Industrial     || PrevState/LandUse == ModelType/V/AbanIndustry;
 				attribute<bool> NewEnergyCrops    (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/V/ForestsYoung); // && !IsPastures;
-				attribute<bool> SHVA              (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/V/ForestsYoung) && not(PrevState/LandUse == ModelType/V/ForestsMature) && not(PrevState/LandUse == ModelType/V/TransWoodlandShrub); // && !IsPastures;
-				attribute<bool> ForestsYoung      (domain):= not(BurntForest/NewlyBurnt) && ((PrevState/LandUse == ModelType/V/ForestsYoung && PrevState/Age < 20[YearDiffRange])	||	(PrevState/LandUse == ModelType/V/TransWoodlandShrub && PrevState/Age >= 10[YearDiffRange]));
+				attribute<bool> SHVA              (domain):= not(IsBuiltupArea) && not(PrevState/LandUse == ModelType/V/ForestsYoung) 
+					&& not(PrevState/LandUse == ModelType/V/ForestsMature) && not(PrevState/LandUse == ModelType/V/TransWoodlandShrub); // && !IsPastures;
+				attribute<bool> ForestsYoung      (domain):= not(BurntForest/NewlyBurnt) 
+					&& 	(	(PrevState/LandUse == ModelType/V/ForestsYoung       && PrevState/Age <  20[YearDiffRange])
+						||	(PrevState/LandUse == ModelType/V/TransWoodlandShrub && PrevState/Age >= 10[YearDiffRange]));
 			}
 			container TransPot := for_each_nedv(LUT/Name
 				, replace('iif(Allowed/@LUT, TotalSuitability/@LUT * 100[EUR_m2], -100000[EUR_m2])', '@LUT', LUT/Name)
@@ -64,7 +70,8 @@ container ModelTraits
 			
 			container BurntForest
 			{
-				attribute<bool> NewlyBurnt (domain) := ((PrevState/Landuse == ModelType/V/ForestsMature) || (PrevState/Landuse = ModelType/V/ForestsYoung)) && float32(CaseData/JrcFactorData/BurntAreas/BurntInYear[domain/grid_rel]) == CurrYear;
+				attribute<bool> NewlyBurnt (domain) := ((PrevState/Landuse == ModelType/V/ForestsMature) || (PrevState/Landuse = ModelType/V/ForestsYoung)) 
+					&& float32(CaseData/JrcFactorData/BurntAreas/BurntInYear[domain/grid_rel]) == CurrYear;
 			}
 		}
 	}

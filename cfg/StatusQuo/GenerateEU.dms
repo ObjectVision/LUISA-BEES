@@ -1,6 +1,6 @@
 container GenerateContainer
 {
-	unit<UInt8>  LandUseType: Expr = "Classifications/LU/ViewType";
+	unit<UInt8>  LandUseType := Classifications/LU/ViewType;
 	unit<UInt16> Periods: Expr= "Parameters/PeriodSet/result";
 	unit<UInt16> ActiveRun := Parameters/Meta/Run;
 	
