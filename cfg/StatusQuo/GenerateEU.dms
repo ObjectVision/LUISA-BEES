@@ -130,7 +130,6 @@ container GenerateContainer
 				attribute<string>    LandUse := LandUseType/Name[LandUseType_rel];
 				attribute<UInt32>    HA      := ='union_data(., '+AsItemList('PerCountryPerYear/'+Periods/Name)+')';
 			}
-			
 		}
 	}		
 	container MozaikPopulation
@@ -170,4 +169,41 @@ container GenerateContainer
 			);
 		}
 	}		
+	container HardValidation {
+		unit<uint8> MT := Classifications/LU/ModelType;
+		
+		unit<uint32> lut: 
+			StorageName = "%LuisettaDataDir%/TestSet/landuse_transition_codes_table.csv", 
+			StorageType = "gdal.vect", 
+			StorageReadOnly = "True"
+		{
+		}
+			
+		unit<uint32> TestSet: 
+			StorageName = "%LuisettaDataDir%/TestSet/test_set_full_change_no_change.shp", 
+			StorageType = "gdal.vect", 
+			StorageReadOnly = "True"
+		{
+			attribute<lut> lut_rel     := rlookup(class, int32(lut/lut));
+			attribute<MT>  MT_from_rel := convert(uint8(lut_rel->from) - 1b, MT);
+			attribute<MT>  MT_to_rel   := convert(uint8(lut_rel->to  ) - 1b, MT);
+			attribute<MT2> MT2_from_to_rel     := combine_data(MT2, MT_from_rel, MT_to_rel);
+			
+			attribute<Geography/Lambert100mGrid> grid_rel := geometry[Geography/Lambert100mGrid];
+			
+			attribute<LandUseType>  ModelledVT  := MozaikLandUse/Results/LandUse/P2020[grid_rel];
+			attribute<MT>  ModelledMT           := ModelledVT->MT;
+			
+			attribute<MT2> MT2_modelled_to_rel     := combine_data(MT2, ModelledMT, MT_to_rel);
+		}
+		unit<uint32> MT2 := combine(MT, MT)
+		{
+			attribute<uint32> count_from_to := pcount(TestSet/MT2_from_to_rel);
+			container xTab_from_to := for_each_nedv(MT/name, 'count_from_to[combine_data(MT2, ID(MT),MT/V/'+MT/name+')]', MT, uint32);
+			
+			attribute<uint32> count_modelled_to := pcount(TestSet/MT2_modelled_to_rel);
+			container xTab_modelled_to := for_each_nedv(MT/name, 'count_modelled_to[combine_data(MT2, ID(MT),MT/V/'+MT/name+')]', MT, uint32);
+			attribute<Float64> PredictionScore(MT) := float64(count_modelled_to[combine_data(MT2, ID(MT), ID(MT))]) / float64(sum(count_modelled_to, first_rel));
+		}
+	}
 }
