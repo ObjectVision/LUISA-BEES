@@ -1,7 +1,8 @@
 container GenerateContainer
 {
 	unit<UInt8>  LandUseType := Classifications/LU/ViewType;
-	unit<UInt16> Periods: Expr= "Parameters/PeriodSet/result";
+	unit<UInt16> PeriodsSrc := Parameters/PeriodSet/result;
+	unit<UInt16> Periods := select_with_attr_by_cond(Parameters/PeriodSet/result, Parameters/PeriodSet/result/ProjectedYear <= 2021f);
 	unit<UInt16> ActiveRun := Parameters/Meta/Run;
 	
 	// decoupled simulation from mozaiking
@@ -24,16 +25,16 @@ container GenerateContainer
 			template GenerateRunRegionTemplate
 			{
 				container RunRegion;
-				container CalculatedPeriods_impl := for_each_ne(Periods/Name, 'GeneratePeriodTemplate(RunRegion/TimeSteps/'+Periods/Name+')');
-				container CalculatedPeriods := FenceContainer(CalculatedPeriods_impl, 'RunRegion: '+RunRegion/RunParameters/name);
+				container CalculatedPeriods := for_each_ne(Periods/Name, 'GeneratePeriodTemplate(RunRegion/TimeSteps/'+Periods/Name+')');
+//				container CalculatedPeriods := FenceContainer(CalculatedPeriods_impl, 'RunRegion: '+RunRegion/RunParameters/name);
 				
 				container result
 				{
 					attribute<bool> StatusFlags(Periods) := ='union_data(Periods, '+AsList('CalculatedPeriods/'+Periods/Name+'/result/StatusFlag', ',')+')'
-					,	ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result', ';')+';RunRegion/simulation_results/GeneratedFiles'"
+					,	ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result/StatusFlag', ';')" //+';RunRegion/simulation_results/GeneratedFiles'"
 					;
 					attribute<string> StatusTexts(Periods) := ='union_data(Periods, '+AsList('CalculatedPeriods/'+Periods/Name+'/result/StatusText', ',')+')'
-					,	ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result', ';')+';RunRegion/simulation_results/GeneratedFiles'"
+					,	ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result', ';')" //+';RunRegion/simulation_results/GeneratedFiles'"
 					;
 				}
 			}
@@ -59,10 +60,10 @@ container GenerateContainer
 				attribute<string>  StatusText             (ActiveRun) := ='replace(union_data(ActiveRun, '+AsItemList('StatusTexts/'+ActiveRun/Name+'[FirstFailureOrLastAlloc['+string(id(ActiveRun))+'[ActiveRun]]]')+'), '';'',''$'')';
 			}
 			parameter<bool> StatusOK := ='and('+AsItemList('all(StatusFlags/'+ActiveRun/Name+')')+')';
-			parameter<String> results
-				:	Expr = "'calculated'"
-				,	ExplicitSuppliers = "=AsList('impl/All/'+ActiveRun/Name+'/result',';')+';GenerateAllLandSupplyCurves/Generate2020;GenerateAllLandPairSupplyCurves/Generate2020'"
-				,	IntegrityCheck   = "StatusOK";
+			parameter<String> results :=	'calculated ' +string(StatusOK)
+//				,	ExplicitSuppliers = "GenerateAllLandSupplyCurves/Generate2020;GenerateAllLandPairSupplyCurves/Generate2020"
+//				,	IntegrityCheck   = "StatusOK"
+				;
 		}
 	}
 	container MozaikLandUse
