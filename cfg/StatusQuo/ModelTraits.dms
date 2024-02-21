@@ -768,32 +768,32 @@ container ModelTraits
 						attribute<tonne> CO2_Emission(domain) := LUC_2P/CO2_EmissionFactor[from_toP] * 1[luHa];
 					}
 					container RegionData := for_each_nedv(transition/name
-						       , 'sum(value(year/transition_rel == value(' + String(id(transition)) +',transition), float32) * year/CO2_Emission, RegionGrid)'
-						       ,  Regions, tonne
+						       , 'sum(value(year/transition_rel == value(' + String(id(transition)) +',transition), float32) * year/CO2_Emission * (0.000001[mega_tonne / tonne]), RegionGrid)'
+						       ,  Regions, mega_tonne
 						       )
 					{
 						attribute<string> Label(Regions) := Regions/Label;
-						attribute<tonne> Total(Regions) := ='add('+AsItemList(transition/name)+')';
+						attribute<mega_tonne> Total(Regions) := ='add('+AsItemList(transition/name)+')';
 					}
 					container NationalData := for_each_nedv(transition/name
-						       , 'sum(value(year/transition_rel == value(' + String(id(transition)) +',transition), float32) * year/CO2_Emission, OccuringParty_rel)'
-						       ,  OccuringParties, tonne
+						       , 'sum(value(year/transition_rel == value(' + String(id(transition)) +',transition), float32) * year/CO2_Emission * (0.000001[mega_tonne / tonne]), OccuringParty_rel)'
+						       ,  OccuringParties, mega_tonne
 						       )
 					{
 						attribute<string> Label(OccuringParties) := OccuringParties/PartyCode;
-						attribute<tonne> Total (OccuringParties) := ='add('+AsItemList(transition/name)+')';
+						attribute<mega_tonne> Total (OccuringParties) := ='add('+AsItemList(transition/name)+')';
 					}
-					container written_RegionData := for_each_nedv(transition/name, 'RegionData/'+transition/name, Regions, tonne)
+					container written_RegionData := for_each_nedv(transition/name, 'RegionData/'+transition/name, Regions, mega_tonne)
 					,	StorageName = "=DirName + '_GHG_reg.dbf'"
 					{
 						attribute<string> Label(Regions) := RegionData/Label;
-						attribute<tonne> Total(Regions) := RegionData/Total;
+						attribute<mega_tonne> Total(Regions) := RegionData/Total;
 					}
-					container written_NationalData := for_each_nedv(transition/name, 'NationalData/'+transition/name, OccuringParties, tonne)
+					container written_NationalData := for_each_nedv(transition/name, 'NationalData/'+transition/name, OccuringParties, mega_tonne)
 					,	StorageName = "=DirName + '_GHG_nat.dbf'"
 					{
 						attribute<string> Label(OccuringParties) := NationalData/Label;
-						attribute<tonne>  Total(OccuringParties) := NationalData/Total;
+						attribute<mega_tonne>  Total(OccuringParties) := NationalData/Total;
 					}	
 				}
 				container ESS {
