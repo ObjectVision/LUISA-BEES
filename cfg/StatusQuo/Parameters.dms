@@ -1053,7 +1053,7 @@ container Parameters: KeepData = "True", Using = "Units"
 				
 				attribute<string> LocSpecExprPrefix(ModelType) := 
 		 				((ParamSet/LocationSpecificPreferenceAddition <> Float32(0.0))
-		 					? ' + (CaseData/LocSpec/'+ModelType/Name+'-1.0f)* ParamSet/LocationSpecificPreferenceAddition['+ggModelIdExpr+']'
+		 					? ' * CaseData/LocSpec/'+ModelType/Name+' * ParamSet/LocationSpecificPreferenceAddition['+ggModelIdExpr+']'
 		 					: '');
 				
 				attribute<string> CombinedSuitExpr(ModelType) := 'Suitability/'+ModelType/Name;
@@ -1079,9 +1079,9 @@ container Parameters: KeepData = "True", Using = "Units"
 				attribute<string> RfRegrResutsProbExpr(ModelType) := RfRegrResutsProbExprBase == '' ? 'const(0f, domain)' : 'add('+RfRegrResutsProbExprBase+')';
 				
 				attribute<string> TotalSuitabilityExpr(ModelType) := 
-					  RfRegrResutsProbExpr    + ' + '
+//					  RfRegrResutsProbExpr    + ' + '
 //					+ LogitRegrResutsProbExpr + ' * 0.5f + ' 
-					+ CombinedSuitExpr 
+					  CombinedSuitExpr 
 					+ LocSpecExprPrefix 
 					+ '- (' + TransitionCostsExpr + ')';
 				
@@ -1361,7 +1361,7 @@ container Parameters: KeepData = "True", Using = "Units"
 		container ActiveSet := StatusQuo   // @USERINPUT, use these lines to switch between StatusQuo and Integration
 		{
 			parameter<String> FolderName := replace_value(Expand(., '%env:DIR_OUTPUT%'), 'env:DIR_OUTPUT', 'GUI');
-			parameter<string> OutputFolderName := '%projdir%/results/ReferenceRF_AdditiveLocSpec/' + replace(FolderName, '/', '_');
+			parameter<string> OutputFolderName := '%projdir%/results/OrgSFwithLocSpec/' + replace(FolderName, '/', '_');
 		}
 		//container ActiveSet: Expr = "NoCAP";   // @USERINPUT, use these lines to switch between StatusQuo and Integration
 //		container ActiveSet: Expr = "Integration"; // @USERINPUT, use these lines to switch between StatusQuo and Integration
