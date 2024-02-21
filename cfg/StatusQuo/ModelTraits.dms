@@ -969,17 +969,19 @@ container ModelTraits
 								//"Indicators/Spatial/NoFilter/LandUseIT/written_RegionData;";
 								//"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;";
 								//"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;Indicators/xTab;";
-								"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;Indicators/Spatial/NoFilter/GHG;";
+								//"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;Indicators/Spatial/NoFilter/GHG;";
 								//"Indicators/Spatial/nat2k_buff500/LandUseIT/written_RegionData;"
 								//"TotalSuitability";
+								"";
 			container Results5: 
 				ExplicitSuppliers = 
 					//"Indicators/Spatial/NoFilter/LandUseIT/written_RegionData;";
 					//"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;";
-					"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;Indicators/xTab;";
+					//"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;Indicators/xTab;";
 					//"Indicators/Spatial/NoFilter/LandUseVT/written_RegionData;Indicators/Spatial/NoFilter/GHG;";
 					//"Indicators/Spatial/nat2k_buff500/LandUseIT/written_RegionData;"
 					//"TotalSuitability";
+					"";
 			container ResultsFathomYears: ExplicitSuppliers = "ClippedLandUseVT"; // required for generating the data for the ReadOnly mozaiking
 
 			container ArableLandSupply {
@@ -1214,7 +1216,7 @@ container ModelTraits
 			,	StorageName = "=Indicators/DirName + '_xTabRegionData.csv'", StorageType = 'str';
 			
 
-			container CapriResults: ExplicitSuppliers = "CapriShadowPriceExport;xTabCapriExport;CapriRegionxTabExport;ArableLandSupply/Export";
+			container CapriResults; //: ExplicitSuppliers = "CapriShadowPriceExport;xTabCapriExport;CapriRegionxTabExport;ArableLandSupply/Export";
 			container Results: ExplicitSuppliers = 
 					"= 'Results1;CapriResults'"
 					"+ (IsDefined(rlookup(UInt16(CurrYear), Parameters/PeriodSet/Lustrum/Year)) ? ';ResultsFathomYears' : '')"
