@@ -41,6 +41,7 @@ container Units:
 
 	unit<Float32> kg:             Expr = "BaseUnit('kg', float32)";
 	unit<Float32> tonne:          Expr = "1000.0 * kg";
+	unit<Float32> mega_tonne := 1000000.0 * tonne;
 	unit<float32> tonne_km2:      Expr = "tonne / km2";   // used for CarbonSequestration
 	unit<float32> tonne_ha:       Expr = "tonne / luHa";  // used for Erosion
 
