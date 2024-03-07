@@ -195,11 +195,14 @@ container GenerateContainer
 			attribute<MT>  ModelledMT           := ModelledVT->MT;
 			
 			attribute<MT2> MT2_modelled_to_rel     := combine_data(MT2, ModelledMT, MT_to_rel);
+			attribute<bool> IsSame := MT2_modelled_to_rel->IsSame;
 		}
 		unit<uint32> MT2 := combine(MT, MT)
 		{
 			attribute<uint32> count_from_to := pcount(TestSet/MT2_from_to_rel);
 			container xTab_from_to := for_each_nedv(MT/name, 'count_from_to[combine_data(MT2, ID(MT),MT/V/'+MT/name+')]', MT, uint32);
+			
+			attribute<bool> IsSame := first_rel == second_rel;
 			
 			attribute<uint32> count_modelled_to := pcount(TestSet/MT2_modelled_to_rel);
 			container xTab_modelled_to := for_each_nedv(MT/name, 'count_modelled_to[combine_data(MT2, ID(MT),MT/V/'+MT/name+')]', MT, uint32);
