@@ -24,8 +24,8 @@ container GenerateContainer
 			template GenerateRunRegionTemplate
 			{
 				container RunRegion;
-				container CalculatedPeriods_impl := for_each_ne(Periods/Name, 'GeneratePeriodTemplate(RunRegion/TimeSteps/'+Periods/Name+')');
-				container CalculatedPeriods := FenceContainer(CalculatedPeriods_impl, 'RunRegion: '+RunRegion/RunParameters/name);
+				container CalculatedPeriods := for_each_ne(Periods/Name, 'GeneratePeriodTemplate(RunRegion/TimeSteps/'+Periods/Name+')');
+//				container CalculatedPeriods := FenceContainer(CalculatedPeriods_impl, 'RunRegion: '+RunRegion/RunParameters/name);
 				
 				container result
 				{
