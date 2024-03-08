@@ -1,7 +1,8 @@
 container GenerateContainer
 {
 	unit<UInt8>  LandUseType := Classifications/LU/ViewType;
-	unit<UInt16> Periods: Expr= "Parameters/PeriodSet/result";
+	unit<UInt16> PeriodsSrc := Parameters/PeriodSet/result;
+	unit<UInt16> Periods := select_with_attr_by_cond(Parameters/PeriodSet/result, Parameters/PeriodSet/result/ProjectedYear <= 2021f);
 	unit<UInt16> ActiveRun := Parameters/Meta/Run;
 	
 	// decoupled simulation from mozaiking
@@ -30,10 +31,10 @@ container GenerateContainer
 				container result
 				{
 					attribute<bool> StatusFlags(Periods) := ='union_data(Periods, '+AsList('CalculatedPeriods/'+Periods/Name+'/result/StatusFlag', ',')+')'
-					,	ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result', ';')+';RunRegion/simulation_results/GeneratedFiles'"
+					,	ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result/StatusFlag', ';')" //+';RunRegion/simulation_results/GeneratedFiles'"
 					;
 					attribute<string> StatusTexts(Periods) := ='union_data(Periods, '+AsList('CalculatedPeriods/'+Periods/Name+'/result/StatusText', ',')+')'
-					,	ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result', ';')+';RunRegion/simulation_results/GeneratedFiles'"
+					,	ExplicitSuppliers = "=AsList('CalculatedPeriods/'+Periods/Name+'/result', ';')" //+';RunRegion/simulation_results/GeneratedFiles'"
 					;
 				}
 			}
@@ -59,10 +60,10 @@ container GenerateContainer
 				attribute<string>  StatusText             (ActiveRun) := ='replace(union_data(ActiveRun, '+AsItemList('StatusTexts/'+ActiveRun/Name+'[FirstFailureOrLastAlloc['+string(id(ActiveRun))+'[ActiveRun]]]')+'), '';'',''$'')';
 			}
 			parameter<bool> StatusOK := ='and('+AsItemList('all(StatusFlags/'+ActiveRun/Name+')')+')';
-			parameter<String> results
-				:	Expr = "'calculated'"
-				,	ExplicitSuppliers = "=AsList('impl/All/'+ActiveRun/Name+'/result',';')+';GenerateAllLandSupplyCurves/Generate2020;GenerateAllLandPairSupplyCurves/Generate2020'"
-				,	IntegrityCheck   = "StatusOK";
+			parameter<String> results :=	'calculated ' +string(StatusOK)
+//				,	ExplicitSuppliers = "GenerateAllLandSupplyCurves/Generate2020;GenerateAllLandPairSupplyCurves/Generate2020"
+//				,	IntegrityCheck   = "StatusOK"
+				;
 		}
 	}
 	container MozaikLandUse
@@ -189,26 +190,30 @@ container GenerateContainer
 			attribute<MT>  MT_to_rel   := convert(uint8(lut_rel->to  ) - 1b, MT);
 			attribute<MT2> MT2_from_to_rel     := combine_data(MT2, MT_from_rel, MT_to_rel);
 			
+			attribute<bool> isSame := MT_from_rel == MT_to_rel;
+			
 			attribute<Geography/Lambert100mGrid> grid_rel := geometry[Geography/Lambert100mGrid];
 			
 			attribute<LandUseType>  ModelledVT  := MozaikLandUse/Results/LandUse/P2020[grid_rel];
 			attribute<MT>  ModelledMT           := ModelledVT->MT;
 			
 			attribute<MT2> MT2_modelled_to_rel     := combine_data(MT2, ModelledMT, MT_to_rel);
-			attribute<bool> IsSame := MT2_modelled_to_rel->IsSame;
 		}
 		unit<uint32> MT2 := combine(MT, MT)
 		{
 			attribute<uint32> count_from_to := pcount(TestSet/MT2_from_to_rel);
 			container xTab_from_to := for_each_nedv(MT/name, 'count_from_to[combine_data(MT2, ID(MT),MT/V/'+MT/name+')]', MT, uint32);
 			
-			attribute<bool> IsSame := first_rel == second_rel;
-			
 			attribute<uint32> count_modelled_to := pcount(TestSet/MT2_modelled_to_rel);
 			container xTab_modelled_to := for_each_nedv(MT/name, 'count_modelled_to[combine_data(MT2, ID(MT),MT/V/'+MT/name+')]', MT, uint32);
+		}
+		container Table
+		{
 			attribute<string>  Label(MT) := MT/name;
-			attribute<uint32>  PredictionCount(MT) := sum(count_modelled_to, first_rel);
-			attribute<uint32>  CorrectCount   (MT) := count_modelled_to[combine_data(MT2, ID(MT), ID(MT))];
+			attribute<uint32>  PredictionCount(MT) := sum(MT2/count_modelled_to, MT2/first_rel);
+			attribute<uint32>  CorrectCount   (MT) := MT2/count_modelled_to[combine_data(MT2, ID(MT), ID(MT))];
+			attribute<uint32>  FalsePredicted (MT) := PredictionCount - CorrectCount;
+			
 			attribute<Float64> PredictionScore(MT) := float64(CorrectCount) / float64(PredictionCount);
 		}
 	}
