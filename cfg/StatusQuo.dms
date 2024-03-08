@@ -58,7 +58,37 @@ container Luisetta
 	{
 		parameter<string> Generate2020 := 'Ready', ExplicitSuppliers = "=AsList('Runs/'+Parameters/Meta/Run/Name+'/TimeSteps/P2020/ResultingState/OutputGeneration/CrossSupplyCurves/GenerateAllCurves', ';')";
 	}
-	container CompareResultsContainer;
+	container CompareResultsContainer
+	{
+		unit<uint8> Scenario:= range(uint8, 0b, 4b) { attribute<string> name: ['Reference', 'ProtectedGrassland', 'Extensification', 'Combined']; }
+		unit<wpoint> domain_grid := /Geography/Lambert100mGrid;
+		unit<uint8> VT := Classifications/LU/ViewType;
+		unit<uint8> MT := Classifications/LU/ModelType;
+		unit<uint16> Periods := Parameters/PeriodSet/result;
+		
+		template compare_t {
+			attribute<MT> map_a(domain_grid);
+			attribute<MT> map_b(domain_grid);
+			
+			attribute<MT> only_a(domain_grid) := map_a != map_b ? map_a : null_b;
+			attribute<MT> only_b(domain_grid) := map_a != map_b ? map_b : null_b;
+			unit<uint16> MT2 := combine_unit_uint16(MT, MT);
+			
+			attribute<MT2> combined_map(domain_grid) := combine_data(MT2, map_a, map_b);
+			attribute<uint32> xtab(MT2) := pcount(combined_map);
+			container xtab_table := for_each_nedv(MT/name, 'xtab[combine_data(MT2, '+string(id(MT))+'[MT],ID(MT))]', MT, uint32);
+		}
+		
+		template scenario_t {
+			parameter<Scenario> scenario_rel;
+			parameter<string> scenario_name := scenario_rel->name;
+			parameter<string> DirName := '%projdir%/results/'+scenario_name+'/GUI/EU';
+			container maps_VT := for_each_ndva(Periods/name, domain_grid, VT, DirName+'/LandUseVT_'+Periods/YearStr + '.tif');
+			container maps_MT := for_each_nedv(Periods/name, 'maps_VT/'+Periods/name+'->MT', domain_grid, MT);
+			container compares := for_each_ne(Periods/name, 'compare_t('+MakeDefined('maps_MT/'+Periods/name[sub_or_null(ID(Periods), 1w)], '/JrcFactorData/PrepareData/LandUseGrid')+', maps_MT/'+Periods/name+')');
+		}
+		container landuse_data := for_each_ne(Scenario/name, 'scenario_t('+string(id(Scenario))+'[Scenario])');
+	}
 	#include <GenerateEU.dms>
 	#include <Templates.dms>
 	
@@ -94,6 +124,4 @@ container Luisetta
 		container P2020 := OutputGenerators/SharedIndicators(domain, domain/P2018, domain/P2018, domain/P2020, JrcFactorData, IndicatorRegion16, IndicatorRegion16/per_domain, EuOutputDirName+'/P2020', Periods/V/P2020);
 		container P2050 := OutputGenerators/SharedIndicators(domain, domain/P2018, domain/P2045, domain/P2050, JrcFactorData, IndicatorRegion16, IndicatorRegion16/per_domain, EuOutputDirName+'/P2050', Periods/V/P2050);
 	}
-	
-
 }

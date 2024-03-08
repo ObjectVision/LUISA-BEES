@@ -284,11 +284,12 @@ template JrcClueWrap:
 		}
 	}
 
-	container TimeSteps: Expr = 
-			"for_each_ne("
-				"Periods/Name,"
-				"'DynaClueTimeStep100(value('+Periods/YearStr+', YearRange),'+Periods/IdStr+','+Periods/ClaimFractionStr+',ModelType, domain_grid, domain,CaseData/OrgPopClaimRegion,CaseData/DestPopClaimRegion,'+Periods/PrevRef+')'"
-			")";
+	container TimeSteps := for_each_ne(Periods/Name,
+			'DynaClueTimeStep100(value('+Periods/YearStr+', YearRange),'
+				+ Periods/IdStr +','
+				+ Periods/ClaimFractionStr +',ModelType, domain_grid, domain,CaseData/OrgPopClaimRegion,CaseData/DestPopClaimRegion,'+Periods/PrevRef
+			+')'
+	);
 	
  	container endstate: Expr = "='TimeSteps/'+Periods/Name[max(ID(Periods))]+'/ResultingState'"
  	{
