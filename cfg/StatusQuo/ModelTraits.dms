@@ -1015,7 +1015,11 @@ container ModelTraits
 					
 					unit<uint8> OtherMT := select_with_org_rel(ID(MT) != to);
 					
-					attribute<int32> ScaledTransPot_from(domain) := ='max_elem('+AsItemList(replace('ScaledTransPot/@MT + d_alloc/shadow_prices/@MT[CaseData/RegionData/@CT]', '@MT', OtherMT/org_rel->name, '@CT', CaseData/DestClaimTableName[OtherMT/org_rel]))+')';
+					attribute<int32> ScaledTransPot_from(domain) := ='max_elem('+AsItemList(replace('ScaledTransPot/@MT + d_alloc/shadow_prices/@MT[CaseData/RegionData/@CT]'
+						, '@MT', OtherMT/org_rel->name
+						, '@CT', CaseData/DestClaimTableName[OtherMT/org_rel]))+
+					')';
+						
 					attribute<int32> ScaledTransPot_to  (domain) := =replace('ScaledTransPot/@MT + d_alloc/shadow_prices/@MT[CaseData/RegionData/@CT]', '@MT', to  ->name, '@CT', CaseData/DestClaimTableName[to  ]);
 					
 					attribute<int32>       SupplyPrice    (domain) := iif(CaseData/RegionData/Capri == capri_rel, ScaledTransPot_from - ScaledTransPot_to, int32(0 / 0));
