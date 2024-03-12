@@ -190,6 +190,8 @@ container GenerateContainer
 			attribute<MT>  MT_to_rel   := convert(uint8(lut_rel->to  ) - 1b, MT);
 			attribute<MT2> MT2_from_to_rel     := combine_data(MT2, MT_from_rel, MT_to_rel);
 			
+			attribute<bool> unchanged := MT_from_rel == MT_to_rel;
+			
 			attribute<Geography/Lambert100mGrid> grid_rel := geometry[Geography/Lambert100mGrid];
 			
 			attribute<LandUseType>  ModelledVT  := MozaikLandUse/Results/LandUse/P2020[grid_rel];
@@ -197,6 +199,18 @@ container GenerateContainer
 			
 			attribute<MT2> MT2_modelled_to_rel     := combine_data(MT2, ModelledMT, MT_to_rel);
 		}
+		
+		unit<uint32> UnchangedSet := select(TestSet/unchanged)
+		{
+			attribute<MT2> MT2_from_to_rel     := collect_by_cond(., TestSet/MT2_from_to_rel);
+			attribute<MT2> MT2_modelled_to_rel := collect_by_cond(., TestSet/MT2_modelled_to_rel);
+		}
+		unit<uint32> ChangedSet := select(not(TestSet/unchanged))
+		{
+			attribute<MT2> MT2_from_to_rel     := collect_by_cond(., TestSet/MT2_from_to_rel);
+			attribute<MT2> MT2_modelled_to_rel := collect_by_cond(., TestSet/MT2_modelled_to_rel);
+		}
+		
 		unit<uint32> MT2 := combine(MT, MT)
 		{
 			attribute<uint32> count_from_to := pcount(TestSet/MT2_from_to_rel);
@@ -204,10 +218,37 @@ container GenerateContainer
 			
 			attribute<uint32> count_modelled_to := pcount(TestSet/MT2_modelled_to_rel);
 			container xTab_modelled_to := for_each_nedv(MT/name, 'count_modelled_to[combine_data(MT2, ID(MT),MT/V/'+MT/name+')]', MT, uint32);
+
+			attribute<uint32> unchanged_count_from_to := pcount(UnchangedSet/MT2_from_to_rel);
+			container unchanged_xTab_from_to := for_each_nedv(MT/name, 'unchanged_count_from_to[combine_data(MT2, ID(MT),MT/V/'+MT/name+')]', MT, uint32);
+			
+			attribute<uint32> unchanged_count_modelled_to := pcount(UnchangedSet/MT2_modelled_to_rel);
+			container unchanged_xTab_modelled_to := for_each_nedv(MT/name, 'unchanged_count_modelled_to[combine_data(MT2, ID(MT),MT/V/'+MT/name+')]', MT, uint32);
+
+			attribute<uint32> changed_count_from_to := pcount(ChangedSet/MT2_from_to_rel);
+			container changed_xTab_from_to := for_each_nedv(MT/name, 'changed_count_from_to[combine_data(MT2, ID(MT),MT/V/'+MT/name+')]', MT, uint32);
+			
+			attribute<uint32> changed_count_modelled_to := pcount(ChangedSet/MT2_modelled_to_rel);
+			container changed_xTab_modelled_to := for_each_nedv(MT/name, 'changed_count_modelled_to[combine_data(MT2, ID(MT),MT/V/'+MT/name+')]', MT, uint32);
+		}
+		container Table
+		{
 			attribute<string>  Label(MT) := MT/name;
-			attribute<uint32>  PredictionCount(MT) := sum(count_modelled_to, first_rel);
-			attribute<uint32>  CorrectCount   (MT) := count_modelled_to[combine_data(MT2, ID(MT), ID(MT))];
+			attribute<uint32>  PredictionCount(MT) := sum(MT2/count_modelled_to, MT2/first_rel);
+			attribute<uint32>  CorrectCount   (MT) := MT2/count_modelled_to[combine_data(MT2, ID(MT), ID(MT))];
+			attribute<uint32>  FalsePredicted (MT) := PredictionCount - CorrectCount;
 			attribute<Float64> PredictionScore(MT) := float64(CorrectCount) / float64(PredictionCount);
+			
+			attribute<uint32>  Unchanged_PredictionCount(MT) := sum(MT2/unchanged_count_modelled_to, MT2/first_rel);
+			attribute<uint32>  Unchanged_CorrectCount   (MT) := MT2/unchanged_count_modelled_to[combine_data(MT2, ID(MT), ID(MT))];
+			attribute<uint32>  Unchanged_FalsePredicted (MT) := unchanged_PredictionCount - unchanged_CorrectCount;
+			attribute<Float64> Unchanged_PredictionScore(MT) := float64(unchanged_CorrectCount) / float64(unchanged_PredictionCount);
+			
+			attribute<uint32>  Changed_PredictionCount(MT) := sum(MT2/changed_count_modelled_to, MT2/first_rel);
+			attribute<uint32>  Changed_CorrectCount   (MT) := MT2/changed_count_modelled_to[combine_data(MT2, ID(MT), ID(MT))];
+			attribute<uint32>  Changed_FalsePredicted (MT) := changed_PredictionCount - changed_CorrectCount;
+			attribute<Float64> Changed_PredictionScore(MT) := float64(changed_CorrectCount) / float64(changed_PredictionCount);
+			
 		}
 	}
 }
