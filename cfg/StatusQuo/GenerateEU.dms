@@ -60,7 +60,7 @@ container GenerateContainer
 			}
 			parameter<bool> StatusOK := ='and('+AsItemList('all(StatusFlags/'+ActiveRun/Name+')')+')';
 			parameter<String> results :=	'calculated ' +string(StatusOK)
-				,	ExplicitSuppliers = "=AsList('impl/All/'+ActiveRun/Name+'/result',';')" //+';GenerateAllLandSupplyCurves/Generate2020;GenerateAllLandPairSupplyCurves/Generate2020'"
+//				,	ExplicitSuppliers = "=AsList('impl/All/'+ActiveRun/Name+'/result',';')" //+';GenerateAllLandSupplyCurves/Generate2020;GenerateAllLandPairSupplyCurves/Generate2020'"
 				,	IntegrityCheck   = "StatusOK";
 		}
 	}
