@@ -1,6 +1,6 @@
 container DataManagement
 {
-	unit<uint32> SpatialDataToLoad: NrOfRows = 49 {
+	unit<uint32> SpatialDataToLoad: NrOfRows = 50 {
 		parameter<uint32> nrAttr: Expr = "3", isHidden = "True";
 		unit<UInt32> Elements: Expr = "Range(uint32, 0, (nrAttr*#SpatialDataToLoad))", isHidden = "True"
 		{
@@ -59,7 +59,7 @@ container DataManagement
 				,'anc_2016',			'polyshp',		'SensitiveAreas/ANC_LAU_Level_2016_sel'
 				,'anc_2019',			'polyshp',		'SensitiveAreas/ANC_LAU_LEVEL_2019_sel'
 				,'lfa_sel',				'polyshp',		'SensitiveAreas/LFA_BG_IT_UK_HU_sel'
-				
+				,'LandUse_2006', 		'uint8tiff', 	'landuse/06_LUS_LB' // used for HardValidation
 			];
 		}
 		attribute<string> Name: 	expr = "Elements/Text[value((uint32(id(.)) * nrAttr)+0, Elements)]";
