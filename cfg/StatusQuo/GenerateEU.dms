@@ -187,8 +187,6 @@ container GenerateContainer
 			attribute<MT>  MT_from_rel := convert(uint8(lut_rel->from) - 1b, MT);
 			attribute<MT>  MT_to_rel   := convert(uint8(lut_rel->to  ) - 1b, MT);
 			
-			attribute<bool> unchanged := MT_from_rel == MT_to_rel;
-			
 			attribute<Geography/Lambert100mGrid> grid_rel := geometry[Geography/Lambert100mGrid];
 			
 			attribute<LandUseType>  ModelledVT  := MozaikLandUse/Results/LandUse/P2020[grid_rel];
