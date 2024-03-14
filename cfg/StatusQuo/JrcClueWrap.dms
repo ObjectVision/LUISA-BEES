@@ -99,11 +99,11 @@ template JrcClueWrap:
 			{
 				parameter<string> OrgClaimZoneSetName;
 				
-				unit<uint16> crossTab: expr = "= 'RunRegions/UnitSets/' + OrgClaimZoneSetName"
+				unit<uint16> crossTab := ='RunRegions/UnitSets/' + OrgClaimZoneSetName
 				{
-					attribute<crossTab> nr_1: 			expr = "id(.)";
-					attribute<crossTab> nr_2: 			expr = "id(.)";
-					attribute<float32> orgzone_weight: 	expr = "const(float32(1), ., float32)";
+					attribute<crossTab> first_rel := id(.);
+					attribute<crossTab> second_rel:= id(.);
+					attribute<float32> orgzone_weight := const(1f, .);
 				}
 			}
 			
@@ -117,8 +117,8 @@ template JrcClueWrap:
 				unit<uint16> DestClaimZone: 				expr = "= 'RunRegions/UnitSets/' + DestClaimZoneSetName";
 				unit<uint32> crossTab: expr = "combine(OrgClaimZone, DestClaimZone)" 
 				{
-					attribute<wpoint> 	ct_id: 			expr = "point(nr_1, nr_2, wpoint)"; 
-					attribute<float32>	orgzone_weight:	expr = "sum(weight, ct_ids) / sum(weight, nr_1[ct_ids])[nr_1]";
+					attribute<wpoint> 	ct_id         := point(first_rel, second_rel, wpoint);
+					attribute<float32>	orgzone_weight:= sum(weight, ct_ids) / sum(weight, first_rel[ct_ids])[first_rel];
 				}
 				attribute<float32> 		weight		 (domain): expr = "= agg_weight_def";
 				attribute<wpoint> 		ct_id_points (domain): expr = "= 'point(RunRegions/RasterSets/'+ OrgClaimZoneSetName +'[domain/grid_rel], RunRegions/RasterSets/'+ DestClaimZoneSetName +'[domain/grid_rel], wpoint)'";
