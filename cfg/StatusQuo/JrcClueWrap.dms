@@ -352,20 +352,14 @@ template JrcClueWrap:
 				"TimeSteps/P2025/ResultingState/OutputGeneration/CapriResults";
 				
 		parameter<string>  Generate2050 := 'Ready'
-		, 	ExplicitSuppliers = 
-				"TimeSteps/P2015/ResultingState/OutputGeneration/CapriResults;"
-				"TimeSteps/P2020/ResultingState/OutputGeneration/CapriResults;"
-				"TimeSteps/P2025/ResultingState/OutputGeneration/CapriResults;"
-				"TimeSteps/P2030/ResultingState/OutputGeneration/CapriResults;"
-				"TimeSteps/P2035/ResultingState/OutputGeneration/CapriResults;"
-				"TimeSteps/P2040/ResultingState/OutputGeneration/CapriResults;"
-				"TimeSteps/P2045/ResultingState/OutputGeneration/CapriResults;"
-				"TimeSteps/P2050/ResultingState/OutputGeneration/CapriResults";
+		, 	ExplicitSuppliers = "=AsList('TimeSteps/'+Periods/Name+'/ResultingState/OutputGeneration/CapriResults', ';')";
+		
+		container FirstTimeStep := ='TimeSteps/'+Periods/Name;
 		
 		unit<WPoint> ForestTransitionStatePerYear := range(wpoint, point(0w, 0w), point(uint16(#LU/ForestTransitionState), uint16(#Periods)))
 		{
 			attribute<uint32> count := ='union_data(., '+AsItemList(replace('pcount(ModelType/FTS_rel[TimeSteps/@P/ResultingState/landuse])','@P',Periods/Name))+' )';
-			attribute<int32> relcount := int32(count) - int32(pcount(ModelType/FTS_rel[TimeSteps/P2015/ResultingState/landuse])[pointcol(ID(.))[LU/ForestTransitionState]]);
+			attribute<int32> relcount := int32(count) - int32(pcount(ModelType/FTS_rel[FirstTimeStep/ResultingState/landuse])[pointcol(ID(.))[LU/ForestTransitionState]]);
 		}
 	}
 }
