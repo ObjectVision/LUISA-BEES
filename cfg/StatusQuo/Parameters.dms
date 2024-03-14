@@ -1079,9 +1079,9 @@ container Parameters: KeepData = "True", Using = "Units"
 				attribute<string> RfRegrResutsProbExpr(ModelType) := RfRegrResutsProbExprBase == '' ? 'const(0f, domain)' : 'add('+RfRegrResutsProbExprBase+')';
 				
 				attribute<string> TotalSuitabilityExpr(ModelType) := 
-//					  RfRegrResutsProbExpr    + ' + '
-//					+ LogitRegrResutsProbExpr + ' * 0.5f + ' 
-					  CombinedSuitExpr 
+					  RfRegrResutsProbExpr    + ' + 0.5f + '
+					+ LogitRegrResutsProbExpr + ' * 0.5f + ' 
+					+ CombinedSuitExpr 
 					+ LocSpecExprPrefix 
 					+ '- (' + TransitionCostsExpr + ')';
 				
