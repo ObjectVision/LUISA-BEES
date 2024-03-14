@@ -179,6 +179,7 @@ container GenerateContainer
 			StorageReadOnly = "True"
 		{
 		}
+		unit<float32> ratio;
 			
 		unit<uint32> TestSet: 
 			StorageName = "%LuisettaDataDir%/TestSet/test_set_full_change_no_change.shp", 
@@ -200,34 +201,33 @@ container GenerateContainer
 		
 		unit<uint32> UnchangedSet := select(TestSet/unchanged)
 		{
-			attribute<MT> MT_from_rel       := collect_by_cond(., TestSet/MT_from_rel);
+			attribute<MT> MT_from_rel := collect_by_cond(., TestSet/MT_from_rel);
 			attribute<bool> predicted := collect_by_cond(., TestSet/predicted);
 		}
 		unit<uint32> ChangedSet := select(not(TestSet/unchanged))
 		{
-			attribute<MT> MT_from_rel       := collect_by_cond(., TestSet/MT_from_rel);
+			attribute<MT> MT_from_rel := collect_by_cond(., TestSet/MT_from_rel);
 			attribute<bool> predicted := collect_by_cond(., TestSet/predicted);
 		}
-		unit<float32> ratio;
 		container Table
 		{
 			attribute<string>  Label(MT) := MT/name;
 			
 			attribute<uint32>  CaseCount(MT) := pcount(TestSet/MT_from_rel);
-//			attribute<uint32>  CorrectCount   (MT) := sum_uint32(TestSet/predicted, TestSet/MT_from_rel);
-//			attribute<uint32>  FalsePredicted (MT) := CaseCount - CorrectCount;
-//			attribute<ratio> PredictionScore(MT) := ratio(CorrectCount) / ratio(CaseCount);
+			//	attribute<uint32> CorrectCount   (MT) := sum_uint32(TestSet/predicted, TestSet/MT_from_rel);
+			//	attribute<uint32> FalsePredicted (MT) := CaseCount - CorrectCount;
+			//	attribute<ratio > PredictionScore(MT) := ratio(CorrectCount) / ratio(CaseCount);
 			
-			attribute<uint32>  U_Count(MT) := pcount(UnchangedSet/MT_from_rel);
-			attribute<uint32>  U_Pred (MT) := sum_uint32(UnchangedSet/predicted, UnchangedSet/MT_from_rel);
-			attribute<uint32>  U_False(MT) := U_Count - U_Pred;
-			attribute<ratio> U_Score(MT) := U_Pred[ratio] / U_Count[ratio];
+			attribute<uint32> U_Count(MT) := pcount(UnchangedSet/MT_from_rel);
+			attribute<uint32> U_Pred (MT) := sum_uint32(UnchangedSet/predicted, UnchangedSet/MT_from_rel);
+			attribute<uint32> U_False(MT) := U_Count - U_Pred;
+			attribute<ratio > U_Score(MT) := U_Pred[ratio] / U_Count[ratio];
 			
-			attribute<uint32>  C_Count(MT) := pcount(ChangedSet/MT_from_rel);
-			attribute<uint32>  C_Pred (MT) := sum_uint32(ChangedSet/predicted, ChangedSet/MT_from_rel);
-			attribute<uint32>  C_False(MT) := C_Count - C_Pred;
-			attribute<ratio> C_Score(MT) := C_Pred[ratio]  / C_Count[ratio];
-//			attribute<ratio> Score  (MT) := U_Score + C_Score - 1.0[ratio];
+			attribute<uint32> C_Count(MT) := pcount(ChangedSet/MT_from_rel);
+			attribute<uint32> C_Pred (MT) := sum_uint32(ChangedSet/predicted, ChangedSet/MT_from_rel);
+			attribute<uint32> C_False(MT) := C_Count - C_Pred;
+			attribute<ratio > C_Score(MT) := C_Pred[ratio]  / C_Count[ratio];
+			//	attribute<ratio> Score  (MT) := U_Score + C_Score - 1.0[ratio];
 		}
 	}
 }
