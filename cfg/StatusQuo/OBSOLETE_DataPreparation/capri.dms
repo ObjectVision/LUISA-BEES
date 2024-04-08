@@ -221,16 +221,16 @@ container Capri: using = "Units"
 		}
 		unit<uint32> CapriRegionGroupYear: expr = "Combine(CapriRegionGroup, YearRange)"
 		{
-			attribute<string>  Region: expr = "CapriRegionGroup/Region[nr_1]";
-			attribute<string>  Group : expr = "CapriRegionGroup/Group [nr_1]";
-			attribute<float64> Year: expr =   "YearRange/CurrYear[nr_2]";
+			attribute<string>  Region: expr = "CapriRegionGroup/Region[first_rel]";
+			attribute<string>  Group : expr = "CapriRegionGroup/Group [first_rel]";
+			attribute<float64> Year: expr =   "YearRange/CurrYear[second_rel]";
 			attribute<ha_f64>  ValueF64: Expr = 
-				" Float64(MakeDefined(CapriRegionGroup/Value_2005[nr_1],0[ha_u32])) * YearRange/Weight_2005[nr_2]"
-				"+Float64(MakeDefined(CapriRegionGroup/Value_2010[nr_1],0[ha_u32])) * YearRange/Weight_2010[nr_2]"
-				"+Float64(MakeDefined(CapriRegionGroup/Value_2020[nr_1],0[ha_u32])) * YearRange/Weight_2020[nr_2]"
-				"+Float64(MakeDefined(CapriRegionGroup/Value_2030[nr_1],0[ha_u32])) * YearRange/Weight_2030[nr_2]"
-				"+Float64(MakeDefined(CapriRegionGroup/Value_2040[nr_1],0[ha_u32])) * YearRange/Weight_2040[nr_2]"
-				"+Float64(MakeDefined(CapriRegionGroup/Value_2050[nr_1],0[ha_u32])) * YearRange/Weight_2050[nr_2]";
+				" Float64(MakeDefined(CapriRegionGroup/Value_2005[first_rel],0[ha_u32])) * YearRange/Weight_2005[second_rel]"
+				"+Float64(MakeDefined(CapriRegionGroup/Value_2010[first_rel],0[ha_u32])) * YearRange/Weight_2010[second_rel]"
+				"+Float64(MakeDefined(CapriRegionGroup/Value_2020[first_rel],0[ha_u32])) * YearRange/Weight_2020[second_rel]"
+				"+Float64(MakeDefined(CapriRegionGroup/Value_2030[first_rel],0[ha_u32])) * YearRange/Weight_2030[second_rel]"
+				"+Float64(MakeDefined(CapriRegionGroup/Value_2040[first_rel],0[ha_u32])) * YearRange/Weight_2040[second_rel]"
+				"+Float64(MakeDefined(CapriRegionGroup/Value_2050[first_rel],0[ha_u32])) * YearRange/Weight_2050[second_rel]";
 			attribute<ha_u32>  Value: Expr = "uint32(ValueF64)";
 		}
 		unit<uint16> AllCapriRegion: expr = "subset(substr(/Geography/Regions/Capri/code, 0, 2) == ccc)"
@@ -251,28 +251,28 @@ container Capri: using = "Units"
 		}
 		unit<uint32> CapriRegionYear: expr = "combine(CapriRegion, YearRange)"
 		{
-			attribute<String> Region:    expr = "CapriRegion/code[nr_1]";
-			attribute<Float64> CurrYear: expr = "YearRange/CurrYear[nr_2]";
+			attribute<String> Region:    expr = "CapriRegion/code[first_rel]";
+			attribute<Float64> CurrYear: expr = "YearRange/CurrYear[second_rel]";
 			
 			parameter<float64> min_Factor_base: [ 0.90 ]; // @@@@ USER-INPUT
 			parameter<float64> max_Factor_base: [ 1.05 ]; // @@@@ USER-INPUT
 			
-			attribute<float64> correction_factor: Expr = "CapriRegion/correction_factor[nr_1]";
+			attribute<float64> correction_factor: Expr = "CapriRegion/correction_factor[first_rel]";
 			attribute<float64> reduce_factor: Expr = "min_elem(correction_factor, 1.0)";
 			attribute<float64> min_Factor: Expr = "min_Factor_base * reduce_factor";
 			attribute<float64> max_Factor: Expr = "max_Factor_base * reduce_factor";
 			
-			attribute<ha_f64> Pasture:     expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';Pasture',     CapriRegionGroup/RegionGroup) * #YearRange + uint32(nr_2), CapriRegionGroupYear)], 0.0)";
-			attribute<ha_f64> PermCrop:    expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';PermCrop',    CapriRegionGroup/RegionGroup) * #YearRange + uint32(nr_2), CapriRegionGroupYear)], 0.0)";
-			attribute<ha_f64> Cereals:     expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';Cereals',     CapriRegionGroup/RegionGroup) * #YearRange + uint32(nr_2), CapriRegionGroupYear)], 0.0)";
-			attribute<ha_f64> Maize:       expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';Maize',       CapriRegionGroup/RegionGroup) * #YearRange + uint32(nr_2), CapriRegionGroupYear)], 0.0)";
-			attribute<ha_f64> RootCrops:   expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';RootCrops',   CapriRegionGroup/RegionGroup) * #YearRange + uint32(nr_2), CapriRegionGroupYear)], 0.0)";
-			attribute<ha_f64> OtherArable: expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';OtherArable', CapriRegionGroup/RegionGroup) * #YearRange + uint32(nr_2), CapriRegionGroupYear)], 0.0)";
-			attribute<ha_f64> NewEnergy:   expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';NewEnergy',   CapriRegionGroup/RegionGroup) * #YearRange + uint32(nr_2), CapriRegionGroupYear)], 0.0)";
+			attribute<ha_f64> Pasture:     expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';Pasture',     CapriRegionGroup/RegionGroup) * #YearRange + uint32(second_rel), CapriRegionGroupYear)], 0.0)";
+			attribute<ha_f64> PermCrop:    expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';PermCrop',    CapriRegionGroup/RegionGroup) * #YearRange + uint32(second_rel), CapriRegionGroupYear)], 0.0)";
+			attribute<ha_f64> Cereals:     expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';Cereals',     CapriRegionGroup/RegionGroup) * #YearRange + uint32(second_rel), CapriRegionGroupYear)], 0.0)";
+			attribute<ha_f64> Maize:       expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';Maize',       CapriRegionGroup/RegionGroup) * #YearRange + uint32(second_rel), CapriRegionGroupYear)], 0.0)";
+			attribute<ha_f64> RootCrops:   expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';RootCrops',   CapriRegionGroup/RegionGroup) * #YearRange + uint32(second_rel), CapriRegionGroupYear)], 0.0)";
+			attribute<ha_f64> OtherArable: expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';OtherArable', CapriRegionGroup/RegionGroup) * #YearRange + uint32(second_rel), CapriRegionGroupYear)], 0.0)";
+			attribute<ha_f64> NewEnergy:   expr = "MakeDefined(CapriRegionGroupYear/ValueF64[value(rlookup(Region+';NewEnergy',   CapriRegionGroup/RegionGroup) * #YearRange + uint32(second_rel), CapriRegionGroupYear)], 0.0)";
 			
-			attribute<ha_f64> clc_pasture: expr = "CapriRegion/clc_pasture[nr_1]";
-			attribute<ha_f64> clc_pc:      expr = "CapriRegion/clc_pc     [nr_1]";
-			attribute<ha_f64> clc_oa:      expr = "max_elem(CapriRegion/clc_arable [nr_1] - reduce_factor * (Cereals+Maize+RootCrops), 0.0)";
+			attribute<ha_f64> clc_pasture: expr = "CapriRegion/clc_pasture[first_rel]";
+			attribute<ha_f64> clc_pc:      expr = "CapriRegion/clc_pc     [first_rel]";
+			attribute<ha_f64> clc_oa:      expr = "max_elem(CapriRegion/clc_arable [first_rel] - reduce_factor * (Cereals+Maize+RootCrops), 0.0)";
 			
 			attribute<ha_f64> OtherArableMin: expr = "min_elem(OtherArable, correction_factor * OtherArable, clc_oa)";
 			attribute<ha_f64> OtherArableMax: expr = "max_elem(OtherArable, correction_factor * OtherArable, clc_oa)";

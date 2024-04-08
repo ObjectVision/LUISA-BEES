@@ -63,8 +63,8 @@ container LU
 		
 		unit<uint8> xCAPRI := combine_uint8(., .)
 		{
-			attribute<string> Code  := ../Code [nr_1] + ../Code[nr_2];
-			attribute<string> label := ../Label[nr_1] + (nr_1 == nr_2 ? ' remaining ': ' converted to ') + ../Label[nr_2];
+			attribute<string> Code  := ../Code [first_rel] + ../Code[second_rel];
+			attribute<string> label := ../Label[first_rel] + (first_rel == second_rel ? ' remaining ': ' converted to ') + ../Label[second_rel];
 		}
 	}
 	
