@@ -72,11 +72,22 @@ container Luisetta
 			
 			attribute<MT> only_a(domain_grid) := map_a != map_b ? map_a : null_b;
 			attribute<MT> only_b(domain_grid) := map_a != map_b ? map_b : null_b;
-			unit<uint16> MT2 := combine_unit_uint16(MT, MT);
+			unit<uint16> MT2 := combine_uint16(MT, MT)
+			{
+				attribute<string> from := first_rel->Label;
+				attribute<string> to   := second_rel->Label;
+			}
 			
 			attribute<MT2> combined_map(domain_grid) := combine_data(MT2, map_a, map_b);
 			attribute<uint32> xtab(MT2) := pcount(combined_map);
-			container xtab_table := for_each_nedv(MT/name, 'xtab[combine_data(MT2, '+string(id(MT))+'[MT],ID(MT))]', MT, uint32);
+			container xtab_xtable := for_each_nedv(MT/name, 'xtab[combine_data(MT2, ID(MT), '+string(id(MT))+'[MT])]', MT, uint32);
+			unit<uint16> xtab_stable := select(xtab > 100)
+			{
+				attribute<string> from  := collect_by_cond(., MT2/from);
+				attribute<string> to    := collect_by_cond(., MT2/to  );
+				attribute<uint32> count := collect_by_cond(., xtab);
+				attribute<float32> fraction := float32(count) / (sum_float32(xtab, MT2/first_rel)[collect_by_cond(., MT2/first_rel)]);
+			}
 		}
 		
 		template scenario_t {
@@ -86,6 +97,12 @@ container Luisetta
 			container maps_VT := for_each_ndva(Periods/name, domain_grid, VT, DirName+'/LandUseVT_'+Periods/YearStr + '.tif');
 			container maps_MT := for_each_nedv(Periods/name, 'maps_VT/'+Periods/name+'->MT', domain_grid, MT);
 			container compares := for_each_ne(Periods/name, 'compare_t('+MakeDefined('maps_MT/'+Periods/name[sub_or_null(ID(Periods), 1w)], '/JrcFactorData/PrepareData/LandUseGrid')+', maps_MT/'+Periods/name+')');
+			
+			container compCLC18_2020   := compare_t ( /JrcFactorData/PrepareData/LandUseGrid , maps_MT/P2020 );
+			container comp2020_2050    := compare_t(maps_MT/P2020, maps_MT/P2050);
+			container compRef2050_2050 := compare_t(Reference/maps_MT/P2050, maps_MT/P2050);
+			container compPG2050_2050  := compare_t(ProtectedGrassland/maps_MT/P2050, maps_MT/P2050);
+			container compGE2050_2050  := compare_t(Extensification/maps_MT/P2050, maps_MT/P2050);
 		}
 		container landuse_data := for_each_ne(Scenario/name, 'scenario_t('+string(id(Scenario))+'[Scenario])');
 	}

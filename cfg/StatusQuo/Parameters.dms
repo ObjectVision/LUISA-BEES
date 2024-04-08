@@ -1475,12 +1475,12 @@ container Parameters: KeepData = "True", Using = "Units"
 			
 			attribute<.> per_ModelType(Classifications/LU/ModelType): [
 				3, 3,  // Urban, Industrial
-				2, 2,  // Arable, PermanentCrops
-				1,     // Pastures
+				1, 1,  // Arable, PermanentCrops
+				2,     // Pastures
 				0, 0,  // ForestsMature, TransWoodlandShrub
-				2, 2, 1, 3, 3, // Abandoned xxx
-				2,     // NewEnergyCrops
-				null,  // SHVA
+				1, 1, 2, 3, 3, // Abandoned xxx
+				1,     // NewEnergyCrops
+				1,     // SHVA, assumed to be similar to (natural) grassland in order to keep the bookkeeping closed
 				0      // ForestsYoung
 			];
 		}
