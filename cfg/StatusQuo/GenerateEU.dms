@@ -186,6 +186,8 @@ container GenerateContainer
 			StorageType = "gdal.vect", 
 			StorageReadOnly = "True"
 		{
+			attribute<Geography/LambertEA> geometry;
+			
 			attribute<lut> lut_rel     := rlookup(class, int32(lut/lut));
 			attribute<MT>  MT_from_rel := convert(uint8(lut_rel->from) - 1b, MT);
 			attribute<MT>  MT_to_rel   := convert(uint8(lut_rel->to  ) - 1b, MT);
@@ -201,11 +203,13 @@ container GenerateContainer
 		
 		unit<uint32> UnchangedSet := select(TestSet/unchanged)
 		{
+			attribute<Geography/LambertEA> geometry := collect_by_cond(., TestSet/geometry);
 			attribute<MT> MT_from_rel := collect_by_cond(., TestSet/MT_from_rel);
 			attribute<bool> predicted := collect_by_cond(., TestSet/predicted);
 		}
 		unit<uint32> ChangedSet := select(not(TestSet/unchanged))
 		{
+			attribute<Geography/LambertEA> geometry := collect_by_cond(., TestSet/geometry);
 			attribute<MT> MT_from_rel := collect_by_cond(., TestSet/MT_from_rel);
 			attribute<bool> predicted := collect_by_cond(., TestSet/predicted);
 		}
