@@ -3,6 +3,7 @@ container Geography: Using = "Units", IsHidden = "True"
 	unit<dpoint> LatLong: SpatialReference = "GEOGCS[""GCS_ETRS_1989"",DATUM[""D_ETRS_1989"",SPHEROID[""GRS_1980"",6378137.0,298.257222101]],PRIMEM[""Greenwich"",0.0],UNIT[""Degree"",0.0174532925199433]]";
 	unit<dpoint> LambertEA: Descr = "ETRS_1989_LAEA_52N_10E" // "coords from SW to NE";
 		,	SpatialReference = "EPSG:3035" // EPSG code for Lambert EA
+		,	 DialogData = "ngr_layer_lea"
 	{
 		parameter<LambertEA> Origin: Expr = "point(1500000.0,  900000.0, LambertEA)"; // Left-Bottom coord
 		parameter<LambertEA> Extent: Expr = "point(6000000.0, 4530000.0, LambertEA)";
@@ -261,4 +262,5 @@ container Geography: Using = "Units", IsHidden = "True"
 		}
 	}
 	#include<CapriLookup.dms>
+	#include<ngr_layer_lea.dms>
 }
