@@ -35,7 +35,10 @@ container LU
 		attribute<UInt8>               G: Expr =" UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 3, Elements)])";
 		attribute<UInt8>               B: Expr =" UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 4, Elements)])";
 		attribute<String>          Label: Expr ="       Elements/Text[value(UInt32(ID(.))* nrAttr + 5, Elements)]" , DialogType = "LabelText";
-		attribute<uint32>          Color: Expr ="rgb(R,G,B)", DialogType = "BrushColor";
+		
+		attribute<uint32>          Color := rgb(R,G,B), DialogType = "BrushColor";
+		attribute<uint32>       SymColor := Color, DialogType = "SymbolColor";
+		
 		attribute<ForestTransitionState>  FTS_rel :=  value(Elements/Text[value(UInt32(ID(.))* nrAttr + 9, Elements)], ForestTransitionState);
 		
 		attribute<String> DemandCharacteristics:  	Expr ="Elements/Text[value(UInt32(ID(.))* nrAttr + 6, Elements)]";
