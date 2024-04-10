@@ -51,14 +51,19 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 		container ProjectedTotals {
 			
 			container Proto_Pop1 {
-				attribute<float32> summed (PopProjectionZones): 
-					expr = "sum(Parameters/DemandSets/Global/PopProjections/Data/Pop[Claims/ClaimTableSelections/Population/sel/Nr_OrgEntity], "
-				 "DemandSet/Global/PopProjections/Data/ZoneRel[Claims/ClaimTableSelections/Population/sel/Nr_OrgEntity])[PopProjectionZones/Nr_OrgEntity]";
+				attribute<float32> summed (PopProjectionZones) := 
+					sum(Parameters/DemandSets/Global/PopProjections/Data/Pop[Claims/ClaimTableSelections/Population/sel/Nr_OrgEntity]
+					, DemandSet/Global/PopProjections/Data/ZoneRel[Claims/ClaimTableSelections/Population/sel/Nr_OrgEntity]
+					)[PopProjectionZones/Nr_OrgEntity];
 			}
 			container Population {
-				attribute<float32> summed (PopModelZones): 
-					expr = "(MakeDefined(sum(Proto_Pop1/summed[Claims/Conversions/urban/crossTab/nr_1] * Claims/Conversions/urban/crossTab/orgzone_weight, "
-					"Claims/Conversions/urban/crossTab/nr_2), float32(0)))";
+				attribute<float32> summed (PopModelZones) :=
+					MakeDefined(
+						sum(Proto_Pop1/summed[Claims/Conversions/urban/crossTab/first_rel] * Claims/Conversions/urban/crossTab/orgzone_weight
+						, Claims/Conversions/urban/crossTab/second_rel
+						)
+					,	float32(0)
+					);
 			}
 		}
 		container Kj {
@@ -199,8 +204,12 @@ container DynaClueTimeStep100:	IsTemplate = "True"
 			}
 			unit<uint32> ms_rel: expr = "MetaData/RegionalFactorDefinitions/ModelSpecificFactorsList";	
 			unit<uint16> UrbanZones: expr = "= 'RunRegions/UnitSets/' + MetaData/DemandCharacteristics/OrgRegion[MetaData/DemandCharacteristics/Urban]";
-			attribute<float32> touristic_lu (UrbanZones): expr = "sum(CaseData/JrcFactorData/Tourism/touristic_lu[Claims/Conversions/OrgTouristicToOrgUrban/crossTab/nr_1] * Claims/Conversions/OrgTouristicToOrgUrban/crossTab/orgzone_weight, Claims/Conversions/OrgTouristicToOrgUrban/crossTab/nr_2)";
-//			attribute<float32> touristic_lu (UrbanZones): expr = "Claims/DynamicDemandModels/tourism_induced_urban/proj_Touristic"; // new code, more realistic touristic, no sudden jumps in residential density
+			attribute<float32> touristic_lu (UrbanZones) := 
+				sum(CaseData/JrcFactorData/Tourism/touristic_lu[Claims/Conversions/OrgTouristicToOrgUrban/crossTab/first_rel] 
+					* Claims/Conversions/OrgTouristicToOrgUrban/crossTab/orgzone_weight
+				, Claims/Conversions/OrgTouristicToOrgUrban/crossTab/second_rel
+				);
+//			attribute<float32> touristic_lu (UrbanZones) := Claims/DynamicDemandModels/tourism_induced_urban/proj_Touristic; // new code, more realistic touristic, no sudden jumps in residential density
 			container ModelSpecificFactors: expr = "for_each_nednv(ms_rel/Name, ms_rel/RegExpr + '[RunRegions/UnitSets/'+ ms_rel/TargetZones +'/nr_OrgEntity]', RunRegions/UnitSets, ms_rel/TargetZones, float32)";
 		}*/
 		

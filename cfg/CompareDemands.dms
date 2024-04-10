@@ -58,12 +58,12 @@ container CompareDemands
 */		
 		unit<uint32> ResultFile := combine(AW, AI, Country, Year)
 		{
-			attribute<string> name := AI/name[nr_2]+'_'+AW/name[nr_1]+'_'+Country/name[nr_3]+'_'+Year/name[nr_4];
+			attribute<string> name := AI/name[second_rel]+'_'+AW/name[first_rel]+'_'+Country/name[third_rel]+'_'+Year/name[fourth_rel];
 			attribute<string> FileName := name+'_ShadowPrices.csv';
-			attribute<string> graph_file_key := AW/name[nr_1]+'/'+Country/code[nr_3];
-			attribute<string> graph_col_key  := Year/name[nr_4];
-			attribute<Percent>graph_row_value := AI/p[nr_2];
-			attribute<string> graph_row_key   := AI/name[nr_2];
+			attribute<string> graph_file_key := AW/name[first_rel]+'/'+Country/code[third_rel];
+			attribute<string> graph_col_key  := Year/name[fourth_rel];
+			attribute<Percent>graph_row_value := AI/p[second_rel];
+			attribute<string> graph_row_key   := AI/name[second_rel];
 		}
 		
 	}
@@ -95,17 +95,17 @@ container CompareDemands
 			
 			attribute<string> result
 			:= 'ArableDemandFactor;'+AsList(Classifications/Year/name, ';')+'\n'
-				+AsList(string(FileRow/result_line), '\n', FileRow/nr_1)
+				+AsList(string(FileRow/result_line), '\n', FileRow/first_rel)
 			,	StorageName = "%projdir%/results/CapriInteraction/MergedResults"
 			,	StorageType = "strfiles"
 			;
 		}
 		unit<uint32> FileRow := combine(Files, Classifications/AI) {
-			attribute<Files>                File_rel := nr_1;
-			attribute<string> FileRow_key := Files/Values[File_rel] + Classifications/AI/Name[nr_2];
+			attribute<Files>                File_rel := first_rel;
+			attribute<string> FileRow_key := Files/Values[File_rel] + Classifications/AI/Name[second_rel];
 			attribute<.> per_Data(Data) := rlookup(Data/FileRow_key, FileRow_key);
 			
-			attribute<string> result_line := string(classifications/AI/F[nr_2])+';'+AsList(string(Data/Arable_Price), ';', per_data);
+			attribute<string> result_line := string(classifications/AI/F[second_rel])+';'+AsList(string(Data/Arable_Price), ';', per_data);
 			
 		}
 	}

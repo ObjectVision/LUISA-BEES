@@ -112,17 +112,17 @@ container GenerateContainer
 		}
 		container GenerateSummary {
 			unit<uint32> CountryLUT := combine(ActiveRun, LandUseType) {
-				attribute<ActiveRun>   ActiveRun_rel   := nr_1;
-				attribute<LandUseType> LandUseType_rel := nr_2;
+				attribute<ActiveRun>   ActiveRun_rel   := first_rel;
+				attribute<LandUseType> LandUseType_rel := second_rel;
 			}
 			container PerCountryPerYear := for_each_nedv(Periods/Name
 				, replace('count(Results/Landuse/@YR, combine_data(CountryLUT, ActiveRun/Grid, Results/Landuse/@YR))', '@YR', Periods/Name)
 				, CountryLUT, UInt32
 			);
 			unit<uint32> YearCountryLUT := combine(Periods, CountryLUT) {
-				attribute<Periods    > Periods_rel     := nr_1;
-				attribute<ActiveRun  > ActiveRun_rel   := CountryLUT/ActiveRun_rel[nr_2];
-				attribute<LandUseType> LandUseType_rel := CountryLUT/LandUseType_rel[nr_2];
+				attribute<Periods    > Periods_rel     := first_rel;
+				attribute<ActiveRun  > ActiveRun_rel   := CountryLUT/ActiveRun_rel[second_rel];
+				attribute<LandUseType> LandUseType_rel := CountryLUT/LandUseType_rel[second_rel];
 			}
 			unit<uint32> ExportTable := YearCountryLUT, StorageName = "=impl/DirName+'/CountryLanduseTable.dbf'"
 			{

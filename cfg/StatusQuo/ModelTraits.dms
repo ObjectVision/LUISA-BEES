@@ -220,9 +220,9 @@ container ModelTraits
 	// demand containers below aggregate the demands to the wanted aggregation level
 			Container DemandMin := for_each_nednv(ModelType/Name
 				,	IsDefined(ModelType/DemandCharacteristics) 
-					? '(MakeDefined(uint32((sum(CollectMinDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * '
+					? '(MakeDefined(uint32((sum(CollectMinDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/first_rel] * '
 						'Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, '
-							'Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)'
+							'Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/second_rel)'
 								'+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +')) * float32(0.90)), 0))'
 					: 'uint32(CollectMinDemandFromClaimTables/'+ModelType/Name+')'
 				, 	CaseData/RegionNumbers, DestClaimTableName, uint32
@@ -230,9 +230,9 @@ container ModelTraits
 					 
 			Container DemandMax := for_each_nednv(ModelType/Name, 
 				IsDefined(ModelType/DemandCharacteristics) ? 
-						'(MakeDefined(uint32((sum(CollectMaxDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_1] * 
+						'(MakeDefined(uint32((sum(CollectMaxDemandFromClaimTables/'+ ModelType/Name + '[Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/first_rel] * 
 						Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/orgzone_weight, 
-							Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/nr_2)
+							Conversions/'+ ModelType/DemandCharacteristics +'/crossTab/second_rel)
 								+ float32(CaseData/OrgLandUseCount/'+ ModelType/Name +'))* float32(1.10)), 0))' 
 					 : 'uint32(CollectMaxDemandFromClaimTables/'+ModelType/Name+')', 
 				 	 CaseData/RegionNumbers, DestClaimTableName, uint32);				
@@ -739,11 +739,11 @@ container ModelTraits
 					
 					unit<uint32> LUC := /Parameters/GHG_Factors/LUC;
 					unit<uint32> LUC_2 := combine(LUC, LUC) {
-						attribute<string> Label := LUC/name[nr_1] + ' -> '+LUC/name[nr_2], DialogType = 'LabelText';
+						attribute<string> Label := LUC/name[first_rel] + ' -> '+LUC/name[second_rel], DialogType = 'LabelText';
 						attribute<transition> transition_rel := invert(per_transition);
 						attribute<.> per_transition(transition) := combine_data(	., transition/from, transition/to);
 						attribute<string> transition_name := transition/name[transition_rel];
-						attribute<bool> is_annual := (nr_1 == nr_2);
+						attribute<bool> is_annual := (first_rel == second_rel);
 						
 						attribute<string> factor_lookup_expr := replace('rjoin(OccuringParties/PartyCode, @TT/Party, value(@TT/EF, tonne_ha))'
 							, '@TT', '/Parameters/GHG_Factors/transitions/'+transition_name
@@ -1189,12 +1189,12 @@ container ModelTraits
 			
 			unit<uint32> CapriRegionxTab := combine(CaseData/RegionNumbers/Capri, xTabCapri)
 			{
-				attribute<String> ZoneID := CaseData/RegionNumbers/Capri/ZoneID[nr_1];
+				attribute<String> ZoneID := CaseData/RegionNumbers/Capri/ZoneID[first_rel];
 				attribute<.> per_domain(domain) := combine_data(., CaseData/RegionData/Capri, xTabCapri/per_domain);
 				
 				attribute<UInt32> Count := pcount(per_domain);
-				attribute<string> xTabCode  := Classifications/LU/Capri/xCapri/Code [nr_2];
-				attribute<string> xTabLabel := Classifications/LU/Capri/xCapri/Label[nr_2];
+				attribute<string> xTabCode  := Classifications/LU/Capri/xCapri/Code [second_rel];
+				attribute<string> xTabLabel := Classifications/LU/Capri/xCapri/Label[second_rel];
 			}
 			
 			unit<uint32> CapriRegionxTabNonNull := subset(CapriRegionxTab/Count > 0)
