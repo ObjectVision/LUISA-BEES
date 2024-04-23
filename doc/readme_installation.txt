@@ -1,20 +1,23 @@
-﻿Instructions to install everything you need to get Luisetta running on your pc.
+﻿Instructions to install everything you need to get LUISA-BEES running on your pc or workstation with Windows 10 or 11 and at least 32 GB of RAM, 64 GB advised.
+
 
 Download 
-1. Notepad ++ 
-2. JrcBox Client* from software centre
-3. Latest GeoDMS version from http://wiki.objectvision.nl/index.php/GeoDms_Setups
-if needed: Atlassian Source Tree for managing bitbucket repository
+1. Notepad++ from https://notepad-plus-plus.org/
+2. JrcBox Client* from software centre (for getting all the source data)
+3. Latest GeoDMS version from https://github.com/ObjectVision/GeoDMS/releases, last version at time of writing with which results were produced:
+  https://github.com/ObjectVision/GeoDMS/releases/tag/v14.17.2
+4. Clone of LUISA-BEES project files: https://github.com/ObjectVision/LUISA-BEES
 ************************************************************************************
 
 1.Create new folder LocalData on hard drive. This folder is for cache, leave it empty. It can get pretty big though, so be sure to put it in a place where you have some space (10Gb)
-2. Clone luisetta repository from https://webgate.ec.europa.eu/CITnet/stash/scm/forbiomod/luisetta.git
-3. Set up the JRC box client. 
+2. Clone the LUISA-BEEs repository from https://github.com/ObjectVision/LUISA-BEES
+3. Set up the JRC box client: ownCloud version 5.2.1.13040 or compatible, see https://owncloud.com/ 
+
 *********
 *JRC BOX*
 *********
 FOR INTERNAL JRC:
-1/ LOGIN TO JRCBOX via web: go to https://jrcbox.jrc.ec.europa.eu and enroll (login once is required for the client to work)
+1/ LOGIN TO JRCBOX via web: go to https://jrcbox.jrc.ec.europa.eu and enroll (login is required for the client to work)
 2/ Write an email to sarah.mubareka@ec.europa.eu telling her you have done this so she can share the source data folder with you. 
    Luisetta data = 18Gb + EUCS_100m data = 5Gb
 3/ INSTALL DESKTOP CLIENT: open the software centre on your PC and choose JrcBox. 
@@ -37,11 +40,11 @@ Luisetta data is Forbiomod\SourceData
 The Notepad ++ editor can be downloaded from: https://notepad-plus-plus.org.
 
 8. Install and open GeoDMS
-File>Open Configuration File> (go to Luisetta folder) select StatusQuo.dms
+File>Open Configuration File> (go to LUISA-BEES folder) select StatusQuo.dms
 Tools>Options>General settings> see screenShotTools_Options_inGeoDMS.png in this folder 
 (adjust paths according to where you have your LocalData and JrcBox client synched - that is the SourceData
 
-After installing the editor, import the language definition files from "GeoDMS/dev/res/\NotePadPlusPlus" (User Name: guest, Password: guest)  
+After installing the editor, import the language definition files from "%ProgramFiles%\ObjectVision\GeoDmsxxx\GeoDMS/dev/res/\NotePadPlusPlus" (User Name: guest, Password: guest)  
 with the menu option language > define your language > import.
 
 For working with this editor, the GeoDMSGUI setting for Tools > Options > General Settings > DMS Editor should be:
