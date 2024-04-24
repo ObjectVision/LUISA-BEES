@@ -1079,8 +1079,8 @@ container Parameters: KeepData = "True", Using = "Units"
 				attribute<string> RfRegrResultsProbExpr(ModelType) := RfRegrResultsProbExprBase == '' ? 'const(0f, domain)' : 'add('+RfRegrResultsProbExprBase+')';
 				
 				attribute<string> TotalSuitabilityExpr(ModelType) := 
-					  RfRegrResultsProbExpr    + ' + 0.5f + '
-					+ LogitRegrResultsProbExpr + ' * 0.5f + ' 
+//					  RfRegrResultsProbExpr    + ' + 0.5f + '
+//					+ LogitRegrResultsProbExpr + ' * 0.5f + ' 
 					+ CombinedSuitExpr 
 					+ LocSpecExprPrefix 
 					+ '- (' + TransitionCostsExpr + ')';
@@ -1361,7 +1361,7 @@ container Parameters: KeepData = "True", Using = "Units"
 		container ActiveSet := StatusQuo   // @USERINPUT, use these lines to switch between StatusQuo and Integration
 		{
 			parameter<String> FolderName := replace_value(Expand(., '%env:DIR_OUTPUT%'), 'env:DIR_OUTPUT', 'GUI');
-			parameter<string> OutputFolderName := '%projdir%/results/ReferenceFrom2006/' + replace(FolderName, '/', '_');
+			parameter<string> OutputFolderName := '%projdir%/results/ReferenceFrom2006WithOldSF/' + replace(FolderName, '/', '_');
 		}
 		//container ActiveSet: Expr = "NoCAP";   // @USERINPUT, use these lines to switch between StatusQuo and Integration
 //		container ActiveSet: Expr = "Integration"; // @USERINPUT, use these lines to switch between StatusQuo and Integration
