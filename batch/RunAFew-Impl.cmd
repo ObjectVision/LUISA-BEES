@@ -1,11 +1,11 @@
 rem echo off
 
-set geodmsversion=GeoDms7407
+set geodmsversion=GeoDms15.0.1
 set LocalDataDir=D:\LocalData
-set LOCALDATA_PROJDIR=%LocalDataDir%\CalcCachex64.v7.407
+set LOCALDATA_PROJDIR=%LocalDataDir%\CalcCache
 
 set pf=%Program Files%
-set luisetta=C:\LUISA-BEES_2022\LUISA-BEES
+set luisetta=E:\prj\JRC\LUISA-BEES-clean
 set ProgramFolder=C:\Program Files\ObjectVision\%geodmsversion%
 rem set ProgramFolder=C:\dev\geodms7400\bin\Release\x64
 set ProgramPath=%ProgramFolder%\GeoDmsRun.exe
