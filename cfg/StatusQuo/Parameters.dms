@@ -1069,7 +1069,7 @@ container Parameters: KeepData = "True", Using = "Units"
 					'* CaseData/JrcFactorData/RegressionResults/Logit/'+MetaData/RegressionResults/LogitTransitions/name+'[domain/grid_rel]'
 				, 	MetaData/RegressionResults/LogitTransitions/to_rel
 				);
-				attribute<string> LogitRegrResultsProbExpr(ModelType) := LogitRegrResultsProbExprBase == '' ? 'const(0f, domain)' : 'add('+LogitRegrResutsProbExprBase+')';
+				attribute<string> LogitRegrResultsProbExpr(ModelType) := LogitRegrResultsProbExprBase == '' ? 'const(0f, domain)' : 'add('+LogitRegrResultsProbExprBase+')';
 				
 				attribute<string> RfRegrResultsProbExprBase(ModelType) := AsItemList(
 					'float32(PrevState/Landuse == '+string(MetaData/RegressionResults/RfTransitions/from_rel)+'[Classifications/LU/ModelType]) '
@@ -1079,8 +1079,8 @@ container Parameters: KeepData = "True", Using = "Units"
 				attribute<string> RfRegrResultsProbExpr(ModelType) := RfRegrResultsProbExprBase == '' ? 'const(0f, domain)' : 'add('+RfRegrResultsProbExprBase+')';
 				
 				attribute<string> TotalSuitabilityExpr(ModelType) := 
-					  RfRegrResutsProbExpr    + ' * 0.5f + '
-					+ LogitRegrResutsProbExpr + ' * 0.5f + ' 
+					  RfRegrResultsProbExpr    + ' * 0.5f + '
+					+ LogitRegrResultsProbExpr + ' * 0.5f + ' 
 					+ CombinedSuitExpr 
 					+ LocSpecExprPrefix 
 					+ '- (' + TransitionCostsExpr + ')';
