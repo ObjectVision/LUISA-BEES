@@ -28,14 +28,17 @@ container LU
 //				'16','3','136','230','156','NaturalGrassland',        	null,				null,    	        null,    '0'
 			];
 		}
-		attribute<String>           Name: Expr = "Label";
-		attribute<ViewType>           VT: Expr =" value(Elements/Text[value(UInt32(ID(.))* nrAttr + 0, Elements)], ViewType)";
-		attribute<IndicatorType>      IT: Expr =" value(Elements/Text[value(UInt32(ID(.))* nrAttr + 1, Elements)], IndicatorType)";
-		attribute<UInt8>               R: Expr =" UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 2, Elements)])";
-		attribute<UInt8>               G: Expr =" UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 3, Elements)])";
-		attribute<UInt8>               B: Expr =" UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 4, Elements)])";
-		attribute<String>          Label: Expr ="       Elements/Text[value(UInt32(ID(.))* nrAttr + 5, Elements)]" , DialogType = "LabelText";
-		attribute<uint32>          Color: Expr ="rgb(R,G,B)", DialogType = "BrushColor";
+		attribute<String>           Name := Label;
+		attribute<ViewType>           VT := value(Elements/Text[value(UInt32(ID(.))* nrAttr + 0, Elements)], ViewType);
+		attribute<IndicatorType>      IT := value(Elements/Text[value(UInt32(ID(.))* nrAttr + 1, Elements)], IndicatorType);
+		attribute<UInt8>               R := UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 2, Elements)]);
+		attribute<UInt8>               G := UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 3, Elements)]);
+		attribute<UInt8>               B := UInt8(Elements/Text[value(UInt32(ID(.))* nrAttr + 4, Elements)]);
+		attribute<String>          Label :=       Elements/Text[value(UInt32(ID(.))* nrAttr + 5, Elements)] , DialogType = "LabelText";
+		
+		attribute<uint32>          Color := rgb(R,G,B), DialogType = "BrushColor";
+		attribute<uint32>       SymColor := Color, DialogType = "SymbolColor";
+		
 		attribute<ForestTransitionState>  FTS_rel :=  value(Elements/Text[value(UInt32(ID(.))* nrAttr + 9, Elements)], ForestTransitionState);
 		
 		attribute<String> DemandCharacteristics:  	Expr ="Elements/Text[value(UInt32(ID(.))* nrAttr + 6, Elements)]";
@@ -172,6 +175,7 @@ container LU
 	
 	unit<UInt8> Corine: Expr = "Range(uint8, UInt8(0), UInt8(46))"
 	{
+		parameter<uint32> nrAttr := 12;
 		unit<UInt32> Elements: Expr = "Range(uint32, 0, 12*#Corine)"
 		{
 			attribute<String> Text: [ // @USERINPUT: Edit columns MT and VT when changing the (definition of) the ModelType and/or ViewType
@@ -181,14 +185,14 @@ container LU
 				'113',       '45',  '00', null, '255', '120', '120', 'Artificial surfaces',           'Urban fabric',                                    'Urban fabric low density (10-30% built-up)', 			        '2', '0',
 				'114',       '45',  '00', null, '255', '175', '175', 'Artificial surfaces',           'Urban fabric',                                    'Urban fabric very low density and isolated (<10% built-up)',  '2', '0',
 				'121',	    '03',  '01', null, '204', '077', '242', 'Artificial surfaces',           'Industrial, commercial and transport units',      'Industrial or commercial units', 		                        '9', '0',
-				'122',	    '04',  null, '01', '078', '078', '078', 'Artificial surfaces',           'Industrial, commercial and transport units',      'Road and rail networks and associated land',                  '9', '0',
-				'123', 	    '05',  null, '01', '156', '156', '156', 'Artificial surfaces',           'Industrial, commercial and transport units',      'Port areas',                                                  '9', '0',
-				'124', 	    '06',  null, '01', '130', '130', '130', 'Artificial surfaces',           'Industrial, commercial and transport units',      'Airports',                                                    '9', '0',
-				'131',       '07',  null, '01', '137', '090', '068', 'Artificial surfaces',           'Mine, dump and construction sites',               'Mineral extraction sites',                                    '9', '0',
-				'132',       '08',  null, '01', '166', '077', '000', 'Artificial surfaces',           'Mine, dump and construction sites',               'Dump sites',                                                  '9', '0',
-				'133',       '09',  null, '01', '205', '137', '102', 'Artificial surfaces',           'Mine, dump and construction sites',               'Construction sites',                                          '9', '0',
-				'141',       '10',  null, '19', '085', '255', '000', 'Artificial surfaces',           'Artificial, non-agricultural vegetated areas',    'Green urban areas',                                           '9', '0',
-				'142',       '11',  null, '19', '170', '255', '000', 'Artificial surfaces',           'Artificial, non-agricultural vegetated areas',    'Sport and leisure facilities',                                '9', '0',
+				'122',	    '04',  null, '16', '078', '078', '078', 'Artificial surfaces',           'Industrial, commercial and transport units',      'Road and rail networks and associated land',                  '9', '0',
+				'123', 	    '05',  null, '16', '156', '156', '156', 'Artificial surfaces',           'Industrial, commercial and transport units',      'Port areas',                                                  '9', '0',
+				'124', 	    '06',  null, '16', '130', '130', '130', 'Artificial surfaces',           'Industrial, commercial and transport units',      'Airports',                                                    '9', '0',
+				'131',       '07',  null, null, '137', '090', '068', 'Artificial surfaces',           'Mine, dump and construction sites',               'Mineral extraction sites',                                    '9', '0',
+				'132',       '08',  null, null, '166', '077', '000', 'Artificial surfaces',           'Mine, dump and construction sites',               'Dump sites',                                                  '9', '0',
+				'133',       '09',  null, null, '205', '137', '102', 'Artificial surfaces',           'Mine, dump and construction sites',               'Construction sites',                                          '9', '0',
+				'141',       '10',  null, '20', '085', '255', '000', 'Artificial surfaces',           'Artificial, non-agricultural vegetated areas',    'Green urban areas',                                           '9', '0',
+				'142',       '11',  null, '20', '170', '255', '000', 'Artificial surfaces',           'Artificial, non-agricultural vegetated areas',    'Sport and leisure facilities',                                '9', '0',
 				'143',       '46',  '00', null, '204', '180', '180', 'Artificial surfaces',           'Urban fabric',                                    'Leisure and touristic built-up',                             '99', '0', 
 				'211',       '12',  '02', null, '255', '255', '168', 'Agricultural areas',            'Arable land',                                     'Non-irrigated arable land',                                   '3', '0',
 				'212',       '13',  '02', null, '255', '255', '000', 'Agricultural areas',            'Arable land',                                     'Permanently irrigated land',                                  '3', '0',
@@ -208,42 +212,41 @@ container LU
 				'322',       '27',  '13', null, '205', '245', '122', 'Forest and semi natural areas', 'Scrub and/or herbaceous vegetation associations', 'Moors and heathland',                                         '8', '0',
 				'323',       '28',  '13', null, '165', '245', '122', 'Forest and semi natural areas', 'Scrub and/or herbaceous vegetation associations', 'Sclerophyllous vegetation',                                   '8', '0',
 				'324',       '29',  '06', null, '137', '205', '102', 'Forest and semi natural areas', 'Scrub and/or herbaceous vegetation associations', 'Transitional woodland-shrub',                                 '8', '0',
-				'331',       '30',  null, '13', '230', '230', '230', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Beaches, dunes, sands',                                      '99', '1', 
-				'332',       '31',  null, '13', '204', '204', '204', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Bare rocks',                                                 '99', '0',
-				'333',       '32',  null, '13', '204', '255', '204', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Sparsely vegetated areas',                                   '99', '0',
+				'331',       '30',  null, '17', '230', '230', '230', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Beaches, dunes, sands',                                      '99', '1', 
+				'332',       '31',  null, '17', '204', '204', '204', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Bare rocks',                                                 '99', '0',
+				'333',       '32',  null, '17', '204', '255', '204', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Sparsely vegetated areas',                                   '99', '0',
 				'334',       '33',  '06', null, '000', '000', '000', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Burnt areas',                                                '99', '0',
-				'335',       '34',  null, '16', '255', '255', '255', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Glaciers and perpetual snow',                                '99', '0',
-				'410',       '35',  null, '17', '166', '166', '255', 'Wetlands',                      'Inland wetlands',                                 'Inland marshes',                                             '99', '0',
-				'421',       '37',  null, '17', '204', '204', '255', 'Wetlands',                      'Maritime wetlands',                               'Salt marshes',                                               '99', '0',
-				'422',       '38',  null, '17', '230', '230', '255', 'Wetlands',                      'Maritime wetlands',                               'Salines',                                                    '99', '0',
-				'423',       '39',  null, '17', '166', '166', '230', 'Wetlands',                      'Maritime wetlands',                               'Intertidal flats',                                           '99', '0',
+				'335',       '34',  null, '17', '255', '255', '255', 'Forest and semi natural areas', 'Open spaces with little or no vegetation',        'Glaciers and perpetual snow',                                '99', '0',
+				'410',       '35',  null, '18', '166', '166', '255', 'Wetlands',                      'Inland wetlands',                                 'Inland marshes',                                             '99', '0',
+				'421',       '37',  null, '18', '204', '204', '255', 'Wetlands',                      'Maritime wetlands',                               'Salt marshes',                                               '99', '0',
+				'422',       '38',  null, '18', '230', '230', '255', 'Wetlands',                      'Maritime wetlands',                               'Salines',                                                    '99', '0',
+				'423',       '39',  null, '18', '166', '166', '230', 'Wetlands',                      'Maritime wetlands',                               'Intertidal flats',                                           '99', '0',
 				'511',       '40',  null, '18', '000', '180', '240', 'Water bodies',                  'Inland waters',                                   'Water courses',                                              '99', '1',
 				'512',       '41',  null, '18', '080', '220', '240', 'Water bodies',                  'Inland waters',                                   'Water bodies',                                               '99', '1',
-				'521',       '42',  null, '18', '000', '255', '166', 'Water bodies',                  'Marine waters',                                   'Coastal lagoons',                                            '99', '1',
-				'522',       '43',  null, '18', '166', '255', '230', 'Water bodies',                  'Marine waters',                                   'Estuaries',                                                  '99', '1',
-				'523',       '44',  null, '18', '230', '242', '255', 'Water bodies',                  'Marine waters',                                   'Sea and ocean',                                              '99', '1'
+				'521',       '42',  null, '19', '000', '255', '166', 'Water bodies',                  'Marine waters',                                   'Coastal lagoons',                                            '99', '1',
+				'522',       '43',  null, '19', '166', '255', '230', 'Water bodies',                  'Marine waters',                                   'Estuaries',                                                  '99', '1',
+				'523',       '44',  null, '19', '230', '242', '255', 'Water bodies',                  'Marine waters',                                   'Sea and ocean',                                              '99', '1'
 			];
 		}
 		
-		attribute<uint16>    CLC12_code:Expr = "value(Elements/Text[value(UInt32(ID(.))*12, Elements)], uint16)";
-		attribute<uint8>     CLC06_code:Expr = "value(Elements/Text[value(UInt32(ID(.))*12+1, Elements)], uint8)";
-		attribute<ModelType> MT:        Expr = "value(Elements/Text[value(UInt32(ID(.))*12+2, Elements)], ModelType)";
-		attribute<ViewType>  VT:        Expr = "value(Elements/Text[value(UInt32(ID(.))*14+3, Elements)], ViewType)";
-		attribute<ViewType>  VT2:       Expr = "MakeDefined(ModelType/VT[MT], VT)";
+		attribute<uint16>    CLC12_code:= value(Elements/Text[value(UInt32(ID(.))*nrAttr, Elements)], uint16);
+		attribute<uint8>     CLC06_code:= value(Elements/Text[value(UInt32(ID(.))*nrAttr+1, Elements)], uint8);
+		attribute<ModelType> MT        := value(Elements/Text[value(UInt32(ID(.))*nrAttr+2, Elements)], ModelType);
+		attribute<ViewType>  VT        := value(Elements/Text[value(UInt32(ID(.))*nrAttr+3, Elements)], ViewType);
+		attribute<ViewType>  VT2       := MakeDefined(ModelType/VT[MT], VT);
 		
 		
-		attribute<UInt32> R: Expr = "uint32(Elements/Text[value(UInt32(ID(.))*12+4, Elements)])";
-		attribute<UInt32> G: Expr = "uint32(Elements/Text[value(UInt32(ID(.))*12+5, Elements)])";
-		attribute<UInt32> B: Expr = "uint32(Elements/Text[value(UInt32(ID(.))*12+6, Elements)])";
-		attribute<UInt32> BrushColor: Expr = "((B*256)+G)*256+R", DialogType = "BrushColor";
+		attribute<UInt32> R := uint32(Elements/Text[value(UInt32(ID(.))*nrAttr+4, Elements)]);
+		attribute<UInt32> G := uint32(Elements/Text[value(UInt32(ID(.))*nrAttr+5, Elements)]);
+		attribute<UInt32> B := uint32(Elements/Text[value(UInt32(ID(.))*nrAttr+6, Elements)]);
+		attribute<UInt32> BrushColor := ((B*256)+G)*256+R, DialogType = "BrushColor";
 
-//		attribute<Corine> nrClc:      Expr = "invert(Corine/Grid_Code)";
-		attribute<String> Label1:     Expr = "Elements/Text[value(UInt32(ID(.))*12+7, Elements)]";
-		attribute<String> Label2:     Expr = "Elements/Text[value(UInt32(ID(.))*12+8, Elements)]";
-		attribute<String> Label:      Expr = "Elements/Text[value(UInt32(ID(.))*12+9, Elements)]", DialogType = "LabelText";
+		attribute<String> Label1 := Elements/Text[value(UInt32(ID(.))*nrAttr+7, Elements)];
+		attribute<String> Label2 := Elements/Text[value(UInt32(ID(.))*nrAttr+8, Elements)];
+		attribute<String> Label  := Elements/Text[value(UInt32(ID(.))*nrAttr+9, Elements)], DialogType = "LabelText";
 		
-		attribute<bool> 					Water:					Expr = "bool(value(Elements/Text[value(UInt32(ID(.))*12+11, Elements)], uint32))";
-		attribute<bool>						Burnt:					Expr = "id(.) = uint8(334)";
+		attribute<bool> Water := bool(value(Elements/Text[value(UInt32(ID(.))*12+11, Elements)], uint32));
+		attribute<bool>	Burnt := id(.) = uint8(334);
 	}
 	unit<uint8> ForestType: Expr = "Range(uint8, UInt8(0), UInt8(4))"
 	{
