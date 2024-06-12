@@ -117,12 +117,12 @@ template JrcClueWrap:
 				unit<uint16> DestClaimZone: 				expr = "= 'RunRegions/UnitSets/' + DestClaimZoneSetName";
 				unit<uint32> crossTab: expr = "combine(OrgClaimZone, DestClaimZone)" 
 				{
-					attribute<wpoint> 	ct_id         := point(first_rel, second_rel, wpoint);
+					attribute<wpoint> 	ct_id         := point_xy(first_rel, second_rel, wpoint);
 					attribute<float32>	orgzone_weight:= sum(weight, ct_ids) / sum(weight, first_rel[ct_ids])[first_rel];
 				}
-				attribute<float32> 		weight		 (domain): expr = "= agg_weight_def";
-				attribute<wpoint> 		ct_id_points (domain): expr = "= 'point(RunRegions/RasterSets/'+ OrgClaimZoneSetName +'[domain/grid_rel], RunRegions/RasterSets/'+ DestClaimZoneSetName +'[domain/grid_rel], wpoint)'";
-				attribute<crossTab>		ct_ids		 (domain): expr = "rlookup(ct_id_points, crossTab/ct_id)";
+				attribute<float32> 		weight		 (domain) := = agg_weight_def;
+				attribute<wpoint> 		ct_id_points (domain) := = 'point_xy(RunRegions/RasterSets/'+ OrgClaimZoneSetName +'[domain/grid_rel], RunRegions/RasterSets/'+ DestClaimZoneSetName +'[domain/grid_rel], wpoint)';
+				attribute<crossTab>		ct_ids		 (domain ):= rlookup(ct_id_points, crossTab/ct_id);
 				
 				// 32 version would use upoint not wpoint!
 			}

@@ -77,77 +77,77 @@ container Parameters: KeepData = "True", Using = "Units"
 	}
 	container FuncKernels
 	{
-		unit<SPoint> ReciprocalRevolution10km: Expr = "range(spoint, point(int16(-100), int16(-100)), point(int16(101), int16(101)))", Descr = "revolution around origin of of z=1/r up to 10 km "
+		unit<SPoint> ReciprocalRevolution10km: Expr = "range(spoint, point_xy(int16(-100), int16(-100)), point_xy(int16(101), int16(101)))", Descr = "revolution around origin of of z=1/r up to 10 km "
 		{
-			attribute<UInt32>  Dist2: Expr = "Dist2(point(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
+			attribute<UInt32>  Dist2: Expr = "Dist2(point_xy(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
 			attribute<Float64> Attr : Expr = "(Dist2 > 0  && Dist2 <= (100*100)) ? (1.0 / Sqrt(Dist2)) : 0.0"; //
 			attribute<Float32> Matr : Expr = "scalesum(Float32(Attr), Float32(1.0))"; // divides Attr by the sum of Attr so that the sum of Matr equals 1.
 		}
 		
-		unit<SPoint> Cylinder500m: Expr = "range(spoint, point(int16(-5), int16(-5)), point(int16(6), int16(6)))", Descr = "cylinder of 500m radius, excluding self interaction"
+		unit<SPoint> Cylinder500m: Expr = "range(spoint, point_xy(int16(-5), int16(-5)), point_xy(int16(6), int16(6)))", Descr = "cylinder of 500m radius, excluding self interaction"
 		{
-			attribute<UInt32>  Dist2: Expr = "Dist2(point(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
+			attribute<UInt32>  Dist2: Expr = "Dist2(point_xy(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
 			attribute<Float64> Attr : Expr = "Float64(Dist2 > 0  && Dist2 <= (5*5))"; //
 			attribute<Float32> Matr : Expr = "scalesum(Float32(Attr), Float32(1.0))"; // divides Attr by the sum of Attr so that the sum of Matr equals 1.
 		}
-		unit<SPoint> Cylinder5km: Expr = "range(spoint, point(int16(-50), int16(-50)), point(int16(51), int16(51)))", Descr = "cylinder of 5km radius, excluding self interaction"
+		unit<SPoint> Cylinder5km: Expr = "range(spoint, point_xy(int16(-50), int16(-50)), point_xy(int16(51), int16(51)))", Descr = "cylinder of 5km radius, excluding self interaction"
 		{
-			attribute<UInt32>  Dist2: Expr = "Dist2(point(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
+			attribute<UInt32>  Dist2: Expr = "Dist2(point_xy(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
 			attribute<Float64> Attr : Expr = "Float64(Dist2 > 0  && Dist2 <= (50*50))"; //
 			attribute<Float32> Matr : Expr = "scalesum(Float32(Attr), Float32(1.0))"; // divides Attr by the sum of Attr so that the sum of Matr equals 1.
 		}
-		unit<SPoint> LinearDecay1km: Expr = "range(spoint, point(int16(-10), int16(-10)), point(int16(11), int16(11)))", Descr = "linear distance decay until 2 km"
+		unit<SPoint> LinearDecay1km: Expr = "range(spoint, point_xy(int16(-10), int16(-10)), point_xy(int16(11), int16(11)))", Descr = "linear distance decay until 2 km"
 		{
-			attribute<UInt32>  Dist2: Expr = "Dist2(point(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
+			attribute<UInt32>  Dist2: Expr = "Dist2(point_xy(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
 			attribute<Float64> Attr : Expr = "(Dist2 > 0  && Dist2 <= (10*10)) ? 10.0 - Sqrt(Dist2) : 0.0"; //
 			attribute<Float32> Matr : Expr = "scalesum(Float32(Attr), Float32(1.0))"; // divides Attr by the sum of Attr so that the sum of Matr equals 1.
 		}
-		unit<SPoint> LinearDecay2km: Expr = "range(spoint, point(int16(-20), int16(-20)), point(int16(21), int16(21)))", Descr = "linear distance decay until 2 km"
+		unit<SPoint> LinearDecay2km: Expr = "range(spoint, point_xy(int16(-20), int16(-20)), point_xy(int16(21), int16(21)))", Descr = "linear distance decay until 2 km"
 		{
-			attribute<UInt32>  Dist2: Expr = "Dist2(point(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
+			attribute<UInt32>  Dist2: Expr = "Dist2(point_xy(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
 			attribute<Float64> Attr : Expr = "(Dist2 > 0  && Dist2 <= (20*20)) ? 20.0 - Sqrt(Dist2) : 0.0"; //
 			attribute<Float32> Matr : Expr = "scalesum(Float32(Attr), Float32(1.0))"; // divides Attr by the sum of Attr so that the sum of Matr equals 1.
 		}
-		unit<Spoint> LinearDecay5km: Expr = "range(spoint, point(int16(-50), int16(-50)), point(int16(51), int16(51)))", Descr = "linear distance decay until 2 km"
+		unit<Spoint> LinearDecay5km: Expr = "range(spoint, point_xy(int16(-50), int16(-50)), point_xy(int16(51), int16(51)))", Descr = "linear distance decay until 2 km"
 		{
-			attribute<UInt32>  Dist2: Expr = "Dist2(point(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
+			attribute<UInt32>  Dist2: Expr = "Dist2(point_xy(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
 			attribute<Float64> Attr : Expr = "(Dist2 > 0  && Dist2 <= (50*50)) ? 50.0 - Sqrt(Dist2) : 0.0"; //
 			attribute<Float32> Matr : Expr = "scalesum(Float32(Attr), Float32(1.0))"; // divides Attr by the sum of Attr so that the sum of Matr equals 1.
 		}
-		unit<SPoint> km10_neighbours: Expr = "range(spoint, point(int16(-100), int16(-100)), point(int16(101), int16(101)))", Descr = "10km neighbours"
+		unit<SPoint> km10_neighbours: Expr = "range(spoint, point_xy(int16(-100), int16(-100)), point_xy(int16(101), int16(101)))", Descr = "10km neighbours"
 		{	
-			attribute<Float32>  Dist2: Expr = "float32(sqrt(Dist2(point(Int16(0), Int16(0), .), uint32)))"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
+			attribute<Float32>  Dist2: Expr = "float32(sqrt(Dist2(point_xy(Int16(0), Int16(0), .), uint32)))"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
 			attribute<Float32> Matr : Expr = "float32(1) / (Dist2)"; // divides Attr by the sum of Attr so that the sum of Matr equals 1.
 		}
-		unit<Spoint> LinearDecay10km: Expr = "range(spoint, point(int16(-100), int16(-100)), point(int16(101), int16(101)))", Descr = "linear distance decay until 2 km"
+		unit<Spoint> LinearDecay10km: Expr = "range(spoint, point_xy(int16(-100), int16(-100)), point_xy(int16(101), int16(101)))", Descr = "linear distance decay until 2 km"
 		{
-			attribute<UInt32>  Dist2: Expr = "Dist2(point(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
+			attribute<UInt32>  Dist2: Expr = "Dist2(point_xy(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
 			attribute<Float64> Attr : Expr = "(Dist2 > 0  && Dist2 <= (100*100)) ? 100.0 - Sqrt(Dist2) : 0.0"; //
 			attribute<Float32> Matr : Expr = "scalesum(Float32(Attr), Float32(1.0))"; // divides Attr by the sum of Attr so that the sum of Matr equals 1.
 		}
 				
-		unit<SPoint> ExponentialDecay7km: Expr = "range(spoint, point(int16(-70), int16(-70)), point(int16(71), int16(71)))", Descr = "linear distance decay until 7 km"
+		unit<SPoint> ExponentialDecay7km: Expr = "range(spoint, point_xy(int16(-70), int16(-70)), point_xy(int16(71), int16(71)))", Descr = "linear distance decay until 7 km"
 		{
-			attribute<UInt32>  Dist2: Expr = "Dist2(point(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
+			attribute<UInt32>  Dist2: Expr = "Dist2(point_xy(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
 			attribute<Float64> Attr : Expr = "(Dist2 > 0  && Dist2 <= (70*70)) ? Exp(-Sqrt(Dist2) / 35.0 ) : 0.0"; //
 			attribute<Float32> Matr : Expr = "scalesum(Float32(Attr), Float32(1.0))"; // divides Attr by the sum of Attr so that the sum of Matr equals 1.
 		}
-		unit<SPoint> RooksNeighbours: Expr = "range(spoint, point(int16(-1), int16(-1)), point(int16(2), int16(2)))", Descr = "Rooks case contiguous neighbours (only direct)"
+		unit<SPoint> RooksNeighbours: Expr = "range(spoint, point_xy(int16(-1), int16(-1)), point_xy(int16(2), int16(2)))", Descr = "Rooks case contiguous neighbours (only direct)"
 		{	
-			attribute<UInt32>  Dist2: Expr = "Dist2(point(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
+			attribute<UInt32>  Dist2: Expr = "Dist2(point_xy(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
 			attribute<Float64> Attr : Expr = "float64(Dist2 > 0  && Dist2 <= (1))"; //
 			attribute<Float32> Matr : Expr = "scalesum(Float32(Attr), Float32(1.0))"; // divides Attr by the sum of Attr so that the sum of Matr equals 1.
 		}
- 		unit<SPoint> QueensNeighbours: Expr = "range(spoint, point(int16(-1), int16(-1)), point(int16(2), int16(2)))", Descr = "Queens case contiguous neighbours (only direct)"
+ 		unit<SPoint> QueensNeighbours: Expr = "range(spoint, point_xy(int16(-1), int16(-1)), point_xy(int16(2), int16(2)))", Descr = "Queens case contiguous neighbours (only direct)"
 		{	
-			attribute<UInt32>  Dist2: Expr = "Dist2(point(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
+			attribute<UInt32>  Dist2: Expr = "Dist2(point_xy(Int16(0), Int16(0), .), uint32)"; // Sqare distance to origin (= cell with row=0 and col=0) in raster cell units.
 			attribute<Float64> Attr : Expr = "float64(Dist2 > 0  && Dist2 <= (2))"; //
 			attribute<Float32> Matr : Expr = "scalesum(Float32(Attr), Float32(1.0))"; // divides Attr by the sum of Attr so that the sum of Matr equals 1.
 		}
 
-	    unit<spoint>  Area1km2: expr =    "range(spoint,point(-int16(5), -int16(5)), point(int16(6), int16(6)))", Descr = "kernel with an area of approximately 1 km2"
+	    unit<spoint>  Area1km2: expr =    "range(spoint,point_xy(-int16(5), -int16(5)), point_xy(int16(6), int16(6)))", Descr = "kernel with an area of approximately 1 km2"
   		 {
-   		   attribute<uint32> distMatr:  expr = "dist2(point(int16(0), int16(0), .), uint32)";
+   		   attribute<uint32> distMatr:  expr = "dist2(point_xy(int16(0), int16(0), .), uint32)";
       	   attribute<Float32> AbsWeight: expr =  "distMatr <=uint32(36) ? Float32(1.0) : Float32(0.0)";
    		 } 
    		 			
@@ -575,7 +575,7 @@ container Parameters: KeepData = "True", Using = "Units"
 			parameter<string> NeighbFile;
 			parameter<UInt32> StartReadPos;
 			parameter<Int16> NrCells: Expr = "ReadValue(NeighbFile, Int16, StartReadPos)";
-			unit<SPoint> Data: Expr = "range(spoint, point(-NrCells, -NrCells), point(NrCells + int16(1), NrCells + int16(1)))"
+			unit<SPoint> Data: Expr = "range(spoint, point_xy(-NrCells, -NrCells), point_xy(NrCells + int16(1), NrCells + int16(1)))"
 			{
 				attribute<Float32> Matr: Expr = "ReadArray(NeighbFile, Data, Float32, NrCells/readPos)";
 			}
